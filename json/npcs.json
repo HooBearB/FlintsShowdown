@@ -1,0 +1,59 @@
+{
+    "npclist": ["offensive", "defensive", "runner", "crawler", "paranoid", "diplomat"],
+    "template": {
+        "name": "template",
+        "saw_participant": ["loud", "stealth", "flee", "communicate"],
+        "heard_participant": ["loud", "stealth", "seek", "flee"],
+        "trace": ["loud", "stealth", "seek", "flee"],
+        "attacked": ["loud", "flee"],
+        "looting": ["loud", "stealth", "seek"]
+    },
+    "offensive": {
+        "name": "Offensive",
+        "saw_participant": "loud",
+        "heard_participant": "stealth",
+        "trace": "seek",
+        "attacked": "loud",
+        "looting": "loud"
+    },
+    "defensive": {
+        "name": "Defensive",
+        "saw_participant": "stealth",
+        "heard_participant": "stealth",
+        "trace": "seek",
+        "attacked": "loud",
+        "looting": "seek"
+    },
+    "runner": {
+        "name": "Runner",
+        "saw_participant": "flee",
+        "heard_participant": "flee",
+        "trace": "stealth",
+        "attacked": "flee",
+        "looting": "seek"
+    },
+    "crawler": {
+        "name": "Stealthy",
+        "saw_participant": "stealth",
+        "heard_participant": "stealth",
+        "trace": "seek",
+        "attacked": "loud",
+        "looting": "stealth"
+    },
+    "paranoid": {
+        "name": "Paranoid",
+        "saw_participant": "stealth",
+        "heard_participant": "flee",
+        "trace": "seek",
+        "attacked": "loud",
+        "looting": "seek"
+    },
+    "diplomat": {
+        "name": "Diplomat",
+        "saw_participant": "communicate",
+        "heard_participant": "communicate",
+        "trace": "seek",
+        "attacked": "loud",
+        "looting": "seek"
+    }
+}

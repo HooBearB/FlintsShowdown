@@ -1,0 +1,10 @@
+{
+    "playerseeplayer": {
+        "participants": 2,
+        "message": " see each other."
+    },
+    "playerhearplayer": {
+        "participants": 2,
+        "message": " hear each other, but"
+    }
+}

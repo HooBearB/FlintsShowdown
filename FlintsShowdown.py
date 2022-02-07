@@ -17,6 +17,8 @@ filename = os.path.join(directory, ('json/items.json'))
 items = json.load(open(filename, "r"))
 filename = os.path.join(directory, ('json/npcs.json'))
 npc = json.load(open(filename, "r"))
+filename = os.path.join(directory, ('json/events.json'))
+events = json.load(open(filename, "r"))
 
 
 
@@ -186,9 +188,78 @@ def mainMenu():
         createCharacters()
     if decision == 3:
         settings()
+    if decision == 4:
+        raise Exception("Exited game.")
 
 def startSim():
-    directToLoad()
+    global creationMode
+    global characterNames
+    global characterPlans
+    global characterAttributes
+    global characterHealth
+    global characterItems
+    global days
+
+    directory = os.path.dirname(__file__)
+    foldername = os.path.join(directory, ('characterSaves/'))
+    characterSaves = os.listdir(foldername)
+    print()
+    run = 0
+    while run < len(characterSaves):
+        if characterSaves[run].endswith(r'.json') != True:
+            characterSaves.pop(run)
+        run = run + 1
+    if len(characterSaves) != 0:
+        filenumber = ask("Load characters:", 2, characterSaves, 0.01)
+        file = os.path.join(foldername, os.path.join(characterSaves[filenumber - 1]))
+        data = json.load(open(file, "r"))
+        creationMode = data["creationmode"]
+        characterNames = []
+        characterPlans = []
+        characterAttributes = []
+        run = 0
+        while run < data["length"]:
+            characterNames.append(data[str(run)]["name"])
+            characterPlans.append(data[str(run)]["plan"])
+            templist = []
+            templist.append(data[str(run)]["melee"])
+            templist.append(data[str(run)]["ranged"])
+            templist.append(data[str(run)]["endurance"])
+            templist.append(data[str(run)]["strength"])
+            templist.append(data[str(run)]["communication"])
+            characterAttributes.append(templist)
+            run = run + 1
+    else:
+        print()
+        scrollingText("Directory is empty!", 2, 0.01)
+        askToContinue()
+        mainMenu()
+    characterHealth = []
+    while len(characterHealth) <= len(characterNames):
+        characterHealth.append(100)
+    characterItems = []
+    while len(characterItems) <= len(characterNames):
+        characterItems.append([])
+    days = 1
+    sim()
+
+def sim():
+    printGUI(generateEvents())
+
+def generateEvents():
+    events = random.randint(1, 5)
+    eventList = []
+    while len(eventList) <= events:
+        currentEvent = []
+        eventID = random.choice(events)
+        currentEvent.append(events[eventID]["participants"])
+        currentEvent.append(events[eventID]["message"])
+        eventList.append(currentEvent)
+    return eventList
+
+def printGUI(events):
+    scrollingText("Day " + str(days) + ".", 2, 0.01)
+    scrollingText()
 
 def selectSimMode():
     global creationMode
@@ -377,7 +448,12 @@ def saveLoadCharacters():
             file = os.path.join(foldername, os.path.join(characterSaves[filenumber - 1]))
             data = json.load(open(file, "r"))
             if data["creationmode"] != creationMode:
-                ask("")
+                print()
+                decision = ask("This file was created in a different mode, would you like to switch to the file's mode?", 2, ["Change mode to file", "Back to character creation"], 0.01)
+                if decision == 1:
+                    creationMode = data["creationmode"]
+                if decision == 2:
+                    createCharacters()
             characterNames = []
             characterPlans = []
             characterAttributes = []
@@ -444,47 +520,6 @@ def directToSave():
     file = open(filename, "w")
     json.dump(data, file, separators = (',', ':'), indent = 4)
     print(format.clear)
-
-def directToLoad():
-    global characterNames
-    global characterPlans
-    global characterAttributes
-    global creationMode
-
-    directory = os.path.dirname(__file__)
-    foldername = os.path.join(directory, ('characterSaves/'))
-    characterSaves = os.listdir(foldername)
-    print()
-    run = 0
-    while run < len(characterSaves):
-        if characterSaves[run].endswith(r'.json') != True:
-            characterSaves.pop(run)
-        run = run + 1
-    if len(characterSaves) != 0:
-        filenumber = ask("Load characters:", 2, characterSaves, 0.01)
-        file = os.path.join(foldername, os.path.join(characterSaves[filenumber - 1]))
-        data = json.load(open(file, "r"))
-        if data["creationmode"] != creationMode:
-            ask("")
-        characterNames = []
-        characterPlans = []
-        characterAttributes = []
-        run = 0
-        while run < data["length"]:
-            characterNames.append(data[str(run)]["name"])
-            characterPlans.append(data[str(run)]["plan"])
-            templist = []
-            templist.append(data[str(run)]["melee"])
-            templist.append(data[str(run)]["ranged"])
-            templist.append(data[str(run)]["endurance"])
-            templist.append(data[str(run)]["strength"])
-            templist.append(data[str(run)]["communication"])
-            characterAttributes.append(templist)
-            run = run + 1
-    else:
-        print()
-        print("  Directory is empty!")
-        askToContinue()
 
 def settings():
     global format

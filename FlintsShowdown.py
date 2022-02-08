@@ -2,10 +2,12 @@
 """
 A fun little project for me to do,
 this is kinda like those hunger games
-simulations you can find online and
-put all your friends into.
+simulations you can find online that
+you can put all your friends into.
 """
 #Project start: Jan 23, 2022
+#JSON finished: February 1st, 2022
+#Character building finished: February 7th, 2022
 
 import random
 import os
@@ -244,22 +246,48 @@ def startSim():
     sim()
 
 def sim():
-    printGUI(generateEvents())
+    printDayGUI()
 
 def generateEvents():
-    events = random.randint(1, 5)
+    eventNum = random.randint(1, 5)
     eventList = []
-    while len(eventList) <= events:
-        currentEvent = []
-        eventID = random.choice(events)
-        currentEvent.append(events[eventID]["participants"])
-        currentEvent.append(events[eventID]["message"])
-        eventList.append(currentEvent)
+    while len(eventList) < eventNum:
+        cardinal = random.randint(0, len(events["rootEvents"]) - 1)
+        eventList.append(events["rootEvents"][cardinal])
     return eventList
 
-def printGUI(events):
+def printDayGUI():
+    print(format.clear)
+    time.sleep(0.25)
     scrollingText("Day " + str(days) + ".", 2, 0.01)
-    scrollingText()
+    time.sleep(0.25)
+    runEvents(generateEvents())
+
+def runEvents(eventList):
+    run = 0
+    while run < len(eventList):
+        curEvent = events[eventList[run]]
+        participants = []
+        participantsID = []
+        while len(participants) < curEvent["participants"]:
+            addChar = random.randint(0, len(characterNames) - 1)
+            participantsID.append(addChar)
+            participants.append(characterNames[addChar])
+        while curEvent != "return" and curEvent != "combat":
+            if len(participants) == 1:
+                scrollingText(participants[0] + " " + curEvent["openmessage"][random.randint(0, len(curEvent["openmessage"]) - 1)], 2, 0.01)
+            if len(participants) == 2:
+                scrollingText(participants[0] + " " + curEvent["openmessage"][random.randint(0, len(curEvent["openmessage"]) - 1)] + " " + participants[1] + ".", 2, 0.01)
+            outcomeList = curEvent[npc[characterPlans[participantsID[0]]][eventList[run]]]
+            curEvent = events[outcomeList[random.randint(0, len(outcomeList) - 1)]]
+            askToContinue()
+        run = run + 1
+
+def generateCharacterList(number):
+    charList = []
+    while len(charList) < number:
+        charList.append(random.choice(characterNames))
+    return charList
 
 def selectSimMode():
     global creationMode
@@ -323,6 +351,21 @@ def createCharacters(currentCharacter = 0):
 
     decision = 1
     while methods[decision - 1] != "Exit":
+        print(format.clear)
+        methods = []
+        if creationMode == "det":
+            methods.append("Name")
+            methods.append("NPC plan")
+            methods.append("Attributes")
+        if creationMode == "ada":
+            methods.append("Name")
+            methods.append("Attributes")
+        if creationMode == "sim":
+            methods.append("Name")
+        methods.append("Switch character")
+        methods.append("New character")
+        methods.append("Import/export character set")
+        methods.append("Exit")
         scrollingText("CHARACTER CREATION", 2, 0.015)
         print()
         scrollingText("Name: " + characterNames[currentCharacter], 2, 0.01)

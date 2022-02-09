@@ -157,8 +157,24 @@ def askString(message, indent):
     return decision
 
 def askToContinue():
-    x = input("  Press " + format.bold + "enter" + format.end + " to continue")
+    x = input("  Press " + format.bold + "enter" + format.end + " to continue   ")
     print(format.clear)
+
+def generateCharacterList(number):
+    charList = []
+    while len(charList) < number:
+        rand = random.randint(0, len(characterNames) - 1)
+        if rand not in charList:
+            charList.append(rand)
+    return charList
+
+def generateEvents():
+    eventNum = random.randint(1, 5)
+    eventList = []
+    while len(eventList) < eventNum:
+        events = ["saw_participant", "heard_participant", "trace", "attacked", "looting"]
+        eventList.append(random.choice(events))
+    return eventList
 
 
 
@@ -179,7 +195,7 @@ def mainMenu():
     print("               /__  / / __  / / /_/ / / // // / / /_/ / / /_/ / / // // / / /||/ /")
     print("              /____/ /_/ /_/ /_____/ /_______/ /_____/ /_____/ /_______/ /_/ |__/")
     print()
-    scrollingText("v0.1 DEMO | Feb 14, 2022 build", 2, 0.02)
+    scrollingText("v0.1 DEMO | Feb 13, 2022 build", 2, 0.02)
     decision = ask("", 2, ["Start new game", "Create characters", "Settings", "Exit"], 0.03)
     if decision == 1:
         startSim()
@@ -198,6 +214,7 @@ def startSim():
     global characterAttributes
     global characterHealth
     global characterItems
+    global characterItemDurabilities
     global days
 
     directory = os.path.dirname(__file__)
@@ -240,54 +257,281 @@ def startSim():
     characterItems = []
     while len(characterItems) <= len(characterNames):
         characterItems.append([])
+    characterItemDurabilities = []
+    while len(characterItemDurabilities) <= len(characterNames):
+        characterItemDurabilities.append([])
     days = 1
     sim()
 
 def sim():
-    printDayGUI()
+    global days
+    while days <= 7:
+        printDayGUI()
+        days = days + 1
 
 def printDayGUI():
     print(format.clear)
-    time.sleep(0.25)
-    scrollingText("Day " + str(days) + ".", 2, 0.01)
-    time.sleep(0.25)
+    time.sleep(0.5)
+    scrollingText(format.bold + format.blue + format.italic + "Day " + str(days) + "." + format.end, 2, 0.01)
+    time.sleep(0.5)
     runEvents(generateEvents())
-
-def generateEvents():
-    eventNum = random.randint(1, 5)
-    eventList = []
-    while len(eventList) < eventNum:
-        events = ["saw_participant", "heard_participant", "trace", "attack", "looting"]
-        eventList.append(random.choice(events))
-    return eventList
 
 def runEvents(eventList):
     run = 0
     while run < len(eventList):
         if eventList[run] == "saw_participant":
             sawParticipant()
+        if eventList[run] == "heard_participant":
+            heardParticipant()
+        if eventList[run] == "trace":
+            trace()
+        if eventList[run] == "attacked":
+            attacked()
         askToContinue()
+        run = run + 1
 
 def sawParticipant():
     characters = generateCharacterList(2)
     scrollingText(characterNames[characters[0]] + " sees " + characterNames[characters[1]] + ".", 2, 0.01)
     time.sleep(0.5)
-    if npc[characterPlans[characters[0]]] == "loud":
-        attack()
-    if npc[characterPlans[characters[0]]] == "stealth":
-        rand = random.randint(1, 5)
-        if rand == 5:
-            attacked()
+    if npc[characterPlans[characters[0]]]["saw_participant"] == "loud":
+        attack(characters)
+    if npc[characterPlans[characters[0]]]["saw_participant"] == "stealth":
+        rand = random.randint(1, 6)
+        if rand == 6:
+            attacked(characters)
         else:
-            scrollingText(characterNames[characters[0]] + "hides.", 2, 0.01)
+            scrollingText(characterNames[characters[0]] + " hides.", 2, 0.01)
+            askToContinue()
+    if npc[characterPlans[characters[0]]]["saw_participant"] == "flee":
+        rand = random.randint(1, 8)
+        rand = rand / characterAttributes[characterPlans[characters[0]]][3]
+        if rand == 4:
+            attacked(characters)
+        else:
+            scrollingText(characterNames[characters[0]] + "runs away.", 2, 0.01)
+            askToContinue()
+    if npc[characterPlans[characters[0]]]["saw_participant"] == "communicate":
+        rand = random.randint(1, 4)
+        if rand == 4:
+            scrollingText(characterNames[characters[1]] + " didn't like that.", 2, 0.01)
+            attacked(characters)
+        else:
+            scrollingText(characterNames[characters[0]] + " successfully negotiates with " + characterNames[characters[1]] + ".", 2, 0.01)
             askToContinue()
 
+def heardParticipant():
+    characters = generateCharacterList(2)
+    scrollingText(characterNames[characters[0]] + " hears something.", 2, 0.01)
+    time.sleep(0.5)
+    if npc[characterPlans[characters[0]]]["heard_participant"] == "loud":
+        rand = random.randint(1, 4)
+        if rand == 4:
+            scrollingText(characterNames[characters[0]] + " finds " + characterNames[characters[1]] + ".", 2, 0.01)
+            attack(characters)
+        else:
+            scrollingText(characterNames[characters[0]] + " searches the area, but doesn't find anyone.", 2, 0.01)
+            askToContinue()
+    if npc[characterPlans[characters[0]]]["heard_participant"] == "stealth":
+        rand = random.randint(1, 6)
+        if rand == 6:
+            scrollingText(characterNames[characters[1]] + " finds " + characterNames[characters[0]] + ".", 2, 0.01)
+            attacked(characters)
+        else:
+            scrollingText(characterNames[characters[0]] + " hides.", 2, 0.01)
+            askToContinue()
+    if npc[characterPlans[characters[0]]]["heard_participant"] == "seek":
+        rand = random.randint(1, 2)
+        if rand == 2:
+            scrollingText(characterNames[characters[0]] + " finds " + characterNames[characters[1]] + ".", 2, 0.01)
+            attack(characters)
+        else:
+            scrollingText(characterNames[characters[0]] + " fails to find anyone.", 2, 0.01)
+            askToContinue()
+    if npc[characterPlans[characters[0]]]["heard_participant"] == "flee":
+        scrollingText(characterNames[characters[0]] + " runs away.", 2, 0.01)
+        askToContinue()
 
-def generateCharacterList():
-    charList = []
-    while len(charList) < number:
-        charList.append(random.randint(0, len(characterNames) - 1))
-    return charList
+def trace():
+    characters = generateCharacterList(2)
+    scrollingText(characterNames[characters[0]] + " notices footprints.", 2, 0.01)
+    time.sleep(0.5)
+    if npc[characterPlans[characters[0]]]["trace"] == "loud":
+        rand = random.randint(1, 10)
+        if rand == 10:
+            scrollingText(characterNames[characters[0]] + " finds " + characterNames[characters[1]] + ".", 2, 0.01)
+            attack(characters)
+        else:
+            scrollingText(characterNames[characters[0]] + " fails to find anyone.", 2, 0.01)
+            askToContinue()
+    if npc[characterPlans[characters[0]]]["trace"] == "stealth":
+        rand = random.randint(1, 16)
+        if rand == 16:
+            scrollingText(characterNames[characters[1]] + " finds " + characterNames[characters[0]] + ".", 2, 0.01)
+            attacked(characters)
+        else:
+            scrollingText(characterNames[characters[0]] + " hides.", 2, 0.01)
+            askToContinue()
+        
+def attacked(characters = []):
+    if characters == []:
+        characters = generateCharacterList(2)
+    if len(characters) == 1:
+        characters.append(generateCharacterList(1))
+    print()
+    ran = False
+    scrollingText(format.bold + characterNames[characters[1]] + " engages " + characterNames[characters[0]] + "." + format.end, 2, 0.01)
+    print()
+    decision = ask("Would you like to view this combat turn by turn?", 2, ["Turn by turn", "Skip to result"], 0.01)
+    print()
+    if npc[characterPlans[characters[0]]]["attacked"] == "flee":
+        rand = random.randint(1, 6)
+        if decision == 1:
+            scrollingText(characterNames[characters[0]] + " attempts to run away.", 2, 0.01)
+        if rand == 6:
+            scrollingText(characterNames[characters[0]] + " runs away.", 2, 0.01)
+            askToContinue()
+            ran = True
+        else:
+            if decision == 1:
+                scrollingText(characterNames[characters[0]] + " fails to run away.", 2, 0.01)
+    charA = 1
+    charB = 0
+    if ran != True:
+        ran = False
+        while characterHealth[characters[0]] > 0 and characterHealth[characters[1]] > 0:
+            if characterItems[characters[charA]] == []:
+                rand = random.randint(1, 3)
+                if rand != 3:
+                    if decision == 1:
+                        scrollingText(characterNames[characters[charA]] + " punches " + characterNames[characters[charB]] + ".", 2, 0.01)
+                    rand = random.randint(3, 5)
+                    characterHealth[characters[charB]] = characterHealth[characters[charB]] - rand
+                else:
+                    if decision == 1:
+                        scrollingText(characterNames[characters[charA]] + " misses their shot.", 2, 0.01)
+            else:
+                if decision == 1:
+                    scrollingText(characterNames[characters[charA]] + items[characterItems[characters[charA]][0]]["ready"], 2, 0.01)
+                rand = random.randint(1,100)
+                if decision == 1:
+                    scrollingText(characterNames[characters[charA]] + items[characterItems[characters[charA]][0]]["attack"] + characterNames[characters[charB]], 2, 0.01)
+                if rand <= items[characterItems[characters[charA]][0]]["accuracy"]:
+                    if decision == 1:
+                        scrollingText("The shot connects.", 2, 0.01)
+                    characterHealth[characters[charB]] = characterHealth[characters[charB]] - items[characterItems[characters[charA]][0]]["damage"]
+                    characterItemDurabilities[characters[charA]][0] = characterItemDurabilities[characters[charA]][0] - 1
+                else:
+                    if decision == 1:
+                        scrollingText("The shot misses.", 2, 0.01)
+                    if items[characterItems[characters[charA]][0]]["faildamage"] == True:
+                        characterItemDurabilities[characters[charA]][0] = characterItemDurabilities[characters[charA]][0] - 1
+            time.sleep(0.25)
+            if npc[characterPlans[characters[charB]]]["attacked"] == "flee":
+                rand = random.randint(1, 8)
+                rand = rand / characterAttributes[characterPlans[characters[charB]]][3]
+                if decision == 1:
+                    scrollingText(characterNames[characters[charB]] + " attempts to run away.", 2, 0.01)
+                if rand == 6:
+                    scrollingText(characterNames[characters[charB]] + " runs away.", 2, 0.01)
+                    ran = True
+                    askToContinue()
+                else:
+                    if decision == 1:
+                        scrollingText(characterNames[characters[charB]] + " fails to run away.", 2, 0.01)
+            time.sleep(0.5)
+            if charA == 1:
+                charA = 0
+                charB = 1
+            else:
+                charA = 1
+                charB = 0
+            if ran == True:
+                break
+
+def attack(characters = []):
+    if characters == []:
+        characters = generateCharacterList(2)
+    if len(characters) == 1:
+        characters.append(generateCharacterList(1))
+    print()
+    ran = False
+    scrollingText(format.bold + characterNames[characters[0]] + " attacks " + characterNames[characters[1]] + "." + format.end, 2, 0.01)
+    print()
+    decision = ask("Would you like to view this combat turn by turn?", 2, ["Turn by turn", "Skip to result"], 0.01)
+    print()
+    if npc[characterPlans[characters[1]]]["attacked"] == "flee":
+        rand = random.randint(1, 6)
+        if decision == 1:
+            scrollingText(characterNames[characters[1]] + " attempts to run away.", 2, 0.01)
+        if rand == 6:
+            scrollingText(characterNames[characters[1]] + " runs away.", 2, 0.01)
+            askToContinue()
+            ran = True
+        else:
+            if decision == 1:
+                scrollingText(characterNames[characters[1]] + " fails to run away.", 2, 0.01)
+    charA = 0
+    charB = 1
+    if ran != True:
+        ran = False
+        while characterHealth[characters[0]] > 0 and characterHealth[characters[1]] > 0:
+            if characterItems[characters[charA]] == []:
+                rand = random.randint(1, 3)
+                if rand != 3:
+                    if decision == 1:
+                        scrollingText(characterNames[characters[charA]] + " punches " + characterNames[characters[charB]] + ".", 2, 0.01)
+                    rand = random.randint(3, 5)
+                    characterHealth[characters[charB]] = characterHealth[characters[charB]] - rand
+                else:
+                    if decision == 1:
+                        scrollingText(characterNames[characters[charA]] + " misses their shot.", 2, 0.01)
+            else:
+                if decision == 1:
+                    scrollingText(characterNames[characters[charA]] + items[characterItems[characters[charA]][0]]["ready"], 2, 0.01)
+                rand = random.randint(1,100)
+                if decision == 1:
+                    scrollingText(characterNames[characters[charA]] + items[characterItems[characters[charA]][0]]["attack"] + characterNames[characters[charB]], 2, 0.01)
+                if rand <= items[characterItems[characters[charA]][0]]["accuracy"]:
+                    if decision == 1:
+                        scrollingText("The shot connects.", 2, 0.01)
+                    characterHealth[characters[charB]] = characterHealth[characters[charB]] - items[characterItems[characters[charA]][0]]["damage"]
+                    characterItemDurabilities[characters[charA]][0] = characterItemDurabilities[characters[charA]][0] - 1
+                else:
+                    if decision == 1:
+                        scrollingText("The shot misses.", 2, 0.01)
+                    if items[characterItems[characters[charA]][0]]["faildamage"] == True:
+                        characterItemDurabilities[characters[charA]][0] = characterItemDurabilities[characters[charA]][0] - 1
+            time.sleep(0.25)
+            if npc[characterPlans[characters[charB]]]["attacked"] == "flee":
+                rand = random.randint(1, 8)
+                rand = rand / characterAttributes[characterPlans[characters[charB]]][3]
+                if decision == 1:
+                    scrollingText(characterNames[characters[charB]] + " attempts to run away.", 2, 0.01)
+                if rand == 6:
+                    scrollingText(characterNames[characters[charB]] + " runs away.", 2, 0.01)
+                    ran = True
+                    askToContinue()
+                else:
+                    if decision == 1:
+                        scrollingText(characterNames[characters[charB]] + " fails to run away.", 2, 0.01)
+            time.sleep(0.5)
+            if charA == 1:
+                charA = 0
+                charB = 1
+            else:
+                charA = 1
+                charB = 0
+            if ran == True:
+                break
+
+def looting():
+    characters = generateCharacterList(2)
+    scrollingText(characterNames[characters[0]] + " notices a cache near their location.", 2, 0.01)
+    if npc[characterPlans[characters[0]]]["looting"] == "loud":
+        rand = random.randint(1, 6)
+        if rand == 1:
+            
 
 def selectSimMode():
     global creationMode

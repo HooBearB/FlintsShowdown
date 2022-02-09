@@ -1,20 +1,4 @@
 {
-    "template": {
-        "name": "",
-        "type": "",
-        "damage": 0,
-        "accuracy": 0,
-        "durability": 0,
-        "faildamage": false,
-        "ready": "",
-        "attack": "",
-        "break": "",
-        "1": "",
-        "2": "",
-        "3": "",
-        "4": "",
-        "5": ""
-    },
     "kitchenknife": {
         "name": "Kitchen knife",
         "type": "Melee",

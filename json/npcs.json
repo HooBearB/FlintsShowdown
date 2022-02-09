@@ -6,13 +6,7 @@
         "heard_participant": ["loud", "stealth", "seek", "flee"],
         "trace": ["loud", "stealth", "seek", "flee"],
         "attacked": ["loud", "flee"],
-        "looting": ["loud", "stealth", "seek"],
-        "hide": "outcome",
-        "found": ["loud", "flee", "communicate"],
-        "run": "outcome",
-        "catch": "attacked",
-        "negotiate": "return",
-        "talkfail": "attacked"
+        "looting": ["loud", "stealth", "seek"]
     },
     "offensive": {
         "name": "Offensive",
@@ -20,13 +14,7 @@
         "heard_participant": "stealth",
         "trace": "seek",
         "attacked": "loud",
-        "looting": "loud",
-        "hide": "outcome",
-        "found": "loud",
-        "run": "outcome",
-        "catch": "attacked",
-        "negotiate": "return",
-        "talkfail": "attacked"
+        "looting": "loud"
     },
     "defensive": {
         "name": "Defensive",
@@ -34,13 +22,7 @@
         "heard_participant": "stealth",
         "trace": "seek",
         "attacked": "loud",
-        "looting": "seek",
-        "hide": "outcome",
-        "found": "loud",
-        "run": "outcome",
-        "catch": "attacked",
-        "negotiate": "return",
-        "talkfail": "attacked"
+        "looting": "seek"
     },
     "runner": {
         "name": "Runner",
@@ -48,13 +30,7 @@
         "heard_participant": "flee",
         "trace": "stealth",
         "attacked": "flee",
-        "looting": "seek",
-        "hide": "outcome",
-        "found": "flee",
-        "run": "outcome",
-        "catch": "attacked",
-        "negotiate": "return",
-        "talkfail": "attacked"
+        "looting": "seek"
     },
     "crawler": {
         "name": "Stealthy",
@@ -62,13 +38,7 @@
         "heard_participant": "stealth",
         "trace": "seek",
         "attacked": "loud",
-        "looting": "stealth",
-        "hide": "outcome",
-        "found": "flee",
-        "run": "outcome",
-        "catch": "attacked",
-        "negotiate": "return",
-        "talkfail": "attacked"
+        "looting": "stealth"
     },
     "paranoid": {
         "name": "Paranoid",
@@ -76,13 +46,7 @@
         "heard_participant": "flee",
         "trace": "seek",
         "attacked": "loud",
-        "looting": "seek",
-        "hide": "outcome",
-        "found": "flee",
-        "run": "outcome",
-        "catch": "attacked",
-        "negotiate": "return",
-        "talkfail": "attacked"
+        "looting": "seek"
     },
     "diplomat": {
         "name": "Diplomat",
@@ -90,12 +54,6 @@
         "heard_participant": "communicate",
         "trace": "seek",
         "attacked": "loud",
-        "looting": "seek",
-        "hide": "outcome",
-        "found": "communicate",
-        "run": "outcome",
-        "catch": "attacked",
-        "negotiate": "return",
-        "talkfail": "attacked"
+        "looting": "seek"
     }
 }

@@ -19,8 +19,6 @@ filename = os.path.join(directory, ('json/items.json'))
 items = json.load(open(filename, "r"))
 filename = os.path.join(directory, ('json/npcs.json'))
 npc = json.load(open(filename, "r"))
-filename = os.path.join(directory, ('json/events.json'))
-events = json.load(open(filename, "r"))
 
 
 
@@ -248,14 +246,6 @@ def startSim():
 def sim():
     printDayGUI()
 
-def generateEvents():
-    eventNum = random.randint(1, 5)
-    eventList = []
-    while len(eventList) < eventNum:
-        cardinal = random.randint(0, len(events["rootEvents"]) - 1)
-        eventList.append(events["rootEvents"][cardinal])
-    return eventList
-
 def printDayGUI():
     print(format.clear)
     time.sleep(0.25)
@@ -263,30 +253,40 @@ def printDayGUI():
     time.sleep(0.25)
     runEvents(generateEvents())
 
+def generateEvents():
+    eventNum = random.randint(1, 5)
+    eventList = []
+    while len(eventList) < eventNum:
+        events = ["saw_participant", "heard_participant", "trace", "attack", "looting"]
+        eventList.append(random.choice(events))
+    return eventList
+
 def runEvents(eventList):
     run = 0
     while run < len(eventList):
-        curEvent = events[eventList[run]]
-        participants = []
-        participantsID = []
-        while len(participants) < curEvent["participants"]:
-            addChar = random.randint(0, len(characterNames) - 1)
-            participantsID.append(addChar)
-            participants.append(characterNames[addChar])
-        while curEvent != "return" and curEvent != "combat":
-            if len(participants) == 1:
-                scrollingText(participants[0] + " " + curEvent["openmessage"][random.randint(0, len(curEvent["openmessage"]) - 1)], 2, 0.01)
-            if len(participants) == 2:
-                scrollingText(participants[0] + " " + curEvent["openmessage"][random.randint(0, len(curEvent["openmessage"]) - 1)] + " " + participants[1] + ".", 2, 0.01)
-            outcomeList = curEvent[npc[characterPlans[participantsID[0]]][eventList[run]]]
-            curEvent = events[outcomeList[random.randint(0, len(outcomeList) - 1)]]
-            askToContinue()
-        run = run + 1
+        if eventList[run] == "saw_participant":
+            sawParticipant()
+        askToContinue()
 
-def generateCharacterList(number):
+def sawParticipant():
+    characters = generateCharacterList(2)
+    scrollingText(characterNames[characters[0]] + " sees " + characterNames[characters[1]] + ".", 2, 0.01)
+    time.sleep(0.5)
+    if npc[characterPlans[characters[0]]] == "loud":
+        attack()
+    if npc[characterPlans[characters[0]]] == "stealth":
+        rand = random.randint(1, 5)
+        if rand == 5:
+            attacked()
+        else:
+            scrollingText(characterNames[characters[0]] + "hides.", 2, 0.01)
+            askToContinue()
+
+
+def generateCharacterList():
     charList = []
     while len(charList) < number:
-        charList.append(random.choice(characterNames))
+        charList.append(random.randint(0, len(characterNames) - 1))
     return charList
 
 def selectSimMode():

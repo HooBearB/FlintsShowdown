@@ -165,14 +165,15 @@ def generateCharacterList(number):
     while len(charList) < number:
         rand = random.randint(0, len(characterNames) - 1)
         if rand not in charList:
-            charList.append(rand)
+            if characterNames[rand] not in deadCharacters:
+                charList.append(rand)
     return charList
 
 def generateEvents():
     eventNum = random.randint(1, 5)
     eventList = []
     while len(eventList) < eventNum:
-        events = ["saw_participant", "heard_participant", "trace", "attacked", "looting"]
+        events = ["saw_participant", "heard_participant", "trace", "attacked", "looting", "looting", "looting"]
         eventList.append(random.choice(events))
     return eventList
 
@@ -216,6 +217,7 @@ def startSim():
     global characterItems
     global characterItemDurabilities
     global days
+    global deadCharacters
 
     directory = os.path.dirname(__file__)
     foldername = os.path.join(directory, ('characterSaves/'))
@@ -261,6 +263,7 @@ def startSim():
     while len(characterItemDurabilities) <= len(characterNames):
         characterItemDurabilities.append([])
     days = 1
+    deadCharacters = []
     sim()
 
 def sim():
@@ -274,6 +277,7 @@ def printDayGUI():
     time.sleep(0.5)
     scrollingText(format.bold + format.blue + format.italic + "Day " + str(days) + "." + format.end, 2, 0.01)
     time.sleep(0.5)
+    print()
     runEvents(generateEvents())
 
 def runEvents(eventList):
@@ -287,6 +291,8 @@ def runEvents(eventList):
             trace()
         if eventList[run] == "attacked":
             attacked()
+        if eventList[run] == "looting":
+            looting()
         askToContinue()
         run = run + 1
 
@@ -331,7 +337,6 @@ def heardParticipant():
             attack(characters)
         else:
             scrollingText(characterNames[characters[0]] + " searches the area, but doesn't find anyone.", 2, 0.01)
-            askToContinue()
     if npc[characterPlans[characters[0]]]["heard_participant"] == "stealth":
         rand = random.randint(1, 6)
         if rand == 6:
@@ -339,7 +344,6 @@ def heardParticipant():
             attacked(characters)
         else:
             scrollingText(characterNames[characters[0]] + " hides.", 2, 0.01)
-            askToContinue()
     if npc[characterPlans[characters[0]]]["heard_participant"] == "seek":
         rand = random.randint(1, 2)
         if rand == 2:
@@ -347,10 +351,8 @@ def heardParticipant():
             attack(characters)
         else:
             scrollingText(characterNames[characters[0]] + " fails to find anyone.", 2, 0.01)
-            askToContinue()
     if npc[characterPlans[characters[0]]]["heard_participant"] == "flee":
         scrollingText(characterNames[characters[0]] + " runs away.", 2, 0.01)
-        askToContinue()
 
 def trace():
     characters = generateCharacterList(2)
@@ -374,11 +376,11 @@ def trace():
             askToContinue()
         
 def attacked(characters = []):
+    global deadCharacters
     if characters == []:
         characters = generateCharacterList(2)
     if len(characters) == 1:
         characters.append(generateCharacterList(1))
-    print()
     ran = False
     scrollingText(format.bold + characterNames[characters[1]] + " engages " + characterNames[characters[0]] + "." + format.end, 2, 0.01)
     print()
@@ -426,7 +428,8 @@ def attacked(characters = []):
                         scrollingText("The shot misses.", 2, 0.01)
                     if items[characterItems[characters[charA]][0]]["faildamage"] == True:
                         characterItemDurabilities[characters[charA]][0] = characterItemDurabilities[characters[charA]][0] - 1
-            time.sleep(0.25)
+            if decision == 1:
+                time.sleep(0.25)
             if npc[characterPlans[characters[charB]]]["attacked"] == "flee":
                 rand = random.randint(1, 8)
                 rand = rand / characterAttributes[characterPlans[characters[charB]]][3]
@@ -439,22 +442,31 @@ def attacked(characters = []):
                 else:
                     if decision == 1:
                         scrollingText(characterNames[characters[charB]] + " fails to run away.", 2, 0.01)
-            time.sleep(0.5)
+            if decision == 1:
+                time.sleep(0.5)
             if charA == 1:
                 charA = 0
                 charB = 1
             else:
                 charA = 1
                 charB = 0
-            if ran == True:
+            if ran == True or characterHealth[characters[charA]] <= 0 or characterHealth[characters[charB]] <= 0:
+                if characterHealth[characters[charA]] <= 0:
+                    scrollingText(characterNames[characters[charA]] + " succumbs to their wounds, and dies.", 2, 0.01)
+                    print()
+                    deadCharacters.append(characterNames[characters[charA]])
+                if characterHealth[characters[charB]] <= 0:
+                    scrollingText(characterNames[characters[charB]] + " succumbs to their wounds, and dies.", 2, 0.01)
+                    print()
+                    deadCharacters.append(characterNames[characters[charB]])
                 break
 
 def attack(characters = []):
+    global deadCharacters
     if characters == []:
         characters = generateCharacterList(2)
     if len(characters) == 1:
         characters.append(generateCharacterList(1))
-    print()
     ran = False
     scrollingText(format.bold + characterNames[characters[0]] + " attacks " + characterNames[characters[1]] + "." + format.end, 2, 0.01)
     print()
@@ -502,7 +514,8 @@ def attack(characters = []):
                         scrollingText("The shot misses.", 2, 0.01)
                     if items[characterItems[characters[charA]][0]]["faildamage"] == True:
                         characterItemDurabilities[characters[charA]][0] = characterItemDurabilities[characters[charA]][0] - 1
-            time.sleep(0.25)
+            if decision == 1:
+                time.sleep(0.25)
             if npc[characterPlans[characters[charB]]]["attacked"] == "flee":
                 rand = random.randint(1, 8)
                 rand = rand / characterAttributes[characterPlans[characters[charB]]][3]
@@ -515,14 +528,23 @@ def attack(characters = []):
                 else:
                     if decision == 1:
                         scrollingText(characterNames[characters[charB]] + " fails to run away.", 2, 0.01)
-            time.sleep(0.5)
+            if decision == 1:
+                time.sleep(0.5)
             if charA == 1:
                 charA = 0
                 charB = 1
             else:
                 charA = 1
                 charB = 0
-            if ran == True:
+            if ran == True or characterHealth[characters[charA]] <= 0 or characterHealth[characters[charB]] <= 0:
+                if characterHealth[characters[charA]] <= 0:
+                    scrollingText(characterNames[characters[charA]] + " succumbs to their wounds, and dies.", 2, 0.01)
+                    print()
+                    deadCharacters.append(characterNames[characters[charA]])
+                if characterHealth[characters[charB]] <= 0:
+                    scrollingText(characterNames[characters[charB]] + " succumbs to their wounds, and dies.", 2, 0.01)
+                    print()
+                    deadCharacters.append(characterNames[characters[charB]])
                 break
 
 def looting():
@@ -531,7 +553,56 @@ def looting():
     if npc[characterPlans[characters[0]]]["looting"] == "loud":
         rand = random.randint(1, 6)
         if rand == 1:
-            
+            attacked(characters)
+        else:
+            lootItem = random.choice(items["lootable"])
+            if len(characterItems[characters[0]]) == 0:
+                characterItems[characters[0]].append(items[lootItem])
+                scrollingText(characterNames[characters[0]] + " picks up the " + items[lootItem]["name"].lower() + ".", 2, 0.01)
+            else:
+                if len(characterItems[characters[0]]) > 3:
+                    if items[lootItem]["grade"] >= characterItems[characters[0]][0]:
+                        scrollingText(characterNames[characters[0]] + " drops their " + items[characterItems[characters[0]][0]]["name"].lower() + " to pick up the cache's " + items[lootItem]["name"].lower() + " in it.", 2, 0.01)
+                        characterItems[characters[0]][0] = lootItem
+                    else:
+                        scrollingText(characterNames[characters[0]] + "'s " + items[characterItems[characters[0]][0]]["name"].lower() + " is better than the " + items[lootItem]["name"].lower() + ".", 2, 0.01)
+                else:
+                    characterItems[characters[0]].append(items[lootItem])
+                    scrollingText(characterNames[characters[0]] + " picks up the " + items[lootItem]["name"].lower() + ".", 2, 0.01)
+    if npc[characterPlans[characters[0]]]["looting"] == "stealth":
+        lootItem = random.choice(items["lootable"])
+        if len(characterItems[characters[0]]) == 0:
+            characterItems[characters[0]].append(items[lootItem])
+            scrollingText(characterNames[characters[0]] + " picks up the " + items[lootItem]["name"].lower() + ".", 2, 0.01)
+        else:
+            if len(characterItems[characters[0]]) > 3:
+                if items[lootItem]["grade"] >= characterItems[characters[0]][0]:
+                    scrollingText(characterNames[characters[0]] + " drops their " + items[characterItems[characters[0]][0]]["name"].lower() + " to pick up the cache's " + items[lootItem]["name"].lower() + " in it.", 2, 0.01)
+                    characterItems[characters[0]][0] = lootItem
+                else:
+                    scrollingText(characterNames[characters[0]] + "'s " + items[characterItems[characters[0]][0]]["name"].lower() + " is better than the " + items[lootItem]["name"].lower() + ".", 2, 0.01)
+            else:
+                characterItems[characters[0]].append(items[lootItem])
+                scrollingText(characterNames[characters[0]] + " picks up the " + items[lootItem]["name"].lower() + ".", 2, 0.01)
+    if npc[characterPlans[characters[0]]]["looting"] == "seek":
+        rand = random.randint(1, 8)
+        if rand == 1:
+            attack(characters)
+        else:
+            lootItem = random.choice(items["lootable"])
+            if len(characterItems[characters[0]]) == 0:
+                characterItems[characters[0]].append(items[lootItem])
+                scrollingText(characterNames[characters[0]] + " picks up the " + items[lootItem]["name"].lower() + ".", 2, 0.01)
+            else:
+                if len(characterItems[characters[0]]) > 3:
+                    if items[lootItem]["grade"] >= characterItems[characters[0]][0]:
+                        scrollingText(characterNames[characters[0]] + " drops their " + items[characterItems[characters[0]][0]]["name"].lower() + " to pick up the cache's " + items[lootItem]["name"].lower() + " in it.", 2, 0.01)
+                        characterItems[characters[0]][0] = lootItem
+                    else:
+                        scrollingText(characterNames[characters[0]] + "'s " + items[characterItems[characters[0]][0]]["name"].lower() + " is better than the " + items[lootItem]["name"].lower() + ".", 2, 0.01)
+                else:
+                    characterItems[characters[0]].append(lootItem)
+                    scrollingText(characterNames[characters[0]] + " picks up the " + items[lootItem]["name"].lower() + ".", 2, 0.01)
 
 def selectSimMode():
     global creationMode

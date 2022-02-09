@@ -1,6 +1,8 @@
 {
+    "lootable": ["kitchenknife", "survivalknife", "hammer", "axe", "golfclub", "bow", "pocketpistol", "pistol", "revolver", "magnum", "huntingrifle", "leverrifle", "shotgun", "db", "sawnoff", "carbine"],
     "kitchenknife": {
         "name": "Kitchen knife",
+        "grade": 1,
         "type": "Melee",
         "damage": 30,
         "accuracy": 75,
@@ -17,6 +19,7 @@
     },
     "survivalknife": {
         "name": "Survival knife",
+        "grade": 2,
         "type": "Melee",
         "damage": 35,
         "accuracy": 80,
@@ -33,6 +36,7 @@
     },
     "hammer": {
         "name": "Hammer",
+        "grade": 2,
         "type": "Melee",
         "damage": 30,
         "accuracy": 75,
@@ -49,6 +53,7 @@
     },
     "axe": {
         "name": "Axe",
+        "grade": 3,
         "type": "Melee",
         "damage": 70,
         "accuracy": 80,
@@ -65,6 +70,7 @@
     },
     "golfclub": {
         "name": "Golf club",
+        "grade": 3,
         "type": "Melee",
         "damage": 30,
         "accuracy": 75,
@@ -81,6 +87,7 @@
     },
     "bow": {
         "name": "Bow",
+        "grade": 3,
         "type": "Ranged",
         "damage": 90,
         "accuracy": 80,
@@ -97,10 +104,11 @@
     },
     "pocketpistol": {
         "name": "Pocket pistol",
+        "grade": 2,
         "type": "Ranged",
         "damage": 40,
         "accuracy": 50,
-        "durability": 3,
+        "durability": 4,
         "faildamage": true,
         "ready": " draws their pocket pistol.",
         "attack": " fires their pocket pistol at ",
@@ -113,6 +121,7 @@
     },
     "pistol": {
         "name": "Pistol",
+        "grade": 4,
         "type": "Ranged",
         "damage": 60,
         "accuracy": 65,
@@ -129,6 +138,7 @@
     },
     "revolver": {
         "name": "Revolver",
+        "grade": 4,
         "type": "Ranged",
         "damage": 85,
         "accuracy": 70,
@@ -145,6 +155,7 @@
     },
     "magnum": {
         "name": "Magnum pistol",
+        "grade": 4,
         "type": "Ranged",
         "damage": 95,
         "accuracy": 75,
@@ -161,6 +172,7 @@
     },
     "huntingrifle": {
         "name": "Hunting rifle",
+        "grade": 5,
         "type": "Ranged",
         "damage": 175,
         "accuracy": 80,
@@ -177,6 +189,7 @@
     },
     "leverrifle": {
         "name": "Lever-action rifle",
+        "grade": 5,
         "type": "Ranged",
         "damage": 150,
         "accuracy": 85,
@@ -193,6 +206,7 @@
     },
     "shotgun": {
         "name": "Shotgun",
+        "grade": 5,
         "type": "Ranged",
         "damage": 125,
         "accuracy": 90,
@@ -209,6 +223,7 @@
     },
     "db": {
         "name": "Double barrel shotgun",
+        "grade": 5,
         "type": "Ranged",
         "damage": 150,
         "accuracy": 90,
@@ -225,6 +240,7 @@
     },
     "sawnoff": {
         "name": "Sawn-off shotgun",
+        "grade": 4,
         "type": "Ranged",
         "damage": 150,
         "accuracy": 50,
@@ -241,14 +257,15 @@
     },
     "carbine": {
         "name": "Carbine",
+        "grade": 6,
         "type": "Ranged",
         "damage": 50,
         "accuracy": 60,
         "durability": 30,
         "faildamage": true,
-        "ready": " readies their assault rifle.",
-        "attack": " fires their assault rifle at ",
-        "break": "'s assault rifle clicks. It's empty.",
+        "ready": " readies their carbine.",
+        "attack": " fires their carbine at ",
+        "break": "'s carbine clicks. It's empty.",
         "1": "         ╷-_",
         "2": " ______╷-╵--╵-----╷______",
         "3": "|   __|  ▘________╷------╵",

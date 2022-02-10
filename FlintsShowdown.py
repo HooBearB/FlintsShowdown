@@ -273,9 +273,11 @@ def startSim():
 
 def sim():
     global days
-    while days <= 7:
+    while len(deadCharacters) < len(characterNames) - 1:
         printDayGUI()
+        healAll()
         days = days + 1
+    printWinner()
 
 def printDayGUI():
     print(format.clear)
@@ -284,6 +286,11 @@ def printDayGUI():
     time.sleep(0.5)
     print()
     runEvents(generateEvents())
+    time.sleep(0.5)
+    print()
+    scrollingText(format.bold + format.blue + format.italic + "Night falls." + format.end, 2, 0.01)
+    askToContinue()
+
 
 def runEvents(eventList):
     run = 0
@@ -320,7 +327,7 @@ def sawParticipant():
         else:
             scrollingText(characterNames[characters[0]] + "runs away.", 2, 0.01)
     if npc[characterPlans[characters[0]]]["saw_participant"] == "communicate":
-        scrollingText(characterNames[characters[0]] + " attempts to negotiate with" + characterNames[characters[1]] + ".", 2, 0.01)
+        scrollingText(characterNames[characters[0]] + " attempts to negotiate with " + characterNames[characters[1]] + ".", 2, 0.01)
         rand = random.randint(1, 4)
         if rand == 4:
             scrollingText(characterNames[characters[1]] + " didn't like that.", 2, 0.01)
@@ -562,7 +569,7 @@ def looting():
                 scrollingText(characterNames[characters[0]] + " picks up the " + items[lootItem]["name"].lower() + ".", 2, 0.01)
             else:
                 if len(characterItems[characters[0]]) > 3:
-                    if items[lootItem]["grade"] >= characterItems[characters[0]][0]:
+                    if items[lootItem]["grade"] >= items[characterItems[characters[0]][0]]["name"]:
                         scrollingText(characterNames[characters[0]] + " drops their " + items[characterItems[characters[0]][0]]["name"].lower() + " to pick up the cache's " + items[lootItem]["name"].lower() + " in it.", 2, 0.01)
                         characterItems[characters[0]][0] = lootItem
                         characterItemDurabilities[characters[0]][0] = items[lootItem]["durability"]
@@ -580,7 +587,7 @@ def looting():
             scrollingText(characterNames[characters[0]] + " picks up the " + items[lootItem]["name"].lower() + ".", 2, 0.01)
         else:
             if len(characterItems[characters[0]]) > 3:
-                if items[lootItem]["grade"] >= characterItems[characters[0]][0]:
+                if items[lootItem]["grade"] >= items[characterItems[characters[0]][0]]["name"]:
                     scrollingText(characterNames[characters[0]] + " drops their " + items[characterItems[characters[0]][0]]["name"].lower() + " to pick up the cache's " + items[lootItem]["name"].lower() + " in it.", 2, 0.01)
                     characterItems[characters[0]][0] = lootItem
                     characterItemDurabilities[characters[0]][0] = items[lootItem]["durability"]
@@ -602,7 +609,7 @@ def looting():
                 scrollingText(characterNames[characters[0]] + " picks up the " + items[lootItem]["name"].lower() + ".", 2, 0.01)
             else:
                 if len(characterItems[characters[0]]) > 3:
-                    if items[lootItem]["grade"] >= characterItems[characters[0]][0]:
+                    if items[lootItem]["grade"] >= items[characterItems[characters[0]][0]]["name"]:
                         scrollingText(characterNames[characters[0]] + " drops their " + items[characterItems[characters[0]][0]]["name"].lower() + " to pick up the cache's " + items[lootItem]["name"].lower() + " in it.", 2, 0.01)
                         characterItems[characters[0]][0] = lootItem
                         characterItemDurabilities[characters[0]][0] = items[lootItem]["durability"]
@@ -612,6 +619,24 @@ def looting():
                     characterItems[characters[0]].append(lootItem)
                     characterItemDurabilities[characters[0]].append(items[lootItem]["durability"])
                     scrollingText(characterNames[characters[0]] + " picks up the " + items[lootItem]["name"].lower() + ".", 2, 0.01)
+
+def healAll():
+    run = 0
+    while run < len(characterHealth):
+        if characterHealth[run] + 20 <= 100:
+            characterHealth[run] = characterHealth[run] + 20
+        else:
+            characterHealth[run] = characterHealth[run] + (100 - characterHealth[run])
+        run = run + 1
+
+def printWinner():
+    run = 0
+    while characterNames[run] in deadCharacters:
+        run = run + 1
+    scrollingText(characterNames[run] + " is the last one alive.", 2, 0.01)
+    scrollingText("They win.", 2, 0.01)
+    print()
+    scrollingText("Kills: " + str(characterKills[run]), 2, 0.01)
 
 def selectSimMode():
     global creationMode

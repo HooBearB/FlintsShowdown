@@ -1,5 +1,5 @@
 {
-    "lootable": ["kitchenknife", "survivalknife", "hammer", "axe", "golfclub", "bow", "pocketpistol", "pistol", "revolver", "magnum", "huntingrifle", "leverrifle", "shotgun", "db", "sawnoff", "carbine"],
+    "lootable": ["kitchenknife", "survivalknife", "hammer", "axe", "golfclub", "scythe", "iceaxe", "bow", "pocketpistol", "pistol", "revolver", "magnum", "huntingrifle", "leverrifle", "shotgun", "db", "sawnoff", "carbine"],
     "kitchenknife": {
         "name": "Kitchen knife",
         "grade": 1,
@@ -83,6 +83,40 @@
         "2": " ________________| \\",
         "3": "╵----------------|_|",
         "4": "",
+        "5": ""
+    },
+    "scythe": {
+        "name": "Scythe",
+        "grade": 5,
+        "type": "Melee",
+        "damage": 75,
+        "accuracy": 60,
+        "durability": 40,
+        "faildamage": false,
+        "ready": " prepares to swing their scythe.",
+        "attack": " swings their scythe at ",
+        "break": "'s scythe head comes off, breaking it.",
+        "1": " __________________",
+        "2": "╵----------------| |",
+        "3": "                 | |",
+        "4": "                / /",
+        "5": "               /_/"
+    },
+    "iceaxe": {
+        "name": "Ice axe",
+        "grade": 4,
+        "type": "Melee",
+        "damage": 60,
+        "accuracy": 65,
+        "durability": 35,
+        "faildamage": false,
+        "ready": " grips their ice axe.",
+        "attack": " lunges with their ice axe at ",
+        "break": "'s ice axe head becomes dull, breaking it.",
+        "1": " __________|\\",
+        "2": "|__|____|__| |",
+        "3": "           | |",
+        "4": "           |/",
         "5": ""
     },
     "bow": {

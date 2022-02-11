@@ -188,16 +188,17 @@ def generateEvents():
 """
 def mainMenu():
     print(format.clear)
+    print(format.green)
     print("     _____  __    _____   __   __  _____  __  _____")
     print("    / ___/ / /   /_  _/  /  | / / /_  _/ /_/ /  __/")
     print("   / ___/ / /__  _/ /_  / /||/ /   / /      /__  /")
-    print("  /_/    /____/ /____/ /_/ |__/   /_/      /____/")
+    print("  /_/    /____/ /____/ /_/ |__/   /_/      /____/" + format.end + format.blue)
     print("                 _____  __  __  ______  __    __  ____    ______  __    __  __   __")
     print("                /  __/ / /_/ / / __  / / /__ / / / __ |  / __  / / /__ / / /  | / /")
     print("               /__  / / __  / / /_/ / / // // / / /_/ / / /_/ / / // // / / /||/ /")
     print("              /____/ /_/ /_/ /_____/ /_______/ /_____/ /_____/ /_______/ /_/ |__/")
-    print()
-    scrollingText("v0.1 DEMO | Feb 13, 2022 build", 2, 0.02)
+    print(format.end)
+    scrollingText("v0.1 DEMO | Feb 11, 2022 build", 2, 0.02)
     decision = ask("", 2, ["Start new game", "Create characters", "Settings", "Exit"], 0.03)
     if decision == 1:
         startSim()
@@ -782,6 +783,7 @@ def createCharacters(currentCharacter = 0):
         methods.append("Name")
     methods.append("Switch character")
     methods.append("New character")
+    methods.append("Delete character")
     methods.append("Import/export character set")
     methods.append("Exit")
 
@@ -800,6 +802,7 @@ def createCharacters(currentCharacter = 0):
             methods.append("Name")
         methods.append("Switch character")
         methods.append("New character")
+        methods.append("Delete character")
         methods.append("Import/export character set")
         methods.append("Exit")
         scrollingText("CHARACTER CREATION", 2, 0.015)
@@ -825,6 +828,8 @@ def createCharacters(currentCharacter = 0):
             currentCharacter = switchCharacter(currentCharacter, characterNames)
         if methods[decision - 1] == "New character":
             currentCharacter = newCharacter(characterNames)
+        if methods[decision - 1] == "Delete character":
+            currentCharacter = deleteCharacter(currentCharacter)
         if methods[decision - 1] == "Import/export character set":
             saveLoadCharacters()
     print(format.clear)
@@ -903,6 +908,20 @@ def newCharacter(currentCharacters):
     characterAttributes.append([0, 0, 0, 0, 0])
     newCharacter = len(currentCharacters) - 1
     return newCharacter
+
+def deleteCharacter(currChar):
+    global characterNames
+    global characterPlans
+    global characterAttributes
+
+    print()
+    decision = ask("Would you really like to delete this character?", 2, ["Yes", "No"], 0.05)
+    if decision == 1:
+        characterNames.pop(currChar)
+        characterPlans.pop(currChar)
+        characterAttributes.pop(currChar)
+        currChar = currChar - 1
+    return currChar
 
 def saveLoadCharacters():
     global characterNames

@@ -6,7 +6,14 @@
         "heard_participant": ["loud", "stealth", "seek", "flee"],
         "trace": ["loud", "stealth", "seek", "flee"],
         "attacked": ["loud", "flee"],
-        "looting": ["loud", "stealth", "seek"]
+        "looting": ["loud", "stealth", "seek"],
+
+        "description": "",
+        "triangle1": "      Self-preservation",
+        "triangle2": "             /\\",
+        "triangle3": "            /  \\",
+        "triangle4": "           /    \\",
+        "triangle5": "Attacking /______\\ Conflict avoidance"
     },
     "offensive": {
         "name": "Offensive",
@@ -14,7 +21,14 @@
         "heard_participant": "stealth",
         "trace": "seek",
         "attacked": "loud",
-        "looting": "loud"
+        "looting": "loud",
+
+        "description": "Prioritizes attacking other participants.",
+        "triangle1": "      Self-preservation",
+        "triangle2": "             /\\",
+        "triangle3": "            /  \\",
+        "triangle4": "           /    \\",
+        "triangle5": "Attacking *______\\ Conflict avoidance"
     },
     "defensive": {
         "name": "Defensive",
@@ -22,7 +36,14 @@
         "heard_participant": "stealth",
         "trace": "seek",
         "attacked": "loud",
-        "looting": "seek"
+        "looting": "seek",
+
+        "description": "A mix between self-preservation and attacking others.",
+        "triangle1": "      Self-preservation",
+        "triangle2": "             /\\",
+        "triangle3": "            /  \\",
+        "triangle4": "           *    \\",
+        "triangle5": "Attacking /______\\ Conflict avoidance"
     },
     "runner": {
         "name": "Runner",
@@ -30,7 +51,14 @@
         "heard_participant": "flee",
         "trace": "stealth",
         "attacked": "flee",
-        "looting": "seek"
+        "looting": "seek",
+
+        "description": "Prioritizes running away from encounters with other participants.",
+        "triangle1": "      Self-preservation",
+        "triangle2": "             /\\",
+        "triangle3": "            /  *",
+        "triangle4": "           /    \\",
+        "triangle5": "Attacking /______\\ Conflict avoidance"
     },
     "crawler": {
         "name": "Stealthy",
@@ -38,7 +66,14 @@
         "heard_participant": "stealth",
         "trace": "seek",
         "attacked": "loud",
-        "looting": "stealth"
+        "looting": "stealth",
+
+        "description": "Prioritizes stealth.",
+        "triangle1": "      Self-preservation",
+        "triangle2": "             /\\",
+        "triangle3": "            /  \\",
+        "triangle4": "           /    \\",
+        "triangle5": "Attacking /___*__\\ Conflict avoidance"
     },
     "paranoid": {
         "name": "Paranoid",
@@ -46,7 +81,14 @@
         "heard_participant": "flee",
         "trace": "seek",
         "attacked": "loud",
-        "looting": "seek"
+        "looting": "seek",
+
+        "description": "Looks for other participants, prioritizes not being snuck up on.",
+        "triangle1": "      Self-preservation",
+        "triangle2": "             /\\",
+        "triangle3": "            *  \\",
+        "triangle4": "           /    \\",
+        "triangle5": "Attacking /______\\ Conflict avoidance"
     },
     "diplomat": {
         "name": "Diplomat",
@@ -54,6 +96,13 @@
         "heard_participant": "communicate",
         "trace": "seek",
         "attacked": "loud",
-        "looting": "seek"
+        "looting": "seek",
+
+        "description": "Prioritizes conflict avoidance. Talks before attacking.",
+        "triangle1": "      Self-preservation",
+        "triangle2": "             /\\",
+        "triangle3": "            /  \\",
+        "triangle4": "           /    \\",
+        "triangle5": "Attacking /______* Conflict avoidance"
     }
 }

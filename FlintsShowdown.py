@@ -8,6 +8,7 @@ you can put all your friends into.
 #Project start: Jan 23, 2022
 #JSON finished: February 1st, 2022
 #Character building finished: February 7th, 2022
+#Event flow finished: February 11th, 2022
 
 import random
 import os
@@ -198,7 +199,7 @@ def mainMenu():
     print("               /__  / / __  / / /_/ / / // // / / /_/ / / /_/ / / // // / / /||/ /")
     print("              /____/ /_/ /_/ /_____/ /_______/ /_____/ /_____/ /_______/ /_/ |__/")
     print(format.end)
-    scrollingText("v0.1 DEMO | Feb 11, 2022 build", 2, 0.02)
+    scrollingText("v0.1 DEMO | Feb 13, 2022 build", 2, 0.02)
     decision = ask("", 2, ["Start new game", "Create characters", "Settings", "Exit"], 0.03)
     if decision == 1:
         startSim()
@@ -857,7 +858,19 @@ def changeCharacterPlan(curChar):
         npclist.append(npc[npc["npclist"][run]]["name"])
         run = run + 1
     decision = ask("Choose character's NPC plan", 2, npclist, 0.01)
-    characterPlans[curChar] = npc["npclist"][decision - 1]
+    print(format.clear)
+    print(npc[npc["npclist"][decision - 1]]["triangle1"])
+    print(npc[npc["npclist"][decision - 1]]["triangle2"])
+    print(npc[npc["npclist"][decision - 1]]["triangle3"])
+    print(npc[npc["npclist"][decision - 1]]["triangle4"])
+    print(npc[npc["npclist"][decision - 1]]["triangle5"])
+    scrollingText(npc[npc["npclist"][decision - 1]]["description"], 2, 0.01)
+    flow = ask("", 2, ["Set this as character plan", "Return to plan selection"], 0.05)
+    if flow == 1:
+        characterPlans[curChar] = npc["npclist"][decision - 1]
+    else:
+        print(format.clear)
+        changeCharacterPlan(curChar)
     print(format.clear)
 
 def changeCharacterAttributes(curChar):

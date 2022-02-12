@@ -864,6 +864,7 @@ def changeCharacterPlan(curChar):
     print(npc[npc["npclist"][decision - 1]]["triangle3"])
     print(npc[npc["npclist"][decision - 1]]["triangle4"])
     print(npc[npc["npclist"][decision - 1]]["triangle5"])
+    print()
     scrollingText(npc[npc["npclist"][decision - 1]]["description"], 2, 0.01)
     flow = ask("", 2, ["Set this as character plan", "Return to plan selection"], 0.05)
     if flow == 1:

@@ -32,7 +32,8 @@ npc = json.load(open(filename, "r"))
 """
 class format:
     mode = "Colourmatic"
-    clear = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+    clear = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+    strikethrough = "\u001b[29m"
     underline = "\u001b[4m"
     italic = "\u001b[3m"
     dim = "\u001b[2m"
@@ -172,7 +173,7 @@ def generateCharacterList(number):
     return charList
 
 def generateEvents():
-    eventNum = random.randint(1, 5)
+    eventNum = random.randint(1, len(characterNames) / 2)
     eventList = []
     while len(eventList) < eventNum:
         events = ["saw_participant", "heard_participant", "trace", "attacked", "looting", "looting", "looting"]
@@ -397,6 +398,14 @@ def attacked(characters = []):
         characters.append(generateCharacterList(1))
     ran = False
     scrollingText(format.bold + characterNames[characters[1]] + " engages " + characterNames[characters[0]] + "." + format.end, 2, 0.01)
+    if len(characterItems[characters[1]]) > 0:
+        scrollingText(characterNames[characters[1]] + " has a " + items[characterItems[characters[1]][0]]["name"].lower() + ".", 2, 0.01)
+    else:
+        scrollingText(characterNames[characters[1]] + " has is using their fists.", 2, 0.01)
+    if len(characterItems[characters[0]]) > 0:
+        scrollingText(characterNames[characters[0]] + " has a " + items[characterItems[characters[0]][0]]["name"].lower() + ".", 2, 0.01)
+    else:
+        scrollingText(characterNames[characters[0]] + " has is using their fists.", 2, 0.01)
     log.append(str(days) + ". " + characterNames[characters[0]] + " got attacked by " + characterNames[characters[1]] + ".")
     print()
     decision = ask("Would you like to view this combat turn by turn?", 2, ["Turn by turn", "Skip to result"], 0.01)
@@ -494,6 +503,14 @@ def attack(characters = []):
         characters.append(generateCharacterList(1))
     ran = False
     scrollingText(format.bold + characterNames[characters[0]] + " attacks " + characterNames[characters[1]] + "." + format.end, 2, 0.01)
+    if len(characterItems[characters[0]]) > 0:
+        scrollingText(characterNames[characters[0]] + " has a " + items[characterItems[characters[0]][0]]["name"].lower() + ".", 2, 0.01)
+    else:
+        scrollingText(characterNames[characters[0]] + " has is using their fists.", 2, 0.01)
+    if len(characterItems[characters[1]]) > 0:
+        scrollingText(characterNames[characters[1]] + " has a " + items[characterItems[characters[1]][0]]["name"].lower() + ".", 2, 0.01)
+    else:
+        scrollingText(characterNames[characters[1]] + " has is using their fists.", 2, 0.01)
     log.append(str(days) + ". " + characterNames[characters[0]] + " attacked " + characterNames[characters[1]] + ".")
     print()
     decision = ask("Would you like to view this combat turn by turn?", 2, ["Turn by turn", "Skip to result"], 0.01)
@@ -599,7 +616,7 @@ def looting():
                 log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"].lower() + ".")
             else:
                 if len(characterItems[characters[0]]) > 3:
-                    if items[lootItem]["grade"] >= items[characterItems[characters[0]][0]]["name"]:
+                    if items[lootItem]["grade"] >= items[characterItems[characters[0]][0]]["grade"]:
                         scrollingText(characterNames[characters[0]] + " drops their " + items[characterItems[characters[0]][0]]["name"].lower() + " to pick up the cache's " + items[lootItem]["name"].lower() + ".", 2, 0.01)
                         log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"].lower() + ".")
                         characterItems[characters[0]][0] = lootItem
@@ -620,7 +637,7 @@ def looting():
             log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"].lower() + ".")
         else:
             if len(characterItems[characters[0]]) > 3:
-                if items[lootItem]["grade"] >= items[characterItems[characters[0]][0]]["name"]:
+                if items[lootItem]["grade"] >= items[characterItems[characters[0]][0]]["grade"]:
                     scrollingText(characterNames[characters[0]] + " drops their " + items[characterItems[characters[0]][0]]["name"].lower() + " to pick up the cache's " + items[lootItem]["name"].lower() + ".", 2, 0.01)
                     log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"].lower() + ".")
                     characterItems[characters[0]][0] = lootItem
@@ -645,7 +662,7 @@ def looting():
                 log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"].lower() + ".")
             else:
                 if len(characterItems[characters[0]]) > 3:
-                    if items[lootItem]["grade"] >= items[characterItems[characters[0]][0]]["name"]:
+                    if items[lootItem]["grade"] >= items[characterItems[characters[0]][0]]["grade"]:
                         scrollingText(characterNames[characters[0]] + " drops their " + items[characterItems[characters[0]][0]]["name"].lower() + " to pick up the cache's " + items[lootItem]["name"].lower() + ".", 2, 0.01)
                         log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"].lower() + ".")
                         characterItems[characters[0]][0] = lootItem
@@ -670,7 +687,13 @@ def viewCharacters():
     options = []
     run = 0
     while len(options) < len(characterNames):
-        options.append(characterNames[run])
+        if characterHealth[run] > 0:
+            if len(characterItems[run]) > 0:
+                options.append(characterNames[run] + " [" + format.red + str(characterHealth[run]) + format.end + "] (" + format.green + items[characterItems[run][0]]["name"] + format.end + ")")
+            else:
+                options.append(characterNames[run] + " [" + format.red + str(characterHealth[run]) + format.end + "] (" + format.green + "Fists" + format.end + ")")
+        else:
+            options.append(format.red + format.strikethrough + characterNames[run] + format.end)
         run = run + 1
     options.append("Exit")
     while options[decision - 1] != "Exit":
@@ -1047,7 +1070,8 @@ def settings():
         if newmode == 1:
             class format:
                 mode = "Colourmatic"
-                clear = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+                clear = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+                strikethrough = "\u001b[29m"
                 underline = "\u001b[4m"
                 italic = "\u001b[3m"
                 dim = "\u001b[2m"
@@ -1059,7 +1083,8 @@ def settings():
         if newmode == 2:
             class format:
                 mode = "Markdown"
-                clear = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+                clear = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+                strikethrough = "\u001b[29m"
                 underline = "\u001b[4m"
                 italic = "\u001b[3m"
                 dim = "\u001b[2m"
@@ -1071,7 +1096,8 @@ def settings():
         if newmode == 3:
             class format:
                 mode = "Plain text"
-                clear = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+                clear = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+                strikethrough = ""
                 underline = ""
                 italic = ""
                 dim = ""

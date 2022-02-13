@@ -278,7 +278,7 @@ def startSim():
 
 def sim():
     global days
-    while len(deadCharacters) < len(characterNames) - 1:
+    while len(deadCharacters) <= len(characterNames) - 1:
         printDayGUI()
         healAll()
         days = days + 1

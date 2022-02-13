@@ -200,7 +200,7 @@ def mainMenu():
     print("               /__  / / __  / / /_/ / / // // / / /_/ / / /_/ / / // // / / /||/ /")
     print("              /____/ /_/ /_/ /_____/ /_______/ /_____/ /_____/ /_______/ /_/ |__/")
     print(format.end)
-    scrollingText("v0.1 DEMO | Feb 13, 2022 build", 2, 0.02)
+    scrollingText("v0.1.5 DEMO | Feb 13, 2022 build", 2, 0.02)
     decision = ask("", 2, ["Start new game", "Create characters", "Settings", "Exit"], 0.03)
     if decision == 1:
         startSim()

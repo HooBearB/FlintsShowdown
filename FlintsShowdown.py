@@ -735,11 +735,12 @@ def viewLog():
 def healAll():
     run = 0
     while run < len(characterHealth):
-        if characterHealth[run] + 20 <= 100:
-            characterHealth[run] = characterHealth[run] + 20
-        else:
-            characterHealth[run] = characterHealth[run] + (100 - characterHealth[run])
-        run = run + 1
+        if characterHealth[run] > 0:
+            if characterHealth[run] + 20 <= 100:
+                characterHealth[run] = characterHealth[run] + 20
+            else:
+                characterHealth[run] = characterHealth[run] + (100 - characterHealth[run])
+            run = run + 1
 
 def printWinner():
     run = 0

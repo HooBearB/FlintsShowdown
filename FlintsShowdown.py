@@ -331,7 +331,7 @@ def sawParticipant():
         if rand == 4:
             attacked(characters)
         else:
-            scrollingText(characterNames[characters[0]] + "runs away.", 2, 0.01)
+            scrollingText(characterNames[characters[0]] + " runs away.", 2, 0.01)
     if npc[characterPlans[characters[0]]]["saw_participant"] == "communicate":
         scrollingText(characterNames[characters[0]] + " attempts to negotiate with " + characterNames[characters[1]] + ".", 2, 0.01)
         rand = random.randint(1, 4)

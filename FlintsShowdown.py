@@ -740,7 +740,7 @@ def healAll():
                 characterHealth[run] = characterHealth[run] + 20
             else:
                 characterHealth[run] = characterHealth[run] + (100 - characterHealth[run])
-            run = run + 1
+        run = run + 1
 
 def printWinner():
     run = 0

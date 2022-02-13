@@ -10,6 +10,25 @@ you can put all your friends into.
 #Character building finished: February 7th, 2022
 #Event flow finished: February 11th, 2022
 
+'''
+TO DO:
+- DIALOGUE! HAVE THEM TALK!
+- Hunger system???? Y'know, like the hunger games???????????
+- Appendage system, getting wounded affects combat, etc
+- Armour!
+- Medical supplies, using them heals specific parts
+- Crafting? Maybe?
+- Factions/grouping
+    - Group meetups
+    - Group conversations
+    - Inter-person dialogue (Custom support?)
+        - Flint and mule are in combat
+        - Flint says "remember what you sent me in our DMs?"
+        - Flint suplexes mule
+- More items
+- Improved NPCs
+'''
+
 import random
 import os
 from re import L
@@ -278,7 +297,7 @@ def startSim():
 
 def sim():
     global days
-    while len(deadCharacters) <= len(characterNames) - 1:
+    while len(deadCharacters) < len(characterNames) - 1:
         printDayGUI()
         healAll()
         days = days + 1
@@ -676,11 +695,13 @@ def looting():
                     log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"].lower() + ".")
 
 def nightfall():
-    decision = ask("Nightfall actions:", 2, ["View characters", "View log", "Continue to day"], 0.05)
+    decision = ask("Nightfall actions:", 2, ["View characters", "View log", "Open settings", "Continue to day"], 0.05)
     if decision == 1:
         viewCharacters()
     if decision == 2:
         viewLog()
+    if decision == 3:
+        settings()
 
 def viewCharacters():
     decision = 1

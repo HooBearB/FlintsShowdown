@@ -12,12 +12,12 @@ you can put all your friends into.
 
 '''
 TO DO:
-- DIALOGUE! HAVE THEM TALK!
+- Dialogue
 - Hunger system???? Y'know, like the hunger games???????????
 - Appendage system, getting wounded affects combat, etc
-- Armour!
+- Armour
 - Medical supplies, using them heals specific parts
-- Crafting? Maybe?
+- Crafting (Maybe?)
 - Factions/grouping
     - Group meetups
     - Group conversations
@@ -192,7 +192,7 @@ def generateCharacterList(number):
     return charList
 
 def generateEvents():
-    eventNum = random.randint(1, len(characterNames) / 2)
+    eventNum = random.randint(1, int(len(characterNames) / 2))
     eventList = []
     while len(eventList) < eventNum:
         events = ["saw_participant", "heard_participant", "trace", "attacked", "looting", "looting", "looting"]
@@ -217,9 +217,13 @@ def mainMenu():
     print("                 _____  __  __  ______  __    __  ____    ______  __    __  __   __")
     print("                /  __/ / /_/ / / __  / / /__ / / / __ |  / __  / / /__ / / /  | / /")
     print("               /__  / / __  / / /_/ / / // // / / /_/ / / /_/ / / // // / / /||/ /")
-    print("              /____/ /_/ /_/ /_____/ /_______/ /_____/ /_____/ /_______/ /_/ |__/")
+    print("              /____/ /_/ /_/ /_____/ /_______/ /_____/ /_____/ /_______/ /_/ |__/" + format.end + format.red + format.italic)
+    print("                                  _▄▂____________________▂_")
+    print("                           ______/   ▅▅▅  _________________|")
+    print("                          |     _________|_╷_╷_╷_╷_╷_/")
+    print("                          |____/(_/")
     print(format.end)
-    scrollingText("v0.1.5 DEMO | Feb 13, 2022 build", 2, 0.02)
+    scrollingText(format.bold + format.italic + "v0.1.5 DEMO | Feb 13, 2022 build" + format.end, 2, 0.02)
     decision = ask("", 2, ["Start new game", "Create characters", "Settings", "Exit"], 0.03)
     if decision == 1:
         startSim()
@@ -254,25 +258,29 @@ def startSim():
             characterSaves.pop(run)
         run = run + 1
     if len(characterSaves) != 0:
+        characterSaves.append("Exit")
         filenumber = ask("Load characters:", 2, characterSaves, 0.01)
-        file = os.path.join(foldername, os.path.join(characterSaves[filenumber - 1]))
-        data = json.load(open(file, "r"))
-        creationMode = data["creationmode"]
-        characterNames = []
-        characterPlans = []
-        characterAttributes = []
-        run = 0
-        while run < data["length"]:
-            characterNames.append(data[str(run)]["name"])
-            characterPlans.append(data[str(run)]["plan"])
-            templist = []
-            templist.append(data[str(run)]["melee"])
-            templist.append(data[str(run)]["ranged"])
-            templist.append(data[str(run)]["endurance"])
-            templist.append(data[str(run)]["strength"])
-            templist.append(data[str(run)]["communication"])
-            characterAttributes.append(templist)
-            run = run + 1
+        if characterSaves[filenumber - 1] != "Exit":
+            file = os.path.join(foldername, os.path.join(characterSaves[filenumber - 1]))
+            data = json.load(open(file, "r"))
+            creationMode = data["creationmode"]
+            characterNames = []
+            characterPlans = []
+            characterAttributes = []
+            run = 0
+            while run < data["length"]:
+                characterNames.append(data[str(run)]["name"])
+                characterPlans.append(data[str(run)]["plan"])
+                templist = []
+                templist.append(data[str(run)]["melee"])
+                templist.append(data[str(run)]["ranged"])
+                templist.append(data[str(run)]["endurance"])
+                templist.append(data[str(run)]["strength"])
+                templist.append(data[str(run)]["communication"])
+                characterAttributes.append(templist)
+                run = run + 1
+        else:
+            mainMenu()
     else:
         print()
         scrollingText("Directory is empty!", 2, 0.01)
@@ -710,11 +718,11 @@ def viewCharacters():
     while len(options) < len(characterNames):
         if characterHealth[run] > 0:
             if len(characterItems[run]) > 0:
-                options.append(characterNames[run] + " [" + format.red + str(characterHealth[run]) + format.end + "] (" + format.green + items[characterItems[run][0]]["name"] + format.end + ")")
+                options.append(characterNames[run] + " [" + format.red + str(characterHealth[run]) + format.end + "] (" + format.green + items[characterItems[run][0]]["name"] + format.end + ") {" + format.blue + str(characterKills[run]) + format.end + "}")
             else:
-                options.append(characterNames[run] + " [" + format.red + str(characterHealth[run]) + format.end + "] (" + format.green + "Fists" + format.end + ")")
+                options.append(characterNames[run] + " [" + format.red + str(characterHealth[run]) + format.end + "] (" + format.green + "Fists" + format.end + ") {" + format.blue + str(characterKills[run]) + format.end + "}")
         else:
-            options.append(format.red + format.strikethrough + characterNames[run] + format.end)
+            options.append(format.red + format.strikethrough + characterNames[run] + format.end + "{" + format.blue + str(characterKills[run]) + format.end + "}")
         run = run + 1
     options.append("Exit")
     while options[decision - 1] != "Exit":
@@ -1001,31 +1009,35 @@ def saveLoadCharacters():
                 characterSaves.pop(run)
             run = run + 1
         if len(characterSaves) != 0:
+            characterSaves.append("Exit")
             filenumber = ask("Load characters:", 2, characterSaves, 0.01)
-            file = os.path.join(foldername, os.path.join(characterSaves[filenumber - 1]))
-            data = json.load(open(file, "r"))
-            if data["creationmode"] != creationMode:
-                print()
-                decision = ask("This file was created in a different mode, would you like to switch to the file's mode?", 2, ["Change mode to file", "Back to character creation"], 0.01)
-                if decision == 1:
-                    creationMode = data["creationmode"]
-                if decision == 2:
-                    createCharacters()
-            characterNames = []
-            characterPlans = []
-            characterAttributes = []
-            run = 0
-            while run < data["length"]:
-                characterNames.append(data[str(run)]["name"])
-                characterPlans.append(data[str(run)]["plan"])
-                templist = []
-                templist.append(data[str(run)]["melee"])
-                templist.append(data[str(run)]["ranged"])
-                templist.append(data[str(run)]["endurance"])
-                templist.append(data[str(run)]["strength"])
-                templist.append(data[str(run)]["communication"])
-                characterAttributes.append(templist)
-                run = run + 1
+            if characterSaves[filenumber - 1] != "Exit":
+                file = os.path.join(foldername, os.path.join(characterSaves[filenumber - 1]))
+                data = json.load(open(file, "r"))
+                if data["creationmode"] != creationMode:
+                    print()
+                    decision = ask("This file was created in a different mode, would you like to switch to the file's mode?", 2, ["Change mode to file", "Back to character creation"], 0.01)
+                    if decision == 1:
+                        creationMode = data["creationmode"]
+                    if decision == 2:
+                        createCharacters()
+                characterNames = []
+                characterPlans = []
+                characterAttributes = []
+                run = 0
+                while run < data["length"]:
+                    characterNames.append(data[str(run)]["name"])
+                    characterPlans.append(data[str(run)]["plan"])
+                    templist = []
+                    templist.append(data[str(run)]["melee"])
+                    templist.append(data[str(run)]["ranged"])
+                    templist.append(data[str(run)]["endurance"])
+                    templist.append(data[str(run)]["strength"])
+                    templist.append(data[str(run)]["communication"])
+                    characterAttributes.append(templist)
+                    run = run + 1
+            else:
+                saveLoadCharacters()
         else:
             print()
             print("  Directory is empty!")

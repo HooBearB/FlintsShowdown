@@ -223,7 +223,7 @@ def mainMenu():
     print("                          |     _________|_╷_╷_╷_╷_╷_/")
     print("                          |____/(_/")
     print(format.end)
-    scrollingText(format.bold + format.italic + "v0.1.5 DEMO | Feb 13, 2022 build" + format.end, 2, 0.02)
+    scrollingText(format.bold + format.italic + "v0.1.5 DEMO / Feb 13, 2022 build" + format.end, 2, 0.02)
     decision = ask("", 2, ["Start new game", "Create characters", "Settings", "Exit"], 0.03)
     if decision == 1:
         startSim()
@@ -703,13 +703,11 @@ def looting():
                     log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"].lower() + ".")
 
 def nightfall():
-    decision = ask("Nightfall actions:", 2, ["View characters", "View log", "Open settings", "Continue to day"], 0.05)
+    decision = ask("Nightfall actions:", 2, ["View characters", "View log", "Continue to day"], 0.05)
     if decision == 1:
         viewCharacters()
     if decision == 2:
         viewLog()
-    if decision == 3:
-        settings()
 
 def viewCharacters():
     decision = 1
@@ -722,7 +720,7 @@ def viewCharacters():
             else:
                 options.append(characterNames[run] + " [" + format.red + str(characterHealth[run]) + format.end + "] (" + format.green + "Fists" + format.end + ") {" + format.blue + str(characterKills[run]) + format.end + "}")
         else:
-            options.append(format.red + format.strikethrough + characterNames[run] + format.end + "{" + format.blue + str(characterKills[run]) + format.end + "}")
+            options.append(format.red + format.strikethrough + characterNames[run] + format.end + " {" + format.blue + str(characterKills[run]) + format.end + "}")
         run = run + 1
     options.append("Exit")
     while options[decision - 1] != "Exit":
@@ -775,10 +773,14 @@ def printWinner():
     run = 0
     while characterNames[run] in deadCharacters:
         run = run + 1
-    scrollingText(characterNames[run] + " is the last one alive.", 2, 0.01)
+    print(format.clear)
+    scrollingText(format.green + characterNames[run] + format.end + " is the last one alive.", 2, 0.01)
     scrollingText("They win.", 2, 0.01)
     print()
-    scrollingText("Kills: " + str(characterKills[run]), 2, 0.01)
+    scrollingText("           Kills: " + str(characterKills[run]), 2, 0.01)
+    scrollingText("Last used weapon: " + characterItems[run][0], 2, 0.01)
+    askToContinue()
+    mainMenu()
 
 def selectSimMode():
     global creationMode

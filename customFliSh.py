@@ -84,6 +84,7 @@ print("    | |" + format.end + format.red + "  / /__" + format.end + format.blue
 print("    |_|" + format.end + format.red + " /____/" + format.end + format.blue + "/_/   " + format.end + format.green + "/____/" + format.end)
 print()
 print(format.bold + "    CustomFliSh" + format.end)
+print(format.italic + "    Mod making tool for Flint's Showdown" + format.end)
 print("    Compatable with FliSh v0.2.0")
 print()
-decision = ask("", 2, ["Create CFS file", "Open CFS file"])
+decision = ask("CFS is currently a work in progress, please bear with me!", 2, ["Create CFS file", "Open CFS file"])

@@ -1,12 +1,13 @@
 {
-    "list": ["boastful"],
+    "list": ["cynic"],
     "template":{
         "meleegot": [],
         "rangedgot": [],
         "havebetter": [],
         "negotiating": [],
         "negotiatedone": [],
-        "negotiatefail": []
+        "negotiatefail": [],
+        "": []
     },
     "program": {
         "menu": ["Getting weird text printed out? Remember to check settings and switch to \"plain text mode\"!",
@@ -18,9 +19,6 @@
                  "Might get finished!",
                  "Suggestions are always welcome!",
                  "Have any issues? Send a bug report to me."]
-    },
-    "boastful": {
-        
     },
     "cynic": {
 

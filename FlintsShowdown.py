@@ -232,7 +232,7 @@ def mainMenu():
     print("  \_╷_╷_╷_|  __|" + format.end + format.bold + format.blue + "  /__  / / __  / / /_/ / / // // / / /_/ / / /_/ / / // // / / /||/ /" + format.end + format.bold + format.red)
     print("          ╵-╵   " + format.end + format.bold + format.blue + " /____/ /_/ /_/ /_____/ /_______/ /_____/ /_____/ /_______/ /_/ |__/" + format.end + format.italic + format.dim)
     print()
-    scrollingText(fetchDialogue("program", "menu")  + format.end, 2, 0.01)
+    scrollingText(fetchDialogue("program", "menu") + format.end, 2, 0.01)
     scrollingText(format.bold + format.italic + "v0.2.0 DEMO / Feb 20, 2022 build" + format.end, 2, 0.02)
     decision = ask("", 2, ["Start new game", "Create characters", "Open content pack", "Settings", "Exit"], 0.03)
     if decision == 1:
@@ -1123,9 +1123,9 @@ def openPack():
     directory = os.path.dirname(__file__)
     foldername = os.path.join(directory, ('contentPacks/*'))
     contentFolders = glob.glob(foldername)
-    display = ["Default pack"]
+    display = []
     run = 0
-    while len(display) < len(contentFolders) + 1:
+    while len(display) < len(contentFolders):
         currFileName = os.path.join(contentFolders[run], "packInfo.json")
         try:
             infoFile = json.load(open(currFileName, "r"))
@@ -1136,44 +1136,96 @@ def openPack():
             scrollingText("the original download, or write one yourself using CFS.", 2, 0.01)
             display.append(format.red + "Invalid content pack" + format.end)
         run = run + 1
+    display.append("Default pack")
+    display.append("Exit")
     print()
     decision = ask("Choose content pack:", 2, display, 0.05)
-    if display[decision - 1] != "Default pack":
-        try:
+    print()
+    if display[decision - 1] != "Exit":
+        if display[decision - 1] != "Default pack":
             packDirectory = os.path.join(foldername, contentFolders[decision - 1])
+            loadingFile = os.path.join(packDirectory, "packInfo.json")
+            infoFile = json.load(open(loadingFile, "r"))
+            display.append(infoFile["name"])
+            run = 0
+            if infoFile["status"] == "Unfinished":
+                scrollingText(format.underline + format.bold + format.red + infoFile["name"] + format.end, 2, 0.01)
+            if infoFile["status"] == "In progress":
+                scrollingText(format.underline + format.bold + format.blue + infoFile["name"] + format.end, 2, 0.01)
+            if infoFile["status"] == "Finished":
+                scrollingText(format.underline + format.bold + format.green + infoFile["name"] + format.end, 2, 0.01)
+            while run < len(infoFile["description"]):
+                scrollingText(infoFile["description"][run], 2, 0.01)
+                run = run + 1
             if "items" in infoFile["content"]:
-                filename = os.path.join(packDirectory, ('json/items.json'))
-                items = json.load(open(filename, "r"))
-                contentPacks.items = infoFile["id"]
+                scrollingText("This pack includes " + format.red + "items" + format.end + ".", 2, 0.01)
             if "npcs" in infoFile["content"]:
-                filename = os.path.join(packDirectory, ('json/npcs.json'))
-                npc = json.load(open(filename, "r"))
-                contentPacks.npc = infoFile["id"]
+                scrollingText("This pack includes " + format.blue + "NPCs" + format.end + ".", 2, 0.01)
             if "dialogue" in infoFile["content"]:
-                filename = os.path.join(packDirectory, ('json/dialogue.json'))
-                dialogue = json.load(open(filename, "r"))
-                contentPacks.dialogue = infoFile["id"]
-        except:
+                scrollingText("This pack includes " + format.green + "dialogue" + format.end + ".", 2, 0.01)
             print()
-            scrollingText("Sorry, we couldn't load this content pack.", 2, 0.01)
-            scrollingText("Make sure the packInfo.json is filled out properly!", 2, 0.01)
+            decision = ask("Load this package?", 2, ["Yes", "No"], 0.05)
             print()
-            askToContinue()
-            mainMenu()
+            if decision == 1:
+                if "items" in infoFile["content"]:
+                    try:
+                        filename = os.path.join(packDirectory, ('json/items.json'))
+                        items = json.load(open(filename, "r"))
+                        contentPacks.items = infoFile["id"]
+                        scrollingText("Items JSON file loaded from " + infoFile["name"] + ".", 2, 0.01)
+                    except:
+                        print()
+                        scrollingText("Sorry, we couldn't load the items file from this content pack.", 2, 0.01)
+                        scrollingText("Make sure the packInfo.json is filled out properly!", 2, 0.01)
+                        print()
+                        askToContinue()
+                        openPack()
+                if "npcs" in infoFile["content"]:
+                    try:
+                        filename = os.path.join(packDirectory, ('json/npcs.json'))
+                        npc = json.load(open(filename, "r"))
+                        contentPacks.npc = infoFile["id"]
+                        scrollingText("NPC JSON file loaded from " + infoFile["name"] + ".", 2, 0.01)
+                    except:
+                        print()
+                        scrollingText("Sorry, we couldn't load the NPC file from this content pack.", 2, 0.01)
+                        scrollingText("Make sure the packInfo.json is filled out properly!", 2, 0.01)
+                        print()
+                        askToContinue()
+                        openPack()
+                if "dialogue" in infoFile["content"]:
+                    try:
+                        filename = os.path.join(packDirectory, ('json/dialogue.json'))
+                        dialogue = json.load(open(filename, "r"))
+                        contentPacks.dialogue = infoFile["id"]
+                        scrollingText("Dialogue JSON file loaded from " + infoFile["name"] + ".", 2, 0.01)
+                    except:
+                        print()
+                        scrollingText("Sorry, we couldn't load the dialogue file from this content pack.", 2, 0.01)
+                        scrollingText("Make sure the packInfo.json is filled out properly!", 2, 0.01)
+                        print()
+                        askToContinue()
+                        openPack()
+                scrollingText("All listed content from " + infoFile["name"] + " loaded.", 2, 0.01)
+                print()
+                askToContinue()
+            else:
+                print(format.clear)
+                openPack()
+        else:
+            directory = os.path.dirname(__file__)
+            filename = os.path.join(directory, ('json/items.json'))
+            items = json.load(open(filename, "r"))
+            filename = os.path.join(directory, ('json/npcs.json'))
+            npc = json.load(open(filename, "r"))
+            filename = os.path.join(directory, ('json/dialogue.json'))
+            dialogue = json.load(open(filename, "r"))
+            contentPacks.items = "Default pack"
+            contentPacks.npc = "Default pack"
+            contentPacks.dialogue = "Default pack"
+        mainMenu()
     else:
-        directory = os.path.dirname(__file__)
-        filename = os.path.join(directory, ('json/items.json'))
-        items = json.load(open(filename, "r"))
-        filename = os.path.join(directory, ('json/npcs.json'))
-        npc = json.load(open(filename, "r"))
-        filename = os.path.join(directory, ('json/dialogue.json'))
-        dialogue = json.load(open(filename, "r"))
-        contentPacks.items = "Default pack"
-        contentPacks.npc = "Default pack"
-        contentPacks.dialogue = "Default pack"
-    
-    mainMenu()
-
+        mainMenu()
 
 def settings():
     global format

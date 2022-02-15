@@ -1,7 +1,8 @@
 {
-    "name": "Real Mod",
-    "id": "rm",
-    "description": ["Real Mod is a content pack that replaces all items with counterparts that ignore balance",
+    "name": "Realism++",
+    "id": "realism_del",
+    "status": "In progress",
+    "description": ["Realism++ is a content pack that replaces all items with counterparts that ignore balance",
                     "in order to deliver a more realistic result to combat."],
     "content": ["items"]
 }

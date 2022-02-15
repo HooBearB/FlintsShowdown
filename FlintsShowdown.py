@@ -9,30 +9,13 @@ you can put all your friends into.
 #JSON finished: February 1st, 2022
 #Character building finished: February 7th, 2022
 #Event flow finished: February 11th, 2022
+currentVersion = "v0.2.0"
 
-'''
-TO DO:
-- Dialogue (Will be completed in 0.2.0)
-- Hunger system???? Y'know, like the hunger games???????????
-- Appendage system, getting wounded affects combat, etc
-- Armour
-- Medical supplies, using them heals specific parts
-- Crafting (Maybe?)
-- Factions/grouping
-    - Group meetups
-    - Group conversations
-    - Inter-person dialogue (Custom support?)
-        - Flint and mule are in combat
-        - Flint says "remember what you sent me in our DMs?"
-        - Flint suplexes mule
-- More items
-- Improved NPCs
-'''
 
-from importlib.resources import contents
+
+from pickle import FALSE
 import random
 import os
-from re import L
 import time
 import json
 import glob
@@ -81,6 +64,19 @@ def scrollingText(message, indent, delay):
         time.sleep(delay)
         run = run + 1
     print("")
+
+def scrollingDialogue(message, indent, delay):
+    run = 0
+    while run < indent:
+        print(" ", end = "")
+        run = run + 1
+    run = 0
+    print("\"", end = "")
+    while run < len(message):
+        print(message[run : run + 1], end = "")
+        time.sleep(delay)
+        run = run + 1
+    print("\"")
 
 def ask(message, indent, options, delay, lookingFor = ""):
     run = 0
@@ -275,22 +271,64 @@ def startSim():
         if characterSaves[filenumber - 1] != "Exit":
             file = os.path.join(foldername, os.path.join(characterSaves[filenumber - 1]))
             data = json.load(open(file, "r"))
-            creationMode = data["creationmode"]
-            characterNames = []
-            characterPlans = []
-            characterAttributes = []
-            run = 0
-            while run < data["length"]:
-                characterNames.append(data[str(run)]["name"])
-                characterPlans.append(data[str(run)]["plan"])
-                templist = []
-                templist.append(data[str(run)]["melee"])
-                templist.append(data[str(run)]["ranged"])
-                templist.append(data[str(run)]["endurance"])
-                templist.append(data[str(run)]["strength"])
-                templist.append(data[str(run)]["communication"])
-                characterAttributes.append(templist)
-                run = run + 1
+            attempt = False
+            try:
+                npcFile = data["npcPack"]
+                dialogueFile = data["dialoguePack"]
+                attempt = True
+            except:
+                print()
+                scrollingText("This file was made before v0.2.0. You can manually update this file", 2, 0.01)
+                scrollingText("to match a current file, or make a new file in the program.", 2, 0.01)
+                print()
+                askToContinue()
+                mainMenu()
+            if attempt:
+                if data["npcPack"] == contentPacks.npc and data["dialoguePack"] == contentPacks.dialogue:
+                    attempt = False
+                    try: 
+                        fileVersion = data["version"]
+                        attempt = True
+                    except:
+                        print()
+                        scrollingText("This file was made before v0.2.0. You can manually update this file", 2, 0.01)
+                        scrollingText("to match a current file, or make a new file in the program.", 2, 0.01)
+                        print()
+                        askToContinue()
+                        mainMenu()
+                    if attempt:
+                        if fileVersion == currentVersion:
+                            creationMode = data["creationmode"]
+                            characterNames = []
+                            characterPlans = []
+                            characterAttributes = []
+                            characterDialogue = []
+                            run = 0
+                            while run < data["length"]:
+                                characterNames.append(data[str(run)]["name"])
+                                characterPlans.append(data[str(run)]["plan"])
+                                characterDialogue.append(data[str(run)]["dialogue"])
+                                templist = []
+                                templist.append(data[str(run)]["melee"])
+                                templist.append(data[str(run)]["ranged"])
+                                templist.append(data[str(run)]["endurance"])
+                                templist.append(data[str(run)]["strength"])
+                                templist.append(data[str(run)]["communication"])
+                                characterAttributes.append(templist)
+                                run = run + 1
+                        else:
+                            print()
+                            scrollingText("This file was created with a previous version of FliSh. You can ", 2, 0.01)
+                            scrollingText("can manually update this file to match a current file, or make a new file in the program.", 2, 0.01)
+                            print()
+                            askToContinue()
+                            mainMenu()
+                else:
+                    scrollingText("Sorry, this character file was made with a different set of content packs.", 2, 0.01)
+                    if data["npcPack"] != contentPacks.npc:
+                        scrollingText("This file takes an npc content pack with the ID of " + data["npcPack"] + " while you have " + contentPacks.npc + " currently enabled.")
+                    if data["dialoguePack"] != contentPacks.dialogue:
+                        scrollingText("This file takes a dialogue content pack with the ID of " + data["dialoguePack"] + " while you have " + contentPacks.dialogue + " currently enabled.")
         else:
             mainMenu()
     else:
@@ -384,6 +422,7 @@ def heardParticipant():
     characters = generateCharacterList(2)
     scrollingText(characterNames[characters[0]] + " hears something.", 2, 0.01)
     log.append(str(days) + ". " + characterNames[characters[0]] + " heard something.")
+    scrollingDialogue(fetchDialogue(characterDialogue[characters[0]], "heard"))
     time.sleep(0.5)
     if npc[characterPlans[characters[0]]]["heard_participant"] == "loud":
         rand = random.randint(1, 4)
@@ -799,28 +838,30 @@ def selectSimMode():
     global characterNames
     global characterPlans
     global characterAttributes
+    global characterDialogue
+
     print(format.clear)
     time.sleep(0.5)
     scrollingText(";showdown.detailed", 2, 0.01)
-    time.sleep(0.3)
+    time.sleep(0.05)
     scrollingText("- Full simulation", 4, 0.01)
     scrollingText("- Choose NPC plan", 4, 0.01)
     scrollingText("- Custom attributes", 4, 0.01)
-    time.sleep(0.3)
+    time.sleep(0.05)
     print()
     scrollingText(";showdown.adaptable", 2, 0.01)
-    time.sleep(0.3)
+    time.sleep(0.05)
     scrollingText("- Full simulation", 4, 0.01)
     scrollingText("- Random NPC plan", 4, 0.01)
     scrollingText("- Custom attributes", 4, 0.01)
-    time.sleep(0.3)
+    time.sleep(0.05)
     print()
     scrollingText(";showdown.simple", 2, 0.01)
-    time.sleep(0.3)
+    time.sleep(0.05)
     scrollingText("- Partial simulation", 4, 0.01)
     scrollingText("- Random NPC plan", 4, 0.01)
     scrollingText("- All have same attributes", 4, 0.01)
-    time.sleep(0.5)
+    time.sleep(0.1)
     print()
     decision = ask("Select a creation mode:", 2, ["Detailed", "Adaptable", "Simple"], 0.01)
     if decision == 1:
@@ -832,11 +873,13 @@ def selectSimMode():
     characterNames = ["Joe Generic"]
     characterPlans = ["offensive"]
     characterAttributes = [[0, 0, 0, 0, 0]]
+    characterDialogue = ["cynic"]
 
 def createCharacters(currentCharacter = 0):
     global characterNames
     global characterPlans
     global characterAttributes
+    global characterDialogue
 
     print(format.clear)
     methods = []
@@ -863,9 +906,11 @@ def createCharacters(currentCharacter = 0):
             methods.append("Name")
             methods.append("NPC plan")
             methods.append("Attributes")
+            methods.append("Dialogue")
         if creationMode == "ada":
             methods.append("Name")
             methods.append("Attributes")
+            methods.append("Dialogue")
         if creationMode == "sim":
             methods.append("Name")
         methods.append("Switch character")
@@ -877,6 +922,7 @@ def createCharacters(currentCharacter = 0):
         print()
         scrollingText("Name: " + characterNames[currentCharacter], 2, 0.01)
         scrollingText("Plan: " + npc[characterPlans[currentCharacter]]["name"], 2, 0.01)
+        scrollingText("Dialogue: " + dialogue[characterDialogue[currentCharacter]]["name"], 2, 0.01)
         scrollingText("Current character: #" + str(currentCharacter + 1), 2, 0.01)
         print()
         print("          Melee: " + str(characterAttributes[currentCharacter][0]))
@@ -892,6 +938,8 @@ def createCharacters(currentCharacter = 0):
             changeCharacterPlan(currentCharacter)
         if methods[decision - 1] == "Attributes":
             changeCharacterAttributes(currentCharacter)
+        if methods[decision - 1] == "Dialogue":
+            changeCharacterDialogue(currentCharacter)
         if methods[decision - 1] == "Switch character":
             currentCharacter = switchCharacter(currentCharacter, characterNames)
         if methods[decision - 1] == "New character":
@@ -924,7 +972,7 @@ def changeCharacterPlan(curChar):
     while run < len(npc["npclist"]):
         npclist.append(npc[npc["npclist"][run]]["name"])
         run = run + 1
-    decision = ask("Choose character's NPC plan", 2, npclist, 0.01)
+    decision = ask("Choose character's NPC plan:", 2, npclist, 0.01)
     print(format.clear)
     print(npc[npc["npclist"][decision - 1]]["triangle1"])
     print(npc[npc["npclist"][decision - 1]]["triangle2"])
@@ -974,6 +1022,18 @@ def changeCharacterAttributes(curChar):
         decision = ask("", 2, ["Change melee", "Change ranged", "Change endurance", "Change strength", "Change communication", "Exit"], 0.01)
     print(format.clear)
 
+def changeCharacterDialogue(curChar):
+    global characterDialogue
+    list = []
+    run = 0
+    while run < len(dialogue["list"]):
+        list.append(dialogue[dialogue["list"][run]]["name"])
+        run = run + 1
+    print()
+    decision = ask("Choose character's dialogue set:", 2, list, 0.05)
+    characterDialogue[curChar] = dialogue["list"][decision - 1]
+    createCharacters(curChar)
+
 def switchCharacter(curChar, currentCharacters):
     print(format.clear)
     print("  ")
@@ -987,6 +1047,7 @@ def newCharacter(currentCharacters):
     characterNames.append("Unnamed character")
     characterPlans.append("defensive")
     characterAttributes.append([0, 0, 0, 0, 0])
+    characterDialogue.append("cynic")
     newCharacter = len(currentCharacters) - 1
     return newCharacter
 
@@ -1028,46 +1089,77 @@ def saveLoadCharacters():
             if characterSaves[filenumber - 1] != "Exit":
                 file = os.path.join(foldername, os.path.join(characterSaves[filenumber - 1]))
                 data = json.load(open(file, "r"))
-                if data["npcPack"] == contentPacks.npc and data["dialoguePack"] == contentPacks.dialogue:
-                    if data["creationmode"] != creationMode:
-                        print()
-                        decision = ask("This file was created in a different mode, would you like to switch to the file's mode?", 2, ["Change mode to file", "Back to character creation"], 0.01)
-                        if decision == 1:
-                            creationMode = data["creationmode"]
-                        if decision == 2:
-                            createCharacters()
-                    characterNames = []
-                    characterPlans = []
-                    characterAttributes = []
-                    run = 0
-                    while run < data["length"]:
-                        characterNames.append(data[str(run)]["name"])
-                        characterPlans.append(data[str(run)]["plan"])
-                        templist = []
-                        templist.append(data[str(run)]["melee"])
-                        templist.append(data[str(run)]["ranged"])
-                        templist.append(data[str(run)]["endurance"])
-                        templist.append(data[str(run)]["strength"])
-                        templist.append(data[str(run)]["communication"])
-                        characterAttributes.append(templist)
-                        run = run + 1
-                else:
-                    scrollingText("Sorry, this character file was made with a different set of content packs.", 2, 0.01)
-                    if data["npcPack"] != contentPacks.npc:
-                        scrollingText("This file takes an npc content pack with the ID of " + data["npcPack"] + " while you have " + contentPacks.npc + " currently enabled.")
-                    if data["dialoguePack"] != contentPacks.dialogue:
-                        scrollingText("This file takes a dialogue content pack with the ID of " + data["dialoguePack"] + " while you have " + contentPacks.dialogue + " currently enabled.")
+                attempt = False
+                try:
+                    npcFile = data["npcPack"]
+                    dialogueFile = data["dialoguePack"]
+                    attempt = True
+                except:
+                    print()
+                    scrollingText("This file was made before v0.2.0. You can manually update this file", 2, 0.01)
+                    scrollingText("to match a current file, or make a new file in the program.", 2, 0.01)
+                    print()
+                    askToContinue()
+                    mainMenu()
+                if attempt:
+                    if data["npcPack"] == contentPacks.npc and data["dialoguePack"] == contentPacks.dialogue:
+                        attempt = False
+                        try: 
+                            fileVersion = data["version"]
+                            attempt = True
+                        except:
+                            print()
+                            scrollingText("This file was made before v0.2.0. You can manually update this file", 2, 0.01)
+                            scrollingText("to match a current file, or make a new file in the program.", 2, 0.01)
+                            print()
+                            askToContinue()
+                            mainMenu()
+                        if attempt:
+                            if fileVersion == currentVersion:
+                                creationMode = data["creationmode"]
+                                characterNames = []
+                                characterPlans = []
+                                characterAttributes = []
+                                characterDialogue = []
+                                run = 0
+                                while run < data["length"]:
+                                    characterNames.append(data[str(run)]["name"])
+                                    characterPlans.append(data[str(run)]["plan"])
+                                    characterDialogue.append(data[str(run)]["dialogue"])
+                                    templist = []
+                                    templist.append(data[str(run)]["melee"])
+                                    templist.append(data[str(run)]["ranged"])
+                                    templist.append(data[str(run)]["endurance"])
+                                    templist.append(data[str(run)]["strength"])
+                                    templist.append(data[str(run)]["communication"])
+                                    characterAttributes.append(templist)
+                                    run = run + 1
+                            else:
+                                print()
+                                scrollingText("This file was created with a previous version of FliSh. You can ", 2, 0.01)
+                                scrollingText("can manually update this file to match a current file, or make a new file in the program.", 2, 0.01)
+                                print()
+                                askToContinue()
+                                mainMenu()
+                    else:
+                        scrollingText("Sorry, this character file was made with a different set of content packs.", 2, 0.01)
+                        if data["npcPack"] != contentPacks.npc:
+                            scrollingText("This file takes an npc content pack with the ID of " + data["npcPack"] + " while you have " + contentPacks.npc + " currently enabled.")
+                        if data["dialoguePack"] != contentPacks.dialogue:
+                            scrollingText("This file takes a dialogue content pack with the ID of " + data["dialoguePack"] + " while you have " + contentPacks.dialogue + " currently enabled.")
             else:
-                saveLoadCharacters()
+                mainMenu()
         else:
             print()
-            print("  Directory is empty!")
+            scrollingText("Directory is empty!", 2, 0.01)
             askToContinue()
+            mainMenu()
     if decision == 2:
         run = 0
         data = {}
         data["length"] = len(characterNames)
         data["creationmode"] = creationMode
+        data["version"] = currentVersion
         data["npcPack"] = contentPacks.npc
         data["dialoguePack"] = contentPacks.dialogue
         while run < len(characterNames):
@@ -1094,6 +1186,7 @@ def directToSave():
     data = {}
     data["length"] = len(characterNames)
     data["creationmode"] = creationMode
+    data["version"] = currentVersion
     data["npcPack"] = contentPacks.npc
     data["dialoguePack"] = contentPacks.dialogue
     while run < len(characterNames):
@@ -1154,6 +1247,12 @@ def openPack():
                 scrollingText(format.underline + format.bold + format.blue + infoFile["name"] + format.end, 2, 0.01)
             if infoFile["status"] == "Finished":
                 scrollingText(format.underline + format.bold + format.green + infoFile["name"] + format.end, 2, 0.01)
+            authList = infoFile["authors"][0]
+            run = 1
+            while run < len(infoFile["authors"]):
+                authList = authList + ", " + infoFile["authors"][run]
+                run = run + 1
+            scrollingText("Author(s): " + authList, 2, 0.01)
             while run < len(infoFile["description"]):
                 scrollingText(infoFile["description"][run], 2, 0.01)
                 run = run + 1

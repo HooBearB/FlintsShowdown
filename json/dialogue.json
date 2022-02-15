@@ -1,13 +1,18 @@
 {
     "list": ["cynic"],
     "template":{
+        "name": "",
         "meleegot": [],
         "rangedgot": [],
         "havebetter": [],
         "negotiating": [],
         "negotiatedone": [],
         "negotiatefail": [],
-        "": []
+        "heard": [],
+        "trace": [],
+        "attacked": [],
+        "combat": [],
+        "chasing": []
     },
     "program": {
         "menu": ["Getting weird text printed out? Remember to check settings and switch to \"plain text mode\"!",
@@ -21,6 +26,31 @@
                  "Have any issues? Send a bug report to me."]
     },
     "cynic": {
-
+        "name": "Cynic",
+        "meleegot": [""],
+        "rangedgot": ["It's ranged alright."],
+        "havebetter": ["I already got something better."],
+        "negotiating": ["Look, we're both people, right?"],
+        "negotiatedone": ["Alright. You better not fuck me over this time."],
+        "negotiatefail": ["Nice try with your fancy words."],
+        "heard": ["Someone's around here."],
+        "trace": ["Someone's been here."],
+        "attacked": ["A sneak attack? How rude.", "Really? Sneaking up on me? That's low."],
+        "combat": ["Get over here you bastard.", "Hey asshole, stand still."],
+        "chasing": ["I'll fuckin find you sooner or later!", "I'll find you eventually!"]
+    },
+    "boastful": {
+        "name": "Boastful",
+        "meleegot": ["Hahaha! A weapon!"],
+        "rangedgot": ["Finally, a gun."],
+        "havebetter": ["I already got a better weapon."],
+        "negotiating": ["I've already taken down people worse than you, man."],
+        "negotiatedone": ["Fine."],
+        "negotiatefail": ["You really thought I wouldn't see through that?"],
+        "heard": ["Someone's here."],
+        "trace": ["Footprints."],
+        "attacked": ["Ha, you think you could sneak up on me?"],
+        "combat": ["I'll get you!"],
+        "chasing": ["I'm gonna find you!"]
     }
 }

@@ -1,0 +1,28 @@
+{
+    "list": ["boastful"],
+    "template":{
+        "meleegot": [],
+        "rangedgot": [],
+        "havebetter": [],
+        "negotiating": [],
+        "negotiatedone": [],
+        "negotiatefail": []
+    },
+    "program": {
+        "menu": ["Getting weird text printed out? Remember to check settings and switch to \"plain text mode\"!",
+                 "Save your character files often in the character editor!",
+                 "The loot tables really need to be rebalanced lol",
+                 "Now with dialogue!",
+                 "Custom dialogue support coming soon!",
+                 "Custom NPC creation support coming soon!",
+                 "Might get finished!",
+                 "Suggestions are always welcome!",
+                 "Have any issues? Send a bug report to me."]
+    },
+    "boastful": {
+        
+    },
+    "cynic": {
+
+    }
+}

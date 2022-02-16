@@ -1,5 +1,5 @@
 {
-    "list": ["cynic"],
+    "list": ["cynic", "boastful"],
     "template":{
         "name": "",
         "meleegot": [],
@@ -31,8 +31,8 @@
         "rangedgot": ["It's ranged alright."],
         "havebetter": ["I already got something better."],
         "negotiating": ["Look, we're both people, right?"],
-        "negotiatedone": ["Alright. You better not fuck me over this time."],
-        "negotiatefail": ["Nice try with your fancy words."],
+        "negotiatedone": ["Alright. You better not fuck me over."],
+        "negotiatefail": ["Nice try with your fancy words.", "All those words make you sound like an asshole."],
         "heard": ["Someone's around here."],
         "trace": ["Someone's been here."],
         "attacked": ["A sneak attack? How rude.", "Really? Sneaking up on me? That's low."],
@@ -52,5 +52,33 @@
         "attacked": ["Ha, you think you could sneak up on me?"],
         "combat": ["I'll get you!"],
         "chasing": ["I'm gonna find you!"]
+    },
+    "nervous": {
+        "name": "Nervous",
+        "meleegot": ["Oh. A weapon."],
+        "rangedgot": ["Gun.", "Jeez, a gun."],
+        "havebetter": ["I think I have something better already."],
+        "negotiating": ["Okay, look, we can be reasonable, right?"],
+        "negotiatedone": ["Yeah, alright."],
+        "negotiatefail": ["You can't try to sweet-talk me."],
+        "heard": ["Oh god, someone's here.", "Oh no."],
+        "trace": ["Oh no."],
+        "attacked": ["Oh FUCK."],
+        "combat": ["Oh fuck-", "Shit-"],
+        "chasing": []
+    },
+    "sarcastic": {
+        "name": "Sarcastic",
+        "meleegot": ["Whoa-hoa-hoa. A weapon."],
+        "rangedgot": ["Jesus, a gun."],
+        "havebetter": ["I'd bet money that what I already have is better."],
+        "negotiating": [""],
+        "negotiatedone": [],
+        "negotiatefail": [],
+        "heard": [],
+        "trace": [],
+        "attacked": [],
+        "combat": [],
+        "chasing": []
     }
 }

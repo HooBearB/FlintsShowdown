@@ -13,7 +13,6 @@ currentVersion = "v0.2.0"
 
 
 
-from pickle import FALSE
 import random
 import os
 import time
@@ -1239,13 +1238,17 @@ def openPack():
             packDirectory = os.path.join(foldername, contentFolders[decision - 1])
             loadingFile = os.path.join(packDirectory, "packInfo.json")
             infoFile = json.load(open(loadingFile, "r"))
+            print(format.clear)
             display.append(infoFile["name"])
             run = 0
             if infoFile["status"] == "Unfinished":
+                print()
                 scrollingText(format.underline + format.bold + format.red + infoFile["name"] + format.end, 2, 0.01)
             if infoFile["status"] == "In progress":
+                print()
                 scrollingText(format.underline + format.bold + format.blue + infoFile["name"] + format.end, 2, 0.01)
             if infoFile["status"] == "Finished":
+                print()
                 scrollingText(format.underline + format.bold + format.green + infoFile["name"] + format.end, 2, 0.01)
             authList = infoFile["authors"][0]
             run = 1
@@ -1315,13 +1318,17 @@ def openPack():
             directory = os.path.dirname(__file__)
             filename = os.path.join(directory, ('json/items.json'))
             items = json.load(open(filename, "r"))
+            scrollingText("Items JSON file loaded from default.", 2, 0.01)
             filename = os.path.join(directory, ('json/npcs.json'))
             npc = json.load(open(filename, "r"))
+            scrollingText("NPC JSON file loaded from default.", 2, 0.01)
             filename = os.path.join(directory, ('json/dialogue.json'))
             dialogue = json.load(open(filename, "r"))
+            scrollingText("Dialogue JSON file loaded from default.", 2, 0.01)
             contentPacks.items = "Default pack"
             contentPacks.npc = "Default pack"
             contentPacks.dialogue = "Default pack"
+            askToContinue()
         mainMenu()
     else:
         mainMenu()

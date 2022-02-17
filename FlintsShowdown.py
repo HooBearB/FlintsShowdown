@@ -64,8 +64,9 @@ def scrollingText(message, indent, delay):
         run = run + 1
     print("")
 
-def scrollingDialogue(message, indent, delay):
+def scrollingDialogue(character, line, indent, delay):
     run = 0
+    message = character + " says " + line
     while run < indent:
         print(" ", end = "")
         run = run + 1

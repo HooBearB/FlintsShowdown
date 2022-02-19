@@ -1,5 +1,5 @@
 {
-    "list": ["cynic", "boastful"],
+    "list": ["cynic", "boastful", "nervous", "sarcastic", "quiet"],
     "template":{
         "name": "",
         "meleegot": [],
@@ -26,12 +26,13 @@
             "Suggestions are always welcome!",
             "Have any issues? Send a bug report to me.",
             "Working, slowly but surely!",
-            "Now with halt and catch fire enabled!"
+            "Now with halt and catch fire enabled!",
+            "Dude. I can't write dialogue. I am so sorry"
                 ]
     },
     "cynic": {
         "name": "Cynic",
-        "meleegot": [""],
+        "meleegot": [],
         "rangedgot": ["It's ranged alright."],
         "havebetter": ["I already got something better."],
         "negotiating": ["Look, we're both people, right?"],
@@ -84,5 +85,33 @@
         "attacked": ["Are you serious?"],
         "combat": ["How fun this is."],
         "chasing": ["I'll get you, or not!"]
+    },
+    "quiet": {
+        "name": "Quiet",
+        "meleegot": [],
+        "rangedgot": [],
+        "havebetter": [],
+        "negotiating": ["We have better things to do, right?"],
+        "negotiatedone": ["Alright."],
+        "negotiatefail": [],
+        "heard": [],
+        "trace": [],
+        "attacked": ["Really?"],
+        "combat": ["How fun this is."],
+        "chasing": []
+    },
+    "shitpost": {
+        "name": "Shitpost",
+        "meleegot": ["WHACKY!"],
+        "rangedgot": ["Bruh, a gun."],
+        "havebetter": ["Got something better, lol."],
+        "negotiating": ["So uhhhhhhhh can I get a huhhhhh"],
+        "negotiatedone": ["Fuck it lmao"],
+        "negotiatefail": ["Fuck you lmao"],
+        "heard": ["Aw shibBbs!!!!!"],
+        "trace": ["What the fuck. Feet"],
+        "attacked": ["OH JEEBSSB!!!!"],
+        "combat": ["I IS SATAN"],
+        "chasing": ["FUCK OFF THIS IS A TAGO BELLS DRIVE THROUH!!!!"]
     }
 }

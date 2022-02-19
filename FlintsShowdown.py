@@ -65,18 +65,19 @@ def scrollingText(message, indent, delay):
     print("")
 
 def scrollingDialogue(character, line, indent, delay):
-    run = 0
-    message = character + " says " + line
-    while run < indent:
-        print(" ", end = "")
-        run = run + 1
-    run = 0
-    print("\"", end = "")
-    while run < len(message):
-        print(message[run : run + 1], end = "")
-        time.sleep(delay)
-        run = run + 1
-    print("\"")
+    if line != "none":
+        run = 0
+        message = character + " says " + line
+        while run < indent:
+            print(" ", end = "")
+            run = run + 1
+        run = 0
+        print("\"", end = "")
+        while run < len(message):
+            print(message[run : run + 1], end = "")
+            time.sleep(delay)
+            run = run + 1
+        print("\"")
 
 def ask(message, indent, options, delay, lookingFor = ""):
     run = 0
@@ -205,7 +206,10 @@ def generateEvents():
 
 def fetchDialogue(target, prompt):
     templist = dialogue[target][prompt]
-    dialoguechoice = random.choice(templist)
+    if len(templist) > 0:
+        dialoguechoice = random.choice(templist)
+    else:
+        dialoguechoice = "none"
     return dialoguechoice
 
 

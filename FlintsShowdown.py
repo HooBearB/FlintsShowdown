@@ -67,17 +67,16 @@ def scrollingText(message, indent, delay):
 def scrollingDialogue(character, line, indent, delay):
     if line != "none":
         run = 0
-        message = character + " says " + line
+        message = character + " says \"" + line + "\""
         while run < indent:
             print(" ", end = "")
             run = run + 1
         run = 0
-        print("\"", end = "")
         while run < len(message):
             print(message[run : run + 1], end = "")
             time.sleep(delay)
             run = run + 1
-        print("\"")
+        print()
 
 def ask(message, indent, options, delay, lookingFor = ""):
     run = 0
@@ -527,9 +526,10 @@ def attacked(characters = []):
                 else:
                     if decision == 1:
                         scrollingText(characterNames[characters[charA]] + " misses their shot.", 2, 0.01)
-                randCheck = random.randint(1, 8)
-                if randCheck == 1:
-                    scrollingDialogue(characterNames[characters[charA]], fetchDialogue(characterDialogue[characters[charA]], "combat"), 2, 0.01)
+                if decision == 1:
+                    randCheck = random.randint(1, 8)
+                    if randCheck == 1:
+                        scrollingDialogue(characterNames[characters[charA]], fetchDialogue(characterDialogue[characters[charA]], "combat"), 2, 0.01)
             else:
                 if decision == 1:
                     scrollingText(characterNames[characters[charA]] + items[characterItems[characters[charA]][0]]["ready"], 2, 0.01)
@@ -546,9 +546,10 @@ def attacked(characters = []):
                         scrollingText("The shot misses.", 2, 0.01)
                     if items[characterItems[characters[charA]][0]]["faildamage"] == True:
                         characterItemDurabilities[characters[charA]][0] = characterItemDurabilities[characters[charA]][0] - 1
-                randCheck = random.randint(1, 8)
-                if randCheck == 1:
-                    scrollingDialogue(characterNames[characters[charA]], fetchDialogue(characterDialogue[characters[charA]], "combat"), 2, 0.01)
+                if decision == 1:
+                    randCheck = random.randint(1, 8)
+                    if randCheck == 1:
+                        scrollingDialogue(characterNames[characters[charA]], fetchDialogue(characterDialogue[characters[charA]], "combat"), 2, 0.01)
             if decision == 1:
                 time.sleep(0.25)
             if decision == 1:
@@ -644,9 +645,10 @@ def attack(characters = []):
                 else:
                     if decision == 1:
                         scrollingText(characterNames[characters[charA]] + " misses their shot.", 2, 0.01)
-                randCheck = random.randint(1, 8)
-                if randCheck == 1:
-                    scrollingDialogue(characterNames[characters[charA]], fetchDialogue(characterDialogue[characters[charA]], "combat"), 2, 0.01)
+                if decision == 1:
+                    randCheck = random.randint(1, 8)
+                    if randCheck == 1:
+                        scrollingDialogue(characterNames[characters[charA]], fetchDialogue(characterDialogue[characters[charA]], "combat"), 2, 0.01)
             else:
                 if decision == 1:
                     scrollingText(characterNames[characters[charA]] + items[characterItems[characters[charA]][0]]["ready"], 2, 0.01)
@@ -663,9 +665,10 @@ def attack(characters = []):
                         scrollingText("The shot misses.", 2, 0.01)
                     if items[characterItems[characters[charA]][0]]["faildamage"] == True:
                         characterItemDurabilities[characters[charA]][0] = characterItemDurabilities[characters[charA]][0] - 1
-                randCheck = random.randint(1, 8)
-                if randCheck == 1:
-                    scrollingDialogue(characterNames[characters[charA]], fetchDialogue(characterDialogue[characters[charA]], "combat"), 2, 0.01)
+                if decision == 1:
+                    randCheck = random.randint(1, 8)
+                    if randCheck == 1:
+                        scrollingDialogue(characterNames[characters[charA]], fetchDialogue(characterDialogue[characters[charA]], "combat"), 2, 0.01)
             if decision == 1:
                 time.sleep(0.25)
             if decision == 1:

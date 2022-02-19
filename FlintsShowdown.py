@@ -934,8 +934,8 @@ def selectSimMode():
     global creationMode
     global characterNames
     global characterPlans
-    global characterAttributes
     global characterDialogue
+    global characterAttributes
 
     print(format.clear)
     time.sleep(0.5)
@@ -1152,6 +1152,7 @@ def deleteCharacter(currChar):
     global characterNames
     global characterPlans
     global characterAttributes
+    global characterDialogue
 
     print()
     decision = ask("Would you really like to delete this character?", 2, ["Yes", "No"], 0.05)
@@ -1159,12 +1160,14 @@ def deleteCharacter(currChar):
         characterNames.pop(currChar)
         characterPlans.pop(currChar)
         characterAttributes.pop(currChar)
+        characterDialogue.pop(currChar)
         currChar = currChar - 1
     return currChar
 
 def saveLoadCharacters():
     global characterNames
     global characterPlans
+    global characterDialogue
     global characterAttributes
     global creationMode
 

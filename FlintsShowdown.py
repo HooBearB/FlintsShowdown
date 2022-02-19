@@ -284,7 +284,7 @@ def startSim():
                 askToContinue()
                 mainMenu()
             if attempt:
-                if data["npcPack"] == contentPacks.npc and data["dialoguePack"] == contentPacks.dialogue:
+                if npcFile == contentPacks.npc and dialogueFile == contentPacks.dialogue:
                     attempt = False
                     try: 
                         fileVersion = data["version"]
@@ -422,7 +422,9 @@ def heardParticipant():
     characters = generateCharacterList(2)
     scrollingText(characterNames[characters[0]] + " hears something.", 2, 0.01)
     log.append(str(days) + ". " + characterNames[characters[0]] + " heard something.")
-    scrollingDialogue(fetchDialogue(characterDialogue[characters[0]], "heard"))
+    randCheck = random.randint(1, 7)
+    if randCheck == 1:
+        scrollingDialogue(characters[0], fetchDialogue(characterDialogue[characters[0]], "heard"), 2, 0.01)
     time.sleep(0.5)
     if npc[characterPlans[characters[0]]]["heard_participant"] == "loud":
         rand = random.randint(1, 4)
@@ -452,6 +454,9 @@ def trace():
     characters = generateCharacterList(2)
     scrollingText(characterNames[characters[0]] + " notices footprints in the mud.", 2, 0.01)
     log.append(str(days) + ". " + characterNames[characters[0]] + " noticed a trace of someone.")
+    randCheck = random.randint(1, 5)
+    if randCheck == 1:
+        scrollingDialogue(characters[0], fetchDialogue(characterDialogue[characters[0]], "trace"), 2, 0.01)
     time.sleep(0.5)
     if npc[characterPlans[characters[0]]]["trace"] == "loud":
         rand = random.randint(1, 10)
@@ -476,6 +481,9 @@ def attacked(characters = []):
         characters.append(generateCharacterList(1))
     ran = False
     scrollingText(format.bold + characterNames[characters[1]] + " engages " + characterNames[characters[0]] + "." + format.end, 2, 0.01)
+    randCheck = random.randint(1, 4)
+    if randCheck == 1:
+        scrollingDialogue(characters[0], fetchDialogue(characterDialogue[characters[0]], "attacked"), 2, 0.01)
     if len(characterItems[characters[1]]) > 0:
         scrollingText(characterNames[characters[1]] + " has a " + items[characterItems[characters[1]][0]]["name"].lower() + ".", 2, 0.01)
     else:
@@ -514,6 +522,9 @@ def attacked(characters = []):
                 else:
                     if decision == 1:
                         scrollingText(characterNames[characters[charA]] + " misses their shot.", 2, 0.01)
+                randCheck = random.randint(1, 8)
+                if randCheck == 1:
+                    scrollingDialogue(characters[charA], fetchDialogue(characterDialogue[characters[charA]], "combat"), 2, 0.01)
             else:
                 if decision == 1:
                     scrollingText(characterNames[characters[charA]] + items[characterItems[characters[charA]][0]]["ready"], 2, 0.01)
@@ -530,6 +541,9 @@ def attacked(characters = []):
                         scrollingText("The shot misses.", 2, 0.01)
                     if items[characterItems[characters[charA]][0]]["faildamage"] == True:
                         characterItemDurabilities[characters[charA]][0] = characterItemDurabilities[characters[charA]][0] - 1
+                randCheck = random.randint(1, 8)
+                if randCheck == 1:
+                    scrollingDialogue(characters[charA], fetchDialogue(characterDialogue[characters[charA]], "combat"), 2, 0.01)
             if decision == 1:
                 time.sleep(0.25)
             if decision == 1:
@@ -568,6 +582,9 @@ def attacked(characters = []):
                 if rand == 6:
                     scrollingText(characterNames[characters[charB]] + " runs away.", 2, 0.01)
                     log.append(str(days) + ". " + characterNames[characters[charB]] + " ran away.")
+                    randCheck = random.randint(1, 5)
+                    if randCheck == 1:
+                        scrollingDialogue(characters[charA], fetchDialogue(characterDialogue[characters[charA]], "chasing"), 2, 0.01)
                     ran = True
                 else:
                     if decision == 1:
@@ -581,6 +598,9 @@ def attack(characters = []):
         characters.append(generateCharacterList(1))
     ran = False
     scrollingText(format.bold + characterNames[characters[0]] + " attacks " + characterNames[characters[1]] + "." + format.end, 2, 0.01)
+    randCheck = random.randint(1, 4)
+    if randCheck == 1:
+        scrollingDialogue(characters[1], fetchDialogue(characterDialogue[characters[1]], "attacked"), 2, 0.01)
     if len(characterItems[characters[0]]) > 0:
         scrollingText(characterNames[characters[0]] + " has a " + items[characterItems[characters[0]][0]]["name"].lower() + ".", 2, 0.01)
     else:
@@ -619,6 +639,9 @@ def attack(characters = []):
                 else:
                     if decision == 1:
                         scrollingText(characterNames[characters[charA]] + " misses their shot.", 2, 0.01)
+                randCheck = random.randint(1, 8)
+                if randCheck == 1:
+                    scrollingDialogue(characters[charA], fetchDialogue(characterDialogue[characters[charA]], "combat"), 2, 0.01)
             else:
                 if decision == 1:
                     scrollingText(characterNames[characters[charA]] + items[characterItems[characters[charA]][0]]["ready"], 2, 0.01)
@@ -635,6 +658,9 @@ def attack(characters = []):
                         scrollingText("The shot misses.", 2, 0.01)
                     if items[characterItems[characters[charA]][0]]["faildamage"] == True:
                         characterItemDurabilities[characters[charA]][0] = characterItemDurabilities[characters[charA]][0] - 1
+                randCheck = random.randint(1, 8)
+                if randCheck == 1:
+                    scrollingDialogue(characters[charA], fetchDialogue(characterDialogue[characters[charA]], "combat"), 2, 0.01)
             if decision == 1:
                 time.sleep(0.25)
             if decision == 1:
@@ -673,6 +699,9 @@ def attack(characters = []):
                 if rand == 6:
                     scrollingText(characterNames[characters[charB]] + " runs away.", 2, 0.01)
                     log.append(str(days) + ". " + characterNames[characters[charB]] + " ran away.")
+                    randCheck = random.randint(1, 5)
+                    if randCheck == 1:
+                        scrollingDialogue(characters[charA], fetchDialogue(characterDialogue[characters[charA]], "chasing"), 2, 0.01)
                     ran = True
                 else:
                     if decision == 1:
@@ -692,6 +721,12 @@ def looting():
                 characterItemDurabilities[characters[0]].append(items[lootItem]["durability"])
                 scrollingText(characterNames[characters[0]] + " picks up the " + format.green + items[lootItem]["name"].lower() + format.end + ".", 2, 0.01)
                 log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"].lower() + ".")
+                randCheck = random.randint(1, 4)
+                if randCheck == 1:
+                    if items[lootItem]["type"] == "Melee":
+                        scrollingDialogue(characters[0], fetchDialogue(characterDialogue[characters[0]], "meleegot"), 2, 0.01)
+                    if items[lootItem]["type"] == "Ranged":
+                        scrollingDialogue(characters[0], fetchDialogue(characterDialogue[characters[0]], "rangedgot"), 2, 0.01)
             else:
                 if len(characterItems[characters[0]]) > 3:
                     if items[lootItem]["grade"] >= items[characterItems[characters[0]][0]]["grade"]:
@@ -699,13 +734,28 @@ def looting():
                         log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"].lower() + ".")
                         characterItems[characters[0]][0] = lootItem
                         characterItemDurabilities[characters[0]][0] = items[lootItem]["durability"]
+                        randCheck = random.randint(1, 4)
+                        if randCheck == 1:
+                            if items[lootItem]["type"] == "Melee":
+                                scrollingDialogue(characters[0], fetchDialogue(characterDialogue[characters[0]], "meleegot"), 2, 0.01)
+                            if items[lootItem]["type"] == "Ranged":
+                                scrollingDialogue(characters[0], fetchDialogue(characterDialogue[characters[0]], "rangedgot"), 2, 0.01)
                     else:
                         scrollingText(characterNames[characters[0]] + "'s " + items[characterItems[characters[0]][0]]["name"].lower() + " is better than the " + items[lootItem]["name"].lower() + ".", 2, 0.01)
+                        randCheck = random.randint(1, 4)
+                        if randCheck == 1:
+                            scrollingDialogue(characters[0], fetchDialogue(characterDialogue[characters[0]], "havebetter"), 2, 0.01)
                 else:
                     characterItems[characters[0]].append(lootItem)
                     characterItemDurabilities[characters[0]].append(items[lootItem]["durability"])
                     scrollingText(characterNames[characters[0]] + " picks up the " + format.green + items[lootItem]["name"].lower() + format.end + ".", 2, 0.01)
                     log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"].lower() + ".")
+                    randCheck = random.randint(1, 4)
+                    if randCheck == 1:
+                        if items[lootItem]["type"] == "Melee":
+                            scrollingDialogue(characters[0], fetchDialogue(characterDialogue[characters[0]], "meleegot"), 2, 0.01)
+                        if items[lootItem]["type"] == "Ranged":
+                            scrollingDialogue(characters[0], fetchDialogue(characterDialogue[characters[0]], "rangedgot"), 2, 0.01)
     if npc[characterPlans[characters[0]]]["looting"] == "stealth":
         lootItem = random.choice(items["lootable"])
         if len(characterItems[characters[0]]) == 0:
@@ -713,6 +763,12 @@ def looting():
             characterItemDurabilities[characters[0]].append(items[lootItem]["durability"])
             scrollingText(characterNames[characters[0]] + " picks up the " + format.green + items[lootItem]["name"].lower() + format.end + ".", 2, 0.01)
             log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"].lower() + ".")
+            randCheck = random.randint(1, 4)
+            if randCheck == 1:
+                if items[lootItem]["type"] == "Melee":
+                    scrollingDialogue(characters[0], fetchDialogue(characterDialogue[characters[0]], "meleegot"), 2, 0.01)
+                if items[lootItem]["type"] == "Ranged":
+                    scrollingDialogue(characters[0], fetchDialogue(characterDialogue[characters[0]], "rangedgot"), 2, 0.01)
         else:
             if len(characterItems[characters[0]]) > 3:
                 if items[lootItem]["grade"] >= items[characterItems[characters[0]][0]]["grade"]:
@@ -720,13 +776,28 @@ def looting():
                     log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"].lower() + ".")
                     characterItems[characters[0]][0] = lootItem
                     characterItemDurabilities[characters[0]][0] = items[lootItem]["durability"]
+                    randCheck = random.randint(1, 4)
+                    if randCheck == 1:
+                        if items[lootItem]["type"] == "Melee":
+                            scrollingDialogue(characters[0], fetchDialogue(characterDialogue[characters[0]], "meleegot"), 2, 0.01)
+                        if items[lootItem]["type"] == "Ranged":
+                            scrollingDialogue(characters[0], fetchDialogue(characterDialogue[characters[0]], "rangedgot"), 2, 0.01)
                 else:
                     scrollingText(characterNames[characters[0]] + "'s " + items[characterItems[characters[0]][0]]["name"].lower() + " is better than the " + items[lootItem]["name"].lower() + ".", 2, 0.01)
+                    randCheck = random.randint(1, 4)
+                    if randCheck == 1:
+                        scrollingDialogue(characters[0], fetchDialogue(characterDialogue[characters[0]], "havebetter"), 2, 0.01)
             else:
                 characterItems[characters[0]].append(lootItem)
                 characterItemDurabilities[characters[0]].append(items[lootItem]["durability"])
                 scrollingText(characterNames[characters[0]] + " picks up the " + format.green + items[lootItem]["name"].lower() + format.end + ".", 2, 0.01)
                 log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"].lower() + ".")
+                randCheck = random.randint(1, 4)
+                if randCheck == 1:
+                    if items[lootItem]["type"] == "Melee":
+                        scrollingDialogue(characters[0], fetchDialogue(characterDialogue[characters[0]], "meleegot"), 2, 0.01)
+                    if items[lootItem]["type"] == "Ranged":
+                        scrollingDialogue(characters[0], fetchDialogue(characterDialogue[characters[0]], "rangedgot"), 2, 0.01)
     if npc[characterPlans[characters[0]]]["looting"] == "seek":
         rand = random.randint(1, 8)
         if rand == 1:
@@ -738,6 +809,12 @@ def looting():
                 characterItemDurabilities[characters[0]].append(items[lootItem]["durability"])
                 scrollingText(characterNames[characters[0]] + " picks up the " + format.green + items[lootItem]["name"].lower() + format.end + ".", 2, 0.01)
                 log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"].lower() + ".")
+                randCheck = random.randint(1, 4)
+                if randCheck == 1:
+                    if items[lootItem]["type"] == "Melee":
+                        scrollingDialogue(characters[0], fetchDialogue(characterDialogue[characters[0]], "meleegot"), 2, 0.01)
+                    if items[lootItem]["type"] == "Ranged":
+                        scrollingDialogue(characters[0], fetchDialogue(characterDialogue[characters[0]], "rangedgot"), 2, 0.01)
             else:
                 if len(characterItems[characters[0]]) > 3:
                     if items[lootItem]["grade"] >= items[characterItems[characters[0]][0]]["grade"]:
@@ -745,13 +822,28 @@ def looting():
                         log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"].lower() + ".")
                         characterItems[characters[0]][0] = lootItem
                         characterItemDurabilities[characters[0]][0] = items[lootItem]["durability"]
+                        randCheck = random.randint(1, 4)
+                        if randCheck == 1:
+                            if items[lootItem]["type"] == "Melee":
+                                scrollingDialogue(characters[0], fetchDialogue(characterDialogue[characters[0]], "meleegot"), 2, 0.01)
+                            if items[lootItem]["type"] == "Ranged":
+                                scrollingDialogue(characters[0], fetchDialogue(characterDialogue[characters[0]], "rangedgot"), 2, 0.01)
                     else:
                         scrollingText(characterNames[characters[0]] + "'s " + items[characterItems[characters[0]][0]]["name"].lower() + " is better than the " + items[lootItem]["name"].lower() + ".", 2, 0.01)
+                        randCheck = random.randint(1, 4)
+                        if randCheck == 1:
+                            scrollingDialogue(characters[0], fetchDialogue(characterDialogue[characters[0]], "havebetter"), 2, 0.01)
                 else:
                     characterItems[characters[0]].append(lootItem)
                     characterItemDurabilities[characters[0]].append(items[lootItem]["durability"])
                     scrollingText(characterNames[characters[0]] + " picks up the " + format.green + items[lootItem]["name"].lower() + format.end + ".", 2, 0.01)
                     log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"].lower() + ".")
+                    randCheck = random.randint(1, 4)
+                    if randCheck == 1:
+                        if items[lootItem]["type"] == "Melee":
+                            scrollingDialogue(characters[0], fetchDialogue(characterDialogue[characters[0]], "meleegot"), 2, 0.01)
+                        if items[lootItem]["type"] == "Ranged":
+                            scrollingDialogue(characters[0], fetchDialogue(characterDialogue[characters[0]], "rangedgot"), 2, 0.01)
 
 def nightfall():
     decision = ask("Nightfall actions:", 2, ["View characters", "View log", "Continue to day"], 0.05)
@@ -1102,7 +1194,7 @@ def saveLoadCharacters():
                     askToContinue()
                     mainMenu()
                 if attempt:
-                    if data["npcPack"] == contentPacks.npc and data["dialoguePack"] == contentPacks.dialogue:
+                    if npcFile == contentPacks.npc and dialogueFile == contentPacks.dialogue:
                         attempt = False
                         try: 
                             fileVersion = data["version"]
@@ -1166,6 +1258,7 @@ def saveLoadCharacters():
             data[str(run)] = {}
             data[str(run)]["name"] = characterNames[run]
             data[str(run)]["plan"] = characterPlans[run]
+            data[str(run)]["dialogue"] = characterDialogue[run]
             data[str(run)]["melee"] = characterAttributes[run][0]
             data[str(run)]["ranged"] = characterAttributes[run][1]
             data[str(run)]["endurance"] = characterAttributes[run][2]
@@ -1193,6 +1286,7 @@ def directToSave():
         data[str(run)] = {}
         data[str(run)]["name"] = characterNames[run]
         data[str(run)]["plan"] = characterPlans[run]
+        data[str(run)]["dialogue"] = characterDialogue[run]
         data[str(run)]["melee"] = characterAttributes[run][0]
         data[str(run)]["ranged"] = characterAttributes[run][1]
         data[str(run)]["endurance"] = characterAttributes[run][2]

@@ -15,15 +15,19 @@
         "chasing": []
     },
     "program": {
-        "menu": ["Getting weird text printed out? Remember to check settings and switch to \"plain text mode\"!",
-                 "Save your character files often in the character editor!",
-                 "The loot tables really need to be rebalanced lol",
-                 "Now with dialogue!",
-                 "Custom dialogue support coming soon!",
-                 "Custom NPC creation support coming soon!",
-                 "Might get finished!",
-                 "Suggestions are always welcome!",
-                 "Have any issues? Send a bug report to me."]
+        "menu": [
+            "Getting weird text printed out? Remember to check settings and switch to \"plain text mode\"!",
+            "Save your character files often in the character editor!",
+            "The loot tables really need to be rebalanced lol",
+            "Now with dialogue!",
+            "Custom dialogue support coming soon!",
+            "Custom NPC creation support coming soon!",
+            "Might get finished!",
+            "Suggestions are always welcome!",
+            "Have any issues? Send a bug report to me.",
+            "Working, slowly but surely!",
+            "Now with halt and catch fire enabled!"
+                ]
     },
     "cynic": {
         "name": "Cynic",
@@ -65,20 +69,20 @@
         "trace": ["Oh no."],
         "attacked": ["Oh FUCK."],
         "combat": ["Oh fuck-", "Shit-"],
-        "chasing": []
+        "chasing": ["I can't think of anything cool to say!"]
     },
     "sarcastic": {
         "name": "Sarcastic",
         "meleegot": ["Whoa-hoa-hoa. A weapon."],
         "rangedgot": ["Jesus, a gun."],
         "havebetter": ["I'd bet money that what I already have is better."],
-        "negotiating": [""],
-        "negotiatedone": [],
-        "negotiatefail": [],
-        "heard": [],
-        "trace": [],
-        "attacked": [],
-        "combat": [],
-        "chasing": []
+        "negotiating": ["Lookit. The two of us. Fighting for what?"],
+        "negotiatedone": ["Got it."],
+        "negotiatefail": ["Fuck this and fuck you."],
+        "heard": ["Ohhhh dear."],
+        "trace": ["Someone's been 'round here."],
+        "attacked": ["Are you serious?"],
+        "combat": ["How fun this is."],
+        "chasing": ["I'll get you, or not!"]
     }
 }

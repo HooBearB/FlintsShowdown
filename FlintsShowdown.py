@@ -251,6 +251,7 @@ def startSim():
     global creationMode
     global characterNames
     global characterPlans
+    global characterDialogue
     global characterAttributes
     global characterHealth
     global characterItems

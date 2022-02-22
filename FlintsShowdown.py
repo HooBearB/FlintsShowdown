@@ -9,27 +9,37 @@ you can put all your friends into.
 #JSON finished: February 1st, 2022
 #Character building finished: February 7th, 2022
 #Event flow finished: February 11th, 2022
-currentVersion = "v0.2.0"
 
-
+'''
+TO DO:
+- Dialogue
+- Hunger system???? Y'know, like the hunger games???????????
+- Appendage system, getting wounded affects combat, etc
+- Armour
+- Medical supplies, using them heals specific parts
+- Crafting (Maybe?)
+- Factions/grouping
+    - Group meetups
+    - Group conversations
+    - Inter-person dialogue (Custom support?)
+        - Flint and mule are in combat
+        - Flint says "remember what you sent me in our DMs?"
+        - Flint suplexes mule
+- More items
+- Improved NPCs
+'''
 
 import random
 import os
+from re import L
 import time
 import json
-import glob
 
-class contentPacks:
-    items = "Default pack"
-    npc = "Default pack"
-    dialogue = "Default pack"
 directory = os.path.dirname(__file__)
 filename = os.path.join(directory, ('json/items.json'))
 items = json.load(open(filename, "r"))
 filename = os.path.join(directory, ('json/npcs.json'))
 npc = json.load(open(filename, "r"))
-filename = os.path.join(directory, ('json/dialogue.json'))
-dialogue = json.load(open(filename, "r"))
 
 
 
@@ -63,20 +73,6 @@ def scrollingText(message, indent, delay):
         time.sleep(delay)
         run = run + 1
     print("")
-
-def scrollingDialogue(character, line, indent, delay):
-    if line != "none":
-        run = 0
-        message = character + " says \"" + line + "\""
-        while run < indent:
-            print(" ", end = "")
-            run = run + 1
-        run = 0
-        while run < len(message):
-            print(message[run : run + 1], end = "")
-            time.sleep(delay)
-            run = run + 1
-        print()
 
 def ask(message, indent, options, delay, lookingFor = ""):
     run = 0
@@ -203,14 +199,6 @@ def generateEvents():
         eventList.append(random.choice(events))
     return eventList
 
-def fetchDialogue(target, prompt):
-    templist = dialogue[target][prompt]
-    if len(templist) > 0:
-        dialoguechoice = random.choice(templist)
-    else:
-        dialoguechoice = "none"
-    return dialoguechoice
-
 
 
 """
@@ -221,36 +209,36 @@ def fetchDialogue(target, prompt):
 """
 def mainMenu():
     print(format.clear)
-    print(format.green + format.bold)
-    print("     _____  __    _____   __   __  _____  __  _____" + format.end + format.red + format.bold + "         _________________________" + format.end + format.bold + format.green)
-    print("    / ___/ / /   /_  _/  /  | / / /_  _/ /_/ /  __/" + format.end + format.red + format.bold + "  ______/   ▅▅▅  _________________|" + format.end + format.bold + format.green)
-    print("   / ___/ / /__  _/ /_  / /||/ /   / /      /__  /" + format.end + format.red + format.bold + "  |     _________|_╷_╷_╷_╷_╷_/" + format.end + format.bold + format.green)
-    print("  /_/    /____/ /____/ /_/ |__/   /_/      /____/" + format.end + format.red + format.bold + "   |____/(_/" + format.end + format.bold + format.red)
-    print("           _    " + format.end + format.bold + format.blue + "    _____  __  __  ______  __    __  ____    ______  __    __  __   __" + format.end + format.bold + format.red)
-    print("  ________| |__ " + format.end + format.bold + format.blue + "   /  __/ / /_/ / / __  / / /__ / / / __ |  / __  / / /__ / / /  | / /" + format.end + format.bold + format.red)
-    print("  \_╷_╷_╷_|  __|" + format.end + format.bold + format.blue + "  /__  / / __  / / /_/ / / // // / / /_/ / / /_/ / / // // / / /||/ /" + format.end + format.bold + format.red)
-    print("          ╵-╵   " + format.end + format.bold + format.blue + " /____/ /_/ /_/ /_____/ /_______/ /_____/ /_____/ /_______/ /_/ |__/" + format.end + format.italic + format.dim)
-    print()
-    scrollingText(fetchDialogue("program", "menu") + format.end, 2, 0.01)
-    scrollingText(format.bold + format.italic + "v0.2.0 DEMO / Feb 20, 2022 build" + format.end, 2, 0.02)
-    decision = ask("", 2, ["Start new game", "Create characters", "Open content pack", "Settings", "Exit"], 0.03)
+    print(format.green)
+    print("     _____  __    _____   __   __  _____  __  _____")
+    print("    / ___/ / /   /_  _/  /  | / / /_  _/ /_/ /  __/")
+    print("   / ___/ / /__  _/ /_  / /||/ /   / /      /__  /")
+    print("  /_/    /____/ /____/ /_/ |__/   /_/      /____/" + format.end + format.blue)
+    print("                 _____  __  __  ______  __    __  ____    ______  __    __  __   __")
+    print("                /  __/ / /_/ / / __  / / /__ / / / __ |  / __  / / /__ / / /  | / /")
+    print("               /__  / / __  / / /_/ / / // // / / /_/ / / /_/ / / // // / / /||/ /")
+    print("              /____/ /_/ /_/ /_____/ /_______/ /_____/ /_____/ /_______/ /_/ |__/" + format.end + format.red + format.italic)
+    print("                                  _▄▂____________________▂_")
+    print("                           ______/   ▅▅▅  _________________|")
+    print("                          |     _________|_╷_╷_╷_╷_╷_/")
+    print("                          |____/(_/")
+    print(format.end)
+    scrollingText(format.bold + format.italic + "v0.1.5 DEMO / Feb 13, 2022 build" + format.end, 2, 0.02)
+    decision = ask("", 2, ["Start new game", "Create characters", "Settings", "Exit"], 0.03)
     if decision == 1:
         startSim()
     if decision == 2:
         selectSimMode()
         createCharacters()
     if decision == 3:
-        openPack()
-    if decision == 4:
         settings()
-    if decision == 6:
+    if decision == 4:
         raise Exception("Exited game.")
 
 def startSim():
     global creationMode
     global characterNames
     global characterPlans
-    global characterDialogue
     global characterAttributes
     global characterHealth
     global characterItems
@@ -275,64 +263,22 @@ def startSim():
         if characterSaves[filenumber - 1] != "Exit":
             file = os.path.join(foldername, os.path.join(characterSaves[filenumber - 1]))
             data = json.load(open(file, "r"))
-            attempt = False
-            try:
-                npcFile = data["npcPack"]
-                dialogueFile = data["dialoguePack"]
-                attempt = True
-            except:
-                print()
-                scrollingText("This file was made before v0.2.0. You can manually update this file", 2, 0.01)
-                scrollingText("to match a current file, or make a new file in the program.", 2, 0.01)
-                print()
-                askToContinue()
-                mainMenu()
-            if attempt:
-                if npcFile == contentPacks.npc and dialogueFile == contentPacks.dialogue:
-                    attempt = False
-                    try: 
-                        fileVersion = data["version"]
-                        attempt = True
-                    except:
-                        print()
-                        scrollingText("This file was made before v0.2.0. You can manually update this file", 2, 0.01)
-                        scrollingText("to match a current file, or make a new file in the program.", 2, 0.01)
-                        print()
-                        askToContinue()
-                        mainMenu()
-                    if attempt:
-                        if fileVersion == currentVersion:
-                            creationMode = data["creationmode"]
-                            characterNames = []
-                            characterPlans = []
-                            characterAttributes = []
-                            characterDialogue = []
-                            run = 0
-                            while run < data["length"]:
-                                characterNames.append(data[str(run)]["name"])
-                                characterPlans.append(data[str(run)]["plan"])
-                                characterDialogue.append(data[str(run)]["dialogue"])
-                                templist = []
-                                templist.append(data[str(run)]["melee"])
-                                templist.append(data[str(run)]["ranged"])
-                                templist.append(data[str(run)]["endurance"])
-                                templist.append(data[str(run)]["strength"])
-                                templist.append(data[str(run)]["communication"])
-                                characterAttributes.append(templist)
-                                run = run + 1
-                        else:
-                            print()
-                            scrollingText("This file was created with a previous version of FliSh. You can ", 2, 0.01)
-                            scrollingText("can manually update this file to match a current file, or make a new file in the program.", 2, 0.01)
-                            print()
-                            askToContinue()
-                            mainMenu()
-                else:
-                    scrollingText("Sorry, this character file was made with a different set of content packs.", 2, 0.01)
-                    if data["npcPack"] != contentPacks.npc:
-                        scrollingText("This file takes an npc content pack with the ID of " + data["npcPack"] + " while you have " + contentPacks.npc + " currently enabled.")
-                    if data["dialoguePack"] != contentPacks.dialogue:
-                        scrollingText("This file takes a dialogue content pack with the ID of " + data["dialoguePack"] + " while you have " + contentPacks.dialogue + " currently enabled.")
+            creationMode = data["creationmode"]
+            characterNames = []
+            characterPlans = []
+            characterAttributes = []
+            run = 0
+            while run < data["length"]:
+                characterNames.append(data[str(run)]["name"])
+                characterPlans.append(data[str(run)]["plan"])
+                templist = []
+                templist.append(data[str(run)]["melee"])
+                templist.append(data[str(run)]["ranged"])
+                templist.append(data[str(run)]["endurance"])
+                templist.append(data[str(run)]["strength"])
+                templist.append(data[str(run)]["communication"])
+                characterAttributes.append(templist)
+                run = run + 1
         else:
             mainMenu()
     else:
@@ -426,9 +372,6 @@ def heardParticipant():
     characters = generateCharacterList(2)
     scrollingText(characterNames[characters[0]] + " hears something.", 2, 0.01)
     log.append(str(days) + ". " + characterNames[characters[0]] + " heard something.")
-    randCheck = random.randint(1, 7)
-    if randCheck == 1:
-        scrollingDialogue(characterNames[characters[0]], fetchDialogue(characterDialogue[characters[0]], "heard"), 2, 0.01)
     time.sleep(0.5)
     if npc[characterPlans[characters[0]]]["heard_participant"] == "loud":
         rand = random.randint(1, 4)
@@ -458,9 +401,6 @@ def trace():
     characters = generateCharacterList(2)
     scrollingText(characterNames[characters[0]] + " notices footprints in the mud.", 2, 0.01)
     log.append(str(days) + ". " + characterNames[characters[0]] + " noticed a trace of someone.")
-    randCheck = random.randint(1, 5)
-    if randCheck == 1:
-        scrollingDialogue(characterNames[characters[0]], fetchDialogue(characterDialogue[characters[0]], "trace"), 2, 0.01)
     time.sleep(0.5)
     if npc[characterPlans[characters[0]]]["trace"] == "loud":
         rand = random.randint(1, 10)
@@ -485,9 +425,6 @@ def attacked(characters = []):
         characters.append(generateCharacterList(1))
     ran = False
     scrollingText(format.bold + characterNames[characters[1]] + " engages " + characterNames[characters[0]] + "." + format.end, 2, 0.01)
-    randCheck = random.randint(1, 4)
-    if randCheck == 1:
-        scrollingDialogue(characterNames[characters[0]], fetchDialogue(characterDialogue[characters[0]], "attacked"), 2, 0.01)
     if len(characterItems[characters[1]]) > 0:
         scrollingText(characterNames[characters[1]] + " has a " + items[characterItems[characters[1]][0]]["name"].lower() + ".", 2, 0.01)
     else:
@@ -526,10 +463,6 @@ def attacked(characters = []):
                 else:
                     if decision == 1:
                         scrollingText(characterNames[characters[charA]] + " misses their shot.", 2, 0.01)
-                if decision == 1:
-                    randCheck = random.randint(1, 8)
-                    if randCheck == 1:
-                        scrollingDialogue(characterNames[characters[charA]], fetchDialogue(characterDialogue[characters[charA]], "combat"), 2, 0.01)
             else:
                 if decision == 1:
                     scrollingText(characterNames[characters[charA]] + items[characterItems[characters[charA]][0]]["ready"], 2, 0.01)
@@ -546,10 +479,6 @@ def attacked(characters = []):
                         scrollingText("The shot misses.", 2, 0.01)
                     if items[characterItems[characters[charA]][0]]["faildamage"] == True:
                         characterItemDurabilities[characters[charA]][0] = characterItemDurabilities[characters[charA]][0] - 1
-                if decision == 1:
-                    randCheck = random.randint(1, 8)
-                    if randCheck == 1:
-                        scrollingDialogue(characterNames[characters[charA]], fetchDialogue(characterDialogue[characters[charA]], "combat"), 2, 0.01)
             if decision == 1:
                 time.sleep(0.25)
             if decision == 1:
@@ -588,9 +517,6 @@ def attacked(characters = []):
                 if rand == 6:
                     scrollingText(characterNames[characters[charB]] + " runs away.", 2, 0.01)
                     log.append(str(days) + ". " + characterNames[characters[charB]] + " ran away.")
-                    randCheck = random.randint(1, 5)
-                    if randCheck == 1:
-                        scrollingDialogue(characterNames[characters[charA]], fetchDialogue(characterDialogue[characters[charA]], "chasing"), 2, 0.01)
                     ran = True
                 else:
                     if decision == 1:
@@ -604,9 +530,6 @@ def attack(characters = []):
         characters.append(generateCharacterList(1))
     ran = False
     scrollingText(format.bold + characterNames[characters[0]] + " attacks " + characterNames[characters[1]] + "." + format.end, 2, 0.01)
-    randCheck = random.randint(1, 4)
-    if randCheck == 1:
-        scrollingDialogue(characterNames[characters[1]], fetchDialogue(characterDialogue[characters[1]], "attacked"), 2, 0.01)
     if len(characterItems[characters[0]]) > 0:
         scrollingText(characterNames[characters[0]] + " has a " + items[characterItems[characters[0]][0]]["name"].lower() + ".", 2, 0.01)
     else:
@@ -645,10 +568,6 @@ def attack(characters = []):
                 else:
                     if decision == 1:
                         scrollingText(characterNames[characters[charA]] + " misses their shot.", 2, 0.01)
-                if decision == 1:
-                    randCheck = random.randint(1, 8)
-                    if randCheck == 1:
-                        scrollingDialogue(characterNames[characters[charA]], fetchDialogue(characterDialogue[characters[charA]], "combat"), 2, 0.01)
             else:
                 if decision == 1:
                     scrollingText(characterNames[characters[charA]] + items[characterItems[characters[charA]][0]]["ready"], 2, 0.01)
@@ -665,10 +584,6 @@ def attack(characters = []):
                         scrollingText("The shot misses.", 2, 0.01)
                     if items[characterItems[characters[charA]][0]]["faildamage"] == True:
                         characterItemDurabilities[characters[charA]][0] = characterItemDurabilities[characters[charA]][0] - 1
-                if decision == 1:
-                    randCheck = random.randint(1, 8)
-                    if randCheck == 1:
-                        scrollingDialogue(characterNames[characters[charA]], fetchDialogue(characterDialogue[characters[charA]], "combat"), 2, 0.01)
             if decision == 1:
                 time.sleep(0.25)
             if decision == 1:
@@ -707,9 +622,6 @@ def attack(characters = []):
                 if rand == 6:
                     scrollingText(characterNames[characters[charB]] + " runs away.", 2, 0.01)
                     log.append(str(days) + ". " + characterNames[characters[charB]] + " ran away.")
-                    randCheck = random.randint(1, 5)
-                    if randCheck == 1:
-                        scrollingDialogue(characterNames[characters[charA]], fetchDialogue(characterDialogue[characters[charA]], "chasing"), 2, 0.01)
                     ran = True
                 else:
                     if decision == 1:
@@ -729,12 +641,6 @@ def looting():
                 characterItemDurabilities[characters[0]].append(items[lootItem]["durability"])
                 scrollingText(characterNames[characters[0]] + " picks up the " + format.green + items[lootItem]["name"].lower() + format.end + ".", 2, 0.01)
                 log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"].lower() + ".")
-                randCheck = random.randint(1, 4)
-                if randCheck == 1:
-                    if items[lootItem]["type"] == "Melee":
-                        scrollingDialogue(characterNames[characters[0]], fetchDialogue(characterDialogue[characters[0]], "meleegot"), 2, 0.01)
-                    if items[lootItem]["type"] == "Ranged":
-                        scrollingDialogue(characterNames[characters[0]], fetchDialogue(characterDialogue[characters[0]], "rangedgot"), 2, 0.01)
             else:
                 if len(characterItems[characters[0]]) > 3:
                     if items[lootItem]["grade"] >= items[characterItems[characters[0]][0]]["grade"]:
@@ -742,28 +648,13 @@ def looting():
                         log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"].lower() + ".")
                         characterItems[characters[0]][0] = lootItem
                         characterItemDurabilities[characters[0]][0] = items[lootItem]["durability"]
-                        randCheck = random.randint(1, 4)
-                        if randCheck == 1:
-                            if items[lootItem]["type"] == "Melee":
-                                scrollingDialogue(characterNames[characters[0]], fetchDialogue(characterDialogue[characters[0]], "meleegot"), 2, 0.01)
-                            if items[lootItem]["type"] == "Ranged":
-                                scrollingDialogue(characterNames[characters[0]], fetchDialogue(characterDialogue[characters[0]], "rangedgot"), 2, 0.01)
                     else:
                         scrollingText(characterNames[characters[0]] + "'s " + items[characterItems[characters[0]][0]]["name"].lower() + " is better than the " + items[lootItem]["name"].lower() + ".", 2, 0.01)
-                        randCheck = random.randint(1, 4)
-                        if randCheck == 1:
-                            scrollingDialogue(characterNames[characters[0]], fetchDialogue(characterDialogue[characters[0]], "havebetter"), 2, 0.01)
                 else:
                     characterItems[characters[0]].append(lootItem)
                     characterItemDurabilities[characters[0]].append(items[lootItem]["durability"])
                     scrollingText(characterNames[characters[0]] + " picks up the " + format.green + items[lootItem]["name"].lower() + format.end + ".", 2, 0.01)
                     log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"].lower() + ".")
-                    randCheck = random.randint(1, 4)
-                    if randCheck == 1:
-                        if items[lootItem]["type"] == "Melee":
-                            scrollingDialogue(characterNames[characters[0]], fetchDialogue(characterDialogue[characters[0]], "meleegot"), 2, 0.01)
-                        if items[lootItem]["type"] == "Ranged":
-                            scrollingDialogue(characterNames[characters[0]], fetchDialogue(characterDialogue[characters[0]], "rangedgot"), 2, 0.01)
     if npc[characterPlans[characters[0]]]["looting"] == "stealth":
         lootItem = random.choice(items["lootable"])
         if len(characterItems[characters[0]]) == 0:
@@ -771,12 +662,6 @@ def looting():
             characterItemDurabilities[characters[0]].append(items[lootItem]["durability"])
             scrollingText(characterNames[characters[0]] + " picks up the " + format.green + items[lootItem]["name"].lower() + format.end + ".", 2, 0.01)
             log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"].lower() + ".")
-            randCheck = random.randint(1, 4)
-            if randCheck == 1:
-                if items[lootItem]["type"] == "Melee":
-                    scrollingDialogue(characterNames[characters[0]], fetchDialogue(characterDialogue[characters[0]], "meleegot"), 2, 0.01)
-                if items[lootItem]["type"] == "Ranged":
-                    scrollingDialogue(characterNames[characters[0]], fetchDialogue(characterDialogue[characters[0]], "rangedgot"), 2, 0.01)
         else:
             if len(characterItems[characters[0]]) > 3:
                 if items[lootItem]["grade"] >= items[characterItems[characters[0]][0]]["grade"]:
@@ -784,28 +669,13 @@ def looting():
                     log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"].lower() + ".")
                     characterItems[characters[0]][0] = lootItem
                     characterItemDurabilities[characters[0]][0] = items[lootItem]["durability"]
-                    randCheck = random.randint(1, 4)
-                    if randCheck == 1:
-                        if items[lootItem]["type"] == "Melee":
-                            scrollingDialogue(characterNames[characters[0]], fetchDialogue(characterDialogue[characters[0]], "meleegot"), 2, 0.01)
-                        if items[lootItem]["type"] == "Ranged":
-                            scrollingDialogue(characterNames[characters[0]], fetchDialogue(characterDialogue[characters[0]], "rangedgot"), 2, 0.01)
                 else:
                     scrollingText(characterNames[characters[0]] + "'s " + items[characterItems[characters[0]][0]]["name"].lower() + " is better than the " + items[lootItem]["name"].lower() + ".", 2, 0.01)
-                    randCheck = random.randint(1, 4)
-                    if randCheck == 1:
-                        scrollingDialogue(characterNames[characters[0]], fetchDialogue(characterDialogue[characters[0]], "havebetter"), 2, 0.01)
             else:
                 characterItems[characters[0]].append(lootItem)
                 characterItemDurabilities[characters[0]].append(items[lootItem]["durability"])
                 scrollingText(characterNames[characters[0]] + " picks up the " + format.green + items[lootItem]["name"].lower() + format.end + ".", 2, 0.01)
                 log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"].lower() + ".")
-                randCheck = random.randint(1, 4)
-                if randCheck == 1:
-                    if items[lootItem]["type"] == "Melee":
-                        scrollingDialogue(characterNames[characters[0]], fetchDialogue(characterDialogue[characters[0]], "meleegot"), 2, 0.01)
-                    if items[lootItem]["type"] == "Ranged":
-                        scrollingDialogue(characterNames[characters[0]], fetchDialogue(characterDialogue[characters[0]], "rangedgot"), 2, 0.01)
     if npc[characterPlans[characters[0]]]["looting"] == "seek":
         rand = random.randint(1, 8)
         if rand == 1:
@@ -817,12 +687,6 @@ def looting():
                 characterItemDurabilities[characters[0]].append(items[lootItem]["durability"])
                 scrollingText(characterNames[characters[0]] + " picks up the " + format.green + items[lootItem]["name"].lower() + format.end + ".", 2, 0.01)
                 log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"].lower() + ".")
-                randCheck = random.randint(1, 4)
-                if randCheck == 1:
-                    if items[lootItem]["type"] == "Melee":
-                        scrollingDialogue(characterNames[characters[0]], fetchDialogue(characterDialogue[characters[0]], "meleegot"), 2, 0.01)
-                    if items[lootItem]["type"] == "Ranged":
-                        scrollingDialogue(characterNames[characters[0]], fetchDialogue(characterDialogue[characters[0]], "rangedgot"), 2, 0.01)
             else:
                 if len(characterItems[characters[0]]) > 3:
                     if items[lootItem]["grade"] >= items[characterItems[characters[0]][0]]["grade"]:
@@ -830,28 +694,13 @@ def looting():
                         log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"].lower() + ".")
                         characterItems[characters[0]][0] = lootItem
                         characterItemDurabilities[characters[0]][0] = items[lootItem]["durability"]
-                        randCheck = random.randint(1, 4)
-                        if randCheck == 1:
-                            if items[lootItem]["type"] == "Melee":
-                                scrollingDialogue(characterNames[characters[0]], fetchDialogue(characterDialogue[characters[0]], "meleegot"), 2, 0.01)
-                            if items[lootItem]["type"] == "Ranged":
-                                scrollingDialogue(characterNames[characters[0]], fetchDialogue(characterDialogue[characters[0]], "rangedgot"), 2, 0.01)
                     else:
                         scrollingText(characterNames[characters[0]] + "'s " + items[characterItems[characters[0]][0]]["name"].lower() + " is better than the " + items[lootItem]["name"].lower() + ".", 2, 0.01)
-                        randCheck = random.randint(1, 4)
-                        if randCheck == 1:
-                            scrollingDialogue(characterNames[characters[0]], fetchDialogue(characterDialogue[characters[0]], "havebetter"), 2, 0.01)
                 else:
                     characterItems[characters[0]].append(lootItem)
                     characterItemDurabilities[characters[0]].append(items[lootItem]["durability"])
                     scrollingText(characterNames[characters[0]] + " picks up the " + format.green + items[lootItem]["name"].lower() + format.end + ".", 2, 0.01)
                     log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"].lower() + ".")
-                    randCheck = random.randint(1, 4)
-                    if randCheck == 1:
-                        if items[lootItem]["type"] == "Melee":
-                            scrollingDialogue(characterNames[characters[0]], fetchDialogue(characterDialogue[characters[0]], "meleegot"), 2, 0.01)
-                        if items[lootItem]["type"] == "Ranged":
-                            scrollingDialogue(characterNames[characters[0]], fetchDialogue(characterDialogue[characters[0]], "rangedgot"), 2, 0.01)
 
 def nightfall():
     decision = ask("Nightfall actions:", 2, ["View characters", "View log", "Continue to day"], 0.05)
@@ -937,31 +786,29 @@ def selectSimMode():
     global creationMode
     global characterNames
     global characterPlans
-    global characterDialogue
     global characterAttributes
-
     print(format.clear)
     time.sleep(0.5)
     scrollingText(";showdown.detailed", 2, 0.01)
-    time.sleep(0.05)
+    time.sleep(0.3)
     scrollingText("- Full simulation", 4, 0.01)
     scrollingText("- Choose NPC plan", 4, 0.01)
     scrollingText("- Custom attributes", 4, 0.01)
-    time.sleep(0.05)
+    time.sleep(0.3)
     print()
     scrollingText(";showdown.adaptable", 2, 0.01)
-    time.sleep(0.05)
+    time.sleep(0.3)
     scrollingText("- Full simulation", 4, 0.01)
     scrollingText("- Random NPC plan", 4, 0.01)
     scrollingText("- Custom attributes", 4, 0.01)
-    time.sleep(0.05)
+    time.sleep(0.3)
     print()
     scrollingText(";showdown.simple", 2, 0.01)
-    time.sleep(0.05)
+    time.sleep(0.3)
     scrollingText("- Partial simulation", 4, 0.01)
     scrollingText("- Random NPC plan", 4, 0.01)
     scrollingText("- All have same attributes", 4, 0.01)
-    time.sleep(0.1)
+    time.sleep(0.5)
     print()
     decision = ask("Select a creation mode:", 2, ["Detailed", "Adaptable", "Simple"], 0.01)
     if decision == 1:
@@ -973,13 +820,11 @@ def selectSimMode():
     characterNames = ["Joe Generic"]
     characterPlans = ["offensive"]
     characterAttributes = [[0, 0, 0, 0, 0]]
-    characterDialogue = ["cynic"]
 
 def createCharacters(currentCharacter = 0):
     global characterNames
     global characterPlans
     global characterAttributes
-    global characterDialogue
 
     print(format.clear)
     methods = []
@@ -1006,11 +851,9 @@ def createCharacters(currentCharacter = 0):
             methods.append("Name")
             methods.append("NPC plan")
             methods.append("Attributes")
-            methods.append("Dialogue")
         if creationMode == "ada":
             methods.append("Name")
             methods.append("Attributes")
-            methods.append("Dialogue")
         if creationMode == "sim":
             methods.append("Name")
         methods.append("Switch character")
@@ -1022,7 +865,6 @@ def createCharacters(currentCharacter = 0):
         print()
         scrollingText("Name: " + characterNames[currentCharacter], 2, 0.01)
         scrollingText("Plan: " + npc[characterPlans[currentCharacter]]["name"], 2, 0.01)
-        scrollingText("Dialogue: " + dialogue[characterDialogue[currentCharacter]]["name"], 2, 0.01)
         scrollingText("Current character: #" + str(currentCharacter + 1), 2, 0.01)
         print()
         print("          Melee: " + str(characterAttributes[currentCharacter][0]))
@@ -1038,8 +880,6 @@ def createCharacters(currentCharacter = 0):
             changeCharacterPlan(currentCharacter)
         if methods[decision - 1] == "Attributes":
             changeCharacterAttributes(currentCharacter)
-        if methods[decision - 1] == "Dialogue":
-            changeCharacterDialogue(currentCharacter)
         if methods[decision - 1] == "Switch character":
             currentCharacter = switchCharacter(currentCharacter, characterNames)
         if methods[decision - 1] == "New character":
@@ -1050,7 +890,7 @@ def createCharacters(currentCharacter = 0):
             saveLoadCharacters()
     print(format.clear)
     scrollingText("Are you sure you want to exit?", 2, 0.01)
-    decision = ask("Make sure you have your sheet saved before exiting.", 2, ["Save sheet", "Back to character creation", "Exit without saving"], 0.01)
+    decision = ask("Make sure you have your sheet saved before exiting.", 2, ["Save sheet", "Back to character creation", "Exit"], 0.01)
     if decision == 1:
         directToSave()
         mainMenu()
@@ -1072,7 +912,7 @@ def changeCharacterPlan(curChar):
     while run < len(npc["npclist"]):
         npclist.append(npc[npc["npclist"][run]]["name"])
         run = run + 1
-    decision = ask("Choose character's NPC plan:", 2, npclist, 0.01)
+    decision = ask("Choose character's NPC plan", 2, npclist, 0.01)
     print(format.clear)
     print(npc[npc["npclist"][decision - 1]]["triangle1"])
     print(npc[npc["npclist"][decision - 1]]["triangle2"])
@@ -1122,22 +962,10 @@ def changeCharacterAttributes(curChar):
         decision = ask("", 2, ["Change melee", "Change ranged", "Change endurance", "Change strength", "Change communication", "Exit"], 0.01)
     print(format.clear)
 
-def changeCharacterDialogue(curChar):
-    global characterDialogue
-    list = []
-    run = 0
-    while run < len(dialogue["list"]):
-        list.append(dialogue[dialogue["list"][run]]["name"])
-        run = run + 1
-    print()
-    decision = ask("Choose character's dialogue set:", 2, list, 0.05)
-    characterDialogue[curChar] = dialogue["list"][decision - 1]
-    createCharacters(curChar)
-
 def switchCharacter(curChar, currentCharacters):
     print(format.clear)
     print("  ")
-    switch = ask("Current characters:", 2, currentCharacters, 0.01, lookingFor = curChar)
+    switch = ask("Current characters:", 2, currentCharacters, 0.01, curChar)
     switch = switch - 1
     print(format.clear)
     return switch
@@ -1147,7 +975,6 @@ def newCharacter(currentCharacters):
     characterNames.append("Unnamed character")
     characterPlans.append("defensive")
     characterAttributes.append([0, 0, 0, 0, 0])
-    characterDialogue.append("cynic")
     newCharacter = len(currentCharacters) - 1
     return newCharacter
 
@@ -1155,7 +982,6 @@ def deleteCharacter(currChar):
     global characterNames
     global characterPlans
     global characterAttributes
-    global characterDialogue
 
     print()
     decision = ask("Would you really like to delete this character?", 2, ["Yes", "No"], 0.05)
@@ -1163,14 +989,12 @@ def deleteCharacter(currChar):
         characterNames.pop(currChar)
         characterPlans.pop(currChar)
         characterAttributes.pop(currChar)
-        characterDialogue.pop(currChar)
         currChar = currChar - 1
     return currChar
 
 def saveLoadCharacters():
     global characterNames
     global characterPlans
-    global characterDialogue
     global characterAttributes
     global creationMode
 
@@ -1192,84 +1016,43 @@ def saveLoadCharacters():
             if characterSaves[filenumber - 1] != "Exit":
                 file = os.path.join(foldername, os.path.join(characterSaves[filenumber - 1]))
                 data = json.load(open(file, "r"))
-                attempt = False
-                try:
-                    npcFile = data["npcPack"]
-                    dialogueFile = data["dialoguePack"]
-                    attempt = True
-                except:
+                if data["creationmode"] != creationMode:
                     print()
-                    scrollingText("This file was made before v0.2.0. You can manually update this file", 2, 0.01)
-                    scrollingText("to match a current file, or make a new file in the program.", 2, 0.01)
-                    print()
-                    askToContinue()
-                    mainMenu()
-                if attempt:
-                    if npcFile == contentPacks.npc and dialogueFile == contentPacks.dialogue:
-                        attempt = False
-                        try: 
-                            fileVersion = data["version"]
-                            attempt = True
-                        except:
-                            print()
-                            scrollingText("This file was made before v0.2.0. You can manually update this file", 2, 0.01)
-                            scrollingText("to match a current file, or make a new file in the program.", 2, 0.01)
-                            print()
-                            askToContinue()
-                            mainMenu()
-                        if attempt:
-                            if fileVersion == currentVersion:
-                                creationMode = data["creationmode"]
-                                characterNames = []
-                                characterPlans = []
-                                characterAttributes = []
-                                characterDialogue = []
-                                run = 0
-                                while run < data["length"]:
-                                    characterNames.append(data[str(run)]["name"])
-                                    characterPlans.append(data[str(run)]["plan"])
-                                    characterDialogue.append(data[str(run)]["dialogue"])
-                                    templist = []
-                                    templist.append(data[str(run)]["melee"])
-                                    templist.append(data[str(run)]["ranged"])
-                                    templist.append(data[str(run)]["endurance"])
-                                    templist.append(data[str(run)]["strength"])
-                                    templist.append(data[str(run)]["communication"])
-                                    characterAttributes.append(templist)
-                                    run = run + 1
-                            else:
-                                print()
-                                scrollingText("This file was created with a previous version of FliSh. You can ", 2, 0.01)
-                                scrollingText("can manually update this file to match a current file, or make a new file in the program.", 2, 0.01)
-                                print()
-                                askToContinue()
-                                mainMenu()
-                    else:
-                        scrollingText("Sorry, this character file was made with a different set of content packs.", 2, 0.01)
-                        if data["npcPack"] != contentPacks.npc:
-                            scrollingText("This file takes an npc content pack with the ID of " + data["npcPack"] + " while you have " + contentPacks.npc + " currently enabled.")
-                        if data["dialoguePack"] != contentPacks.dialogue:
-                            scrollingText("This file takes a dialogue content pack with the ID of " + data["dialoguePack"] + " while you have " + contentPacks.dialogue + " currently enabled.")
+                    decision = ask("This file was created in a different mode, would you like to switch to the file's mode?", 2, ["Change mode to file", "Back to character creation"], 0.01)
+                    if decision == 1:
+                        creationMode = data["creationmode"]
+                    if decision == 2:
+                        createCharacters()
+                characterNames = []
+                characterPlans = []
+                characterAttributes = []
+                run = 0
+                while run < data["length"]:
+                    characterNames.append(data[str(run)]["name"])
+                    characterPlans.append(data[str(run)]["plan"])
+                    templist = []
+                    templist.append(data[str(run)]["melee"])
+                    templist.append(data[str(run)]["ranged"])
+                    templist.append(data[str(run)]["endurance"])
+                    templist.append(data[str(run)]["strength"])
+                    templist.append(data[str(run)]["communication"])
+                    characterAttributes.append(templist)
+                    run = run + 1
             else:
-                mainMenu()
+                saveLoadCharacters()
         else:
             print()
-            scrollingText("Directory is empty!", 2, 0.01)
+            print("  Directory is empty!")
             askToContinue()
-            mainMenu()
     if decision == 2:
         run = 0
         data = {}
         data["length"] = len(characterNames)
         data["creationmode"] = creationMode
-        data["version"] = currentVersion
-        data["npcPack"] = contentPacks.npc
-        data["dialoguePack"] = contentPacks.dialogue
         while run < len(characterNames):
             data[str(run)] = {}
             data[str(run)]["name"] = characterNames[run]
             data[str(run)]["plan"] = characterPlans[run]
-            data[str(run)]["dialogue"] = characterDialogue[run]
             data[str(run)]["melee"] = characterAttributes[run][0]
             data[str(run)]["ranged"] = characterAttributes[run][1]
             data[str(run)]["endurance"] = characterAttributes[run][2]
@@ -1290,14 +1073,10 @@ def directToSave():
     data = {}
     data["length"] = len(characterNames)
     data["creationmode"] = creationMode
-    data["version"] = currentVersion
-    data["npcPack"] = contentPacks.npc
-    data["dialoguePack"] = contentPacks.dialogue
     while run < len(characterNames):
         data[str(run)] = {}
         data[str(run)]["name"] = characterNames[run]
         data[str(run)]["plan"] = characterPlans[run]
-        data[str(run)]["dialogue"] = characterDialogue[run]
         data[str(run)]["melee"] = characterAttributes[run][0]
         data[str(run)]["ranged"] = characterAttributes[run][1]
         data[str(run)]["endurance"] = characterAttributes[run][2]
@@ -1312,132 +1091,6 @@ def directToSave():
     file = open(filename, "w")
     json.dump(data, file, separators = (',', ':'), indent = 4)
     print(format.clear)
-
-def openPack():
-    global items
-    global npc
-    global dialogue
-
-    directory = os.path.dirname(__file__)
-    foldername = os.path.join(directory, ('contentPacks/*'))
-    contentFolders = glob.glob(foldername)
-    display = []
-    run = 0
-    while len(display) < len(contentFolders):
-        currFileName = os.path.join(contentFolders[run], "packInfo.json")
-        try:
-            infoFile = json.load(open(currFileName, "r"))
-            display.append(infoFile["name"])
-        except:
-            print()
-            scrollingText("One of these folders doesn't have a packInfo.json, make sure it has one in", 2, 0.01)
-            scrollingText("the original download, or write one yourself using CFS.", 2, 0.01)
-            display.append(format.red + "Invalid content pack" + format.end)
-        run = run + 1
-    display.append("Default pack")
-    display.append("Exit")
-    print()
-    decision = ask("Choose content pack:", 2, display, 0.05)
-    print()
-    if display[decision - 1] != "Exit":
-        if display[decision - 1] != "Default pack":
-            packDirectory = os.path.join(foldername, contentFolders[decision - 1])
-            loadingFile = os.path.join(packDirectory, "packInfo.json")
-            infoFile = json.load(open(loadingFile, "r"))
-            print(format.clear)
-            display.append(infoFile["name"])
-            run = 0
-            if infoFile["status"] == "Unfinished":
-                print()
-                scrollingText(format.underline + format.bold + format.red + infoFile["name"] + format.end, 2, 0.01)
-            if infoFile["status"] == "In progress":
-                print()
-                scrollingText(format.underline + format.bold + format.blue + infoFile["name"] + format.end, 2, 0.01)
-            if infoFile["status"] == "Finished":
-                print()
-                scrollingText(format.underline + format.bold + format.green + infoFile["name"] + format.end, 2, 0.01)
-            authList = infoFile["authors"][0]
-            run = 1
-            while run < len(infoFile["authors"]):
-                authList = authList + ", " + infoFile["authors"][run]
-                run = run + 1
-            scrollingText("Author(s): " + authList, 2, 0.01)
-            while run < len(infoFile["description"]):
-                scrollingText(infoFile["description"][run], 2, 0.01)
-                run = run + 1
-            if "items" in infoFile["content"]:
-                scrollingText("This pack includes " + format.red + "items" + format.end + ".", 2, 0.01)
-            if "npcs" in infoFile["content"]:
-                scrollingText("This pack includes " + format.blue + "NPCs" + format.end + ".", 2, 0.01)
-            if "dialogue" in infoFile["content"]:
-                scrollingText("This pack includes " + format.green + "dialogue" + format.end + ".", 2, 0.01)
-            print()
-            decision = ask("Load this package?", 2, ["Yes", "No"], 0.05)
-            print()
-            if decision == 1:
-                if "items" in infoFile["content"]:
-                    try:
-                        filename = os.path.join(packDirectory, ('json/items.json'))
-                        items = json.load(open(filename, "r"))
-                        contentPacks.items = infoFile["id"]
-                        scrollingText("Items JSON file loaded from " + infoFile["name"] + ".", 2, 0.01)
-                    except:
-                        print()
-                        scrollingText("Sorry, we couldn't load the items file from this content pack.", 2, 0.01)
-                        scrollingText("Make sure the packInfo.json is filled out properly!", 2, 0.01)
-                        print()
-                        askToContinue()
-                        openPack()
-                if "npcs" in infoFile["content"]:
-                    try:
-                        filename = os.path.join(packDirectory, ('json/npcs.json'))
-                        npc = json.load(open(filename, "r"))
-                        contentPacks.npc = infoFile["id"]
-                        scrollingText("NPC JSON file loaded from " + infoFile["name"] + ".", 2, 0.01)
-                    except:
-                        print()
-                        scrollingText("Sorry, we couldn't load the NPC file from this content pack.", 2, 0.01)
-                        scrollingText("Make sure the packInfo.json is filled out properly!", 2, 0.01)
-                        print()
-                        askToContinue()
-                        openPack()
-                if "dialogue" in infoFile["content"]:
-                    try:
-                        filename = os.path.join(packDirectory, ('json/dialogue.json'))
-                        dialogue = json.load(open(filename, "r"))
-                        contentPacks.dialogue = infoFile["id"]
-                        scrollingText("Dialogue JSON file loaded from " + infoFile["name"] + ".", 2, 0.01)
-                    except:
-                        print()
-                        scrollingText("Sorry, we couldn't load the dialogue file from this content pack.", 2, 0.01)
-                        scrollingText("Make sure the packInfo.json is filled out properly!", 2, 0.01)
-                        print()
-                        askToContinue()
-                        openPack()
-                scrollingText("All listed content from " + infoFile["name"] + " loaded.", 2, 0.01)
-                print()
-                askToContinue()
-            else:
-                print(format.clear)
-                openPack()
-        else:
-            directory = os.path.dirname(__file__)
-            filename = os.path.join(directory, ('json/items.json'))
-            items = json.load(open(filename, "r"))
-            scrollingText("Items JSON file loaded from default.", 2, 0.01)
-            filename = os.path.join(directory, ('json/npcs.json'))
-            npc = json.load(open(filename, "r"))
-            scrollingText("NPC JSON file loaded from default.", 2, 0.01)
-            filename = os.path.join(directory, ('json/dialogue.json'))
-            dialogue = json.load(open(filename, "r"))
-            scrollingText("Dialogue JSON file loaded from default.", 2, 0.01)
-            contentPacks.items = "Default pack"
-            contentPacks.npc = "Default pack"
-            contentPacks.dialogue = "Default pack"
-            askToContinue()
-        mainMenu()
-    else:
-        mainMenu()
 
 def settings():
     global format

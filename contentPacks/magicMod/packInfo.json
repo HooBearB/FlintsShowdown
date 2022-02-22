@@ -1,8 +1,0 @@
-{
-    "name": "Magic Showdown",
-    "authors": ["Flint"],
-    "id": "mm",
-    "status": "Unfinished",
-    "description": ["Magic showdown adds magical weaponry to loot in the showdown."],
-    "content": ["items"]
-}

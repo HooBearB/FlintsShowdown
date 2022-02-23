@@ -1,4 +1,6 @@
 #FLINT'S SHOWDOWN
+version = "0.2.0 ALT"
+dateRelease = "February 27, 2022"
 """
 A fun little project for me to do,
 this is kinda like those hunger games
@@ -31,7 +33,6 @@ TO DO:
 
 import random
 import os
-from re import L
 import time
 import json
 
@@ -199,6 +200,47 @@ def generateEvents():
         eventList.append(random.choice(events))
     return eventList
 
+def checkRelint(data, filename):
+    issues = []
+    try:
+        version = data["version"]
+    except:
+        issues.append("version")
+    if len(issues) > 0:
+        relintedData = relint(data, issues, filename)
+        return relintedData
+
+def relint(data, issues, filename):
+    print()
+    scrollingText("Data file is out of date. Relinting...", 2, 0.01)
+    run = 0
+    while run < len(issues):
+        if issues[run] == "version":
+            data["version"] = version
+        run = run + 1
+    scrollingText("Data relinted.", 2, 0.01)
+    askToContinue()
+    run = 0
+    newData = {}
+    newData["length"] = data["length"]
+    newData["version"] = version
+    newData["creationmode"] = data["creationmode"]
+    while run < data["length"]:
+        newData[str(run)] = {}
+        newData[str(run)]["name"] = data[str(run)]["name"]
+        newData[str(run)]["plan"] = data[str(run)]["plan"]
+        newData[str(run)]["melee"] = data[str(run)]["melee"]
+        newData[str(run)]["ranged"] = data[str(run)]["ranged"]
+        newData[str(run)]["endurance"] = data[str(run)]["endurance"]
+        newData[str(run)]["strength"] = data[str(run)]["strength"]
+        newData[str(run)]["communication"] = data[str(run)]["communication"]
+        run = run + 1
+    directory = os.path.dirname(__file__)
+    foldername = os.path.join(directory, ('characterSaves/'))
+    filename = os.path.join(foldername, filename)
+    file = open(filename, "w")
+    json.dump(newData, file, separators = (',', ':'), indent = 4)
+    return newData
 
 
 """
@@ -209,21 +251,17 @@ def generateEvents():
 """
 def mainMenu():
     print(format.clear)
-    print(format.green)
-    print("     _____  __    _____   __   __  _____  __  _____")
-    print("    / ___/ / /   /_  _/  /  | / / /_  _/ /_/ /  __/")
-    print("   / ___/ / /__  _/ /_  / /||/ /   / /      /__  /")
-    print("  /_/    /____/ /____/ /_/ |__/   /_/      /____/" + format.end + format.blue)
-    print("                 _____  __  __  ______  __    __  ____    ______  __    __  __   __")
-    print("                /  __/ / /_/ / / __  / / /__ / / / __ |  / __  / / /__ / / /  | / /")
-    print("               /__  / / __  / / /_/ / / // // / / /_/ / / /_/ / / // // / / /||/ /")
-    print("              /____/ /_/ /_/ /_____/ /_______/ /_____/ /_____/ /_______/ /_/ |__/" + format.end + format.red + format.italic)
-    print("                                  _▄▂____________________▂_")
-    print("                           ______/   ▅▅▅  _________________|")
-    print("                          |     _________|_╷_╷_╷_╷_╷_/")
-    print("                          |____/(_/")
-    print(format.end)
-    scrollingText(format.bold + format.italic + "v0.1.5 DEMO / Feb 13, 2022 build" + format.end, 2, 0.02)
+    print(format.green + format.bold)
+    print("     _____  __    _____   __   __  _____  __  _____" + format.end + format.red + format.bold + "         _________________________" + format.end + format.bold + format.green)
+    print("    / ___/ / /   /_  _/  /  | / / /_  _/ /_/ /  __/" + format.end + format.red + format.bold + "  ______/   ▅▅▅  _________________|" + format.end + format.bold + format.green)
+    print("   / ___/ / /__  _/ /_  / /||/ /   / /      /__  /" + format.end + format.red + format.bold + "  |     _________|_╷_╷_╷_╷_╷_/" + format.end + format.bold + format.green)
+    print("  /_/    /____/ /____/ /_/ |__/   /_/      /____/" + format.end + format.red + format.bold + "   |____/(_/" + format.end + format.bold + format.red)
+    print("           _    " + format.end + format.bold + format.blue + "    _____  __  __  ______  __    __  ____    ______  __    __  __   __" + format.end + format.bold + format.red)
+    print("  ________| |__ " + format.end + format.bold + format.blue + "   /  __/ / /_/ / / __  / / /__ / / / __ |  / __  / / /__ / / /  | / /" + format.end + format.bold + format.red)
+    print("  \_╷_╷_╷_|  __|" + format.end + format.bold + format.blue + "  /__  / / __  / / /_/ / / // // / / /_/ / / /_/ / / // // / / /||/ /" + format.end + format.bold + format.red)
+    print("          ╵-╵   " + format.end + format.bold + format.blue + " /____/ /_/ /_/ /_____/ /_______/ /_____/ /_____/ /_______/ /_/ |__/" + format.end + format.italic + format.bold)
+    print()
+    scrollingText("v" + version + " / " + dateRelease + " build" + format.end, 2, 0.02)
     decision = ask("", 2, ["Start new game", "Create characters", "Settings", "Exit"], 0.03)
     if decision == 1:
         startSim()
@@ -263,6 +301,7 @@ def startSim():
         if characterSaves[filenumber - 1] != "Exit":
             file = os.path.join(foldername, os.path.join(characterSaves[filenumber - 1]))
             data = json.load(open(file, "r"))
+            checkRelint(data, characterSaves[filenumber - 1])
             creationMode = data["creationmode"]
             characterNames = []
             characterPlans = []

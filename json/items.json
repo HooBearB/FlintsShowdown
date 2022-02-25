@@ -2,7 +2,7 @@
     "lootable": ["screwdriver", "kitchenknife", "survivalknife", "hammer", "axe", "machete", "golfclub", "shovel", "scythe", "katana", "iceaxe", "bow", "pocketpistol", "pistol", "revolver", "magnum", "huntingrifle", "leverrifle", "shotgun", "db", "sawnoff", "carbine"],
     
     "screwdriver": {
-        "name": "screwdriver",
+        "name": "Screwdriver",
         "grade": 1,
         "type": "Melee",
         "damage": 20,

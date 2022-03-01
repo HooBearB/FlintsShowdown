@@ -32,9 +32,9 @@ import time
 import json
 
 directory = os.path.dirname(__file__)
-filename = os.path.join(directory, ('json/items.json'))
+filename = os.path.join(directory, (r'json/items.json'))
 items = json.load(open(filename, "r"))
-filename = os.path.join(directory, ('json/npcs.json'))
+filename = os.path.join(directory, (r'json/npcs.json'))
 npc = json.load(open(filename, "r"))
 
 
@@ -245,27 +245,32 @@ def relint(data, issues, filename):
 def runLoot(characters):
     global characterItems
     global characterItemDurabilities
+    global characterArmour
     
     lootItem = random.choice(items["lootable"])
-    if len(characterItems[characters[0]]) == 0:
-        characterItems[characters[0]].append(lootItem)
-        characterItemDurabilities[characters[0]].append(items[lootItem]["durability"])
+    if items[lootItem]["type"] == "Armour":
+        characterArmour[characters[0]] = characterArmour[characters[0]] + items[lootItem]["ap"]
         scrollingText(characterNames[characters[0]] + " picks up the " + format.green + items[lootItem]["name"].lower() + format.end + ".", 2, 0.01)
-        log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"].lower() + ".")
     else:
-        if len(characterItems[characters[0]]) > 3:
-            if items[lootItem]["grade"] >= items[characterItems[characters[0]][0]]["grade"]:
-                scrollingText(characterNames[characters[0]] + " drops their " + items[characterItems[characters[0]][0]]["name"].lower() + " to pick up the cache's " + items[lootItem]["name"].lower() + ".", 2, 0.01)
-                log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"].lower() + ".")
-                characterItems[characters[0]][0] = lootItem
-                characterItemDurabilities[characters[0]][0] = items[lootItem]["durability"]
-            else:
-                scrollingText(characterNames[characters[0]] + "'s " + items[characterItems[characters[0]][0]]["name"].lower() + " is better than the " + items[lootItem]["name"].lower() + ".", 2, 0.01)
-        else:
+        if len(characterItems[characters[0]]) == 0:
             characterItems[characters[0]].append(lootItem)
             characterItemDurabilities[characters[0]].append(items[lootItem]["durability"])
             scrollingText(characterNames[characters[0]] + " picks up the " + format.green + items[lootItem]["name"].lower() + format.end + ".", 2, 0.01)
             log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"].lower() + ".")
+        else:
+            if len(characterItems[characters[0]]) > 3:
+                if items[lootItem]["grade"] >= items[characterItems[characters[0]][0]]["grade"]:
+                    scrollingText(characterNames[characters[0]] + " drops their " + items[characterItems[characters[0]][0]]["name"].lower() + " to pick up the cache's " + items[lootItem]["name"].lower() + ".", 2, 0.01)
+                    log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"].lower() + ".")
+                    characterItems[characters[0]][0] = lootItem
+                    characterItemDurabilities[characters[0]][0] = items[lootItem]["durability"]
+                else:
+                    scrollingText(characterNames[characters[0]] + "'s " + items[characterItems[characters[0]][0]]["name"].lower() + " is better than the " + items[lootItem]["name"].lower() + ".", 2, 0.01)
+            else:
+                characterItems[characters[0]].append(lootItem)
+                characterItemDurabilities[characters[0]].append(items[lootItem]["durability"])
+                scrollingText(characterNames[characters[0]] + " picks up the " + format.green + items[lootItem]["name"].lower() + format.end + ".", 2, 0.01)
+                log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"].lower() + ".")
 
 def checkBreak(character):
     if len(characterItems[character]) > 0:
@@ -280,7 +285,8 @@ def checkBreak(character):
 
 def combat(characters, decision, ran):
     global deadCharacters
-
+    if decision == 1:
+        print()
     if npc[characterPlans[characters[0]]]["attacked"] == "flee":
         rand = random.randint(1, 4 + (characterAttributes[characters[1]][3] - characterAttributes[characters[0]][3]))
         if decision == 1:
@@ -301,23 +307,47 @@ def combat(characters, decision, ran):
                 rand = random.randint(1, 3)
                 hits = ["punches", "hits", "kicks", "knees"]
                 if rand != 3:
+                    rand = random.randint(3, (characterAttributes[characters[charA]][4] * 2) + 3)
+                    if characterArmour[characters[charB]] > 0:
+                        if characterArmour[characters[charB]] - rand > 0:
+                            characterArmour[characters[charB]] = characterArmour[characters[charB]] - rand
+                        else:
+                            rand = rand - characterArmour[characters[charB]]
+                            characterArmour[characters[charB]] = 0
+                            characterHealth[characters[charB]] = characterHealth[characters[charB]] - rand
+                    else:
+                        characterHealth[characters[charB]] = characterHealth[characters[charB]] - rand
                     if decision == 1:
-                        scrollingText(characterNames[characters[charA]] + " " + random.choice(hits) + " " + characterNames[characters[charB]] + ".", 2, 0.01)
-                    rand = random.randint(3, 5)
-                    characterHealth[characters[charB]] = characterHealth[characters[charB]] - rand
+                        scrollingText(characterNames[characters[charA]] + " " + random.choice(hits) + " " + characterNames[characters[charB]] + ".   " + format.red + "-" + str(rand) + format.end, 2, 0.01)
                 else:
                     if decision == 1:
                         scrollingText(characterNames[characters[charA]] + " misses their shot.", 2, 0.01)
             else:
                 if decision == 1:
                     scrollingText(characterNames[characters[charA]] + items[characterItems[characters[charA]][0]]["ready"], 2, 0.01)
-                rand = random.randint(1,100)
+                rand = random.randint(1, 100)
+                weapon = items[characterItems[characters[charA]][0]]
                 if decision == 1:
                     scrollingText(characterNames[characters[charA]] + items[characterItems[characters[charA]][0]]["attack"] + characterNames[characters[charB]] + ".", 2, 0.01)
-                if rand <= items[characterItems[characters[charA]][0]]["accuracy"]:
+                if weapon["type"] == "Melee":
+                    rand = rand + (characterAttributes[characters[charA]][1] * 5)
+                if weapon["type"] == "Ranged":
+                    rand = rand + (characterAttributes[characters[charA]][2] * 5)
+                if rand <= weapon["accuracy"]:
                     if decision == 1:
-                        scrollingText("The shot connects.", 2, 0.01)
-                    characterHealth[characters[charB]] = characterHealth[characters[charB]] - items[characterItems[characters[charA]][0]]["damage"]
+                        scrollingText("The shot connects.   " + format.red + "-" + str(rand) + format.end, 2, 0.01)
+                    dam = weapon["damage"]
+                    if weapon["type"] == "Melee":
+                        dam = dam + random.randint(0, characterAttributes[characters[charA]][1] * 5)  + random.randint(0, characterAttributes[characters[charA]][4] * 5)
+                    if characterArmour[characters[charB]] > 0:
+                        if characterArmour[characters[charB]] - dam > 0:
+                            characterArmour[characters[charB]] = characterArmour[characters[charB]] - dam
+                        else:
+                            dam = dam - characterArmour[characters[charB]]
+                            characterArmour[characters[charB]] = 0
+                            characterHealth[characters[charB]] = characterHealth[characters[charB]] - dam
+                    else:
+                        characterHealth[characters[charB]] = characterHealth[characters[charB]] - dam
                     characterItemDurabilities[characters[charA]][0] = characterItemDurabilities[characters[charA]][0] - 1
                 else:
                     if decision == 1:
@@ -335,7 +365,10 @@ def combat(characters, decision, ran):
                 charB = 0
             if ran == True or characterHealth[characters[charA]] <= 0 or characterHealth[characters[charB]] <= 0:
                 if characterHealth[characters[charA]] <= 0:
+                    print()
                     scrollingText(characterNames[characters[charA]] + " succumbs to their wounds, and dies.", 2, 0.01)
+                    charactersKilled[characters[charB]].append(characterNames[characters[charA]])
+                    killedBy[characters[charA]] = characterNames[characters[charB]]
                     if characterItems[characters[charB]] != []:
                         log.append(str(days) + ". " + characterNames[characters[charA]] + " was killed by " + characterNames[characters[charB]] + " with a " + items[characterItems[characters[charB]][0]]["name"].lower() +  ".")
                     else:
@@ -345,6 +378,8 @@ def combat(characters, decision, ran):
                     deadCharacters.append(characterNames[characters[charA]])
                 if characterHealth[characters[charB]] <= 0:
                     scrollingText(characterNames[characters[charB]] + " succumbs to their wounds, and dies.", 2, 0.01)
+                    charactersKilled[characters[charA]].append(characterNames[characters[charB]])
+                    killedBy[characters[charB]] = characterNames[characters[charA]]
                     if characterItems[characters[charA]] != []:
                         log.append(str(days) + ". " + characterNames[characters[charB]] + " was killed by " + characterNames[characters[charA]] + " with a " + items[characterItems[characters[charA]][0]]["name"].lower() +  ".")
                     else:
@@ -409,6 +444,9 @@ def startSim():
     global days
     global deadCharacters
     global characterKills
+    global charactersKilled
+    global killedBy
+    global characterArmour
     global log
 
     directory = os.path.dirname(__file__)
@@ -462,6 +500,15 @@ def startSim():
     characterKills = []
     while len(characterKills) <= len(characterNames):
         characterKills.append(0)
+    charactersKilled = []
+    while len(charactersKilled) <= len(characterNames):
+        charactersKilled.append([])
+    killedBy = []
+    while len(killedBy) <= len(characterNames):
+        killedBy.append("n/a")
+    characterArmour = []
+    while len(characterArmour) <= len(characterNames):
+        characterArmour.append(0)
     days = 1
     deadCharacters = []
     log = []
@@ -491,18 +538,19 @@ def printDayGUI():
 def runEvents(eventList):
     run = 0
     while run < len(eventList):
-        if eventList[run] == "saw_participant":
-            sawParticipant()
-        if eventList[run] == "heard_participant":
-            heardParticipant()
-        if eventList[run] == "trace":
-            trace()
-        if eventList[run] == "attacked":
-            attacked()
-        if eventList[run] == "looting":
-            looting()
-        askToContinue()
-        run = run + 1
+        if len(deadCharacters) < len(characterNames) - 1:
+            if eventList[run] == "saw_participant":
+                sawParticipant()
+            if eventList[run] == "heard_participant":
+                heardParticipant()
+            if eventList[run] == "trace":
+                trace()
+            if eventList[run] == "attacked":
+                attacked()
+                askToContinue()
+            if eventList[run] == "looting":
+                looting()
+            run = run + 1
 
 def sawParticipant():
     characters = generateCharacterList(2)
@@ -531,6 +579,7 @@ def sawParticipant():
             attacked(characters)
         else:
             scrollingText(format.green + characterNames[characters[0]] + " successfully negotiates with " + characterNames[characters[1]] + "." + format.end, 2, 0.01)
+    askToContinue()
 
 def heardParticipant():
     characters = generateCharacterList(2)
@@ -560,6 +609,7 @@ def heardParticipant():
             scrollingText(characterNames[characters[0]] + " fails to find anyone.", 2, 0.01)
     if npc[characterPlans[characters[0]]]["heard_participant"] == "flee":
         scrollingText(characterNames[characters[0]] + " runs away.", 2, 0.01)
+    askToContinue()
 
 def trace():
     characters = generateCharacterList(2)
@@ -580,6 +630,7 @@ def trace():
             attacked(characters)
         else:
             scrollingText(characterNames[characters[0]] + " hides.", 2, 0.01)
+    askToContinue()
         
 def attacked(characters = []):
     if characters == []:
@@ -591,15 +642,14 @@ def attacked(characters = []):
     if len(characterItems[characters[1]]) > 0:
         scrollingText(characterNames[characters[1]] + " has a " + items[characterItems[characters[1]][0]]["name"].lower() + ".", 2, 0.01)
     else:
-        scrollingText(characterNames[characters[1]] + " has is using their fists.", 2, 0.01)
+        scrollingText(characterNames[characters[1]] + " is using their fists.", 2, 0.01)
     if len(characterItems[characters[0]]) > 0:
         scrollingText(characterNames[characters[0]] + " has a " + items[characterItems[characters[0]][0]]["name"].lower() + ".", 2, 0.01)
     else:
-        scrollingText(characterNames[characters[0]] + " has is using their fists.", 2, 0.01)
+        scrollingText(characterNames[characters[0]] + " is using their fists.", 2, 0.01)
     log.append(str(days) + ". " + characterNames[characters[0]] + " got attacked by " + characterNames[characters[1]] + ".")
     print()
     decision = ask("Would you like to view this combat turn by turn?", 2, ["Turn by turn", "Skip to result"], 0.01)
-    print()
     combat(characters, decision, ran)
 
 def attack(characters = []):
@@ -620,7 +670,6 @@ def attack(characters = []):
     log.append(str(days) + ". " + characterNames[characters[0]] + " attacked " + characterNames[characters[1]] + ".")
     print()
     decision = ask("Would you like to view this combat turn by turn?", 2, ["Turn by turn", "Skip to result"], 0.01)
-    print()
     newCharacters = []
     run = len(characters) - 1
     while run >= 0:
@@ -645,6 +694,7 @@ def looting():
             attack(characters)
         else:
             runLoot(characters)
+    askToContinue()
 
 def nightfall():
     decision = ask("Nightfall actions:", 2, ["View characters", "View log", "Continue to day"], 0.05)
@@ -674,8 +724,17 @@ def viewCharacters():
         print()
         if options[decision - 1] != "Exit":
             scrollingText(format.bold + characterNames[view] + format.end, 2, 0.01)
-            scrollingText("Health: " + str(characterHealth[view]), 2, 0.01)
-            scrollingText(" Kills: " + str(characterKills[view]), 2, 0.01)
+            scrollingText("Health: " + format.red + format.bold + str(characterHealth[view]) + format.end, 2, 0.01)
+            if characterArmour[view] > 0:
+                scrollingText("Armour: " + format.blue + format.bold + str(characterArmour[view]) + format.end, 2, 0.01)
+            if characterNames[view] in deadCharacters:
+                scrollingText("Killed by: " + killedBy[view], 2, 0.01)
+            scrollingText("Kills: " + str(characterKills[view]), 2, 0.01)
+            if len(charactersKilled[view]) > 0:
+                run = 0
+                while run < len(charactersKilled[view]):
+                    scrollingText(str(run + 1) + ". " + charactersKilled[view][run], 2, 0.01)
+                    run = run + 1
             print()
             scrollingText("Inventory:", 2, 0.01)
             run = 0
@@ -1009,7 +1068,7 @@ def saveLoadCharacters():
         directory = os.path.dirname(__file__)
         foldername = os.path.join(directory, ('characterSaves/'))
         filename = askString("Name this character set:", 2)
-        filename = os.path.join(foldername, filename + '.json')
+        filename = os.path.join(foldername, filename + r'.json')
         file = open(filename, "w")
         json.dump(data, file, separators = (',', ':'), indent = 4)
     print(format.clear)
@@ -1033,7 +1092,7 @@ def directToSave():
     directory = os.path.dirname(__file__)
     foldername = os.path.join(directory, ('characterSaves/'))
     filename = askString("Name this character set:", 2)
-    filename = os.path.join(foldername, filename + '.json')
+    filename = os.path.join(foldername, filename + r'.json')
     file = open(filename, "w")
     json.dump(data, file, separators = (',', ':'), indent = 4)
     print(format.clear)

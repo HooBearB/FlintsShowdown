@@ -47,7 +47,7 @@ npc = json.load(open(filename, "r"))
 """
 class format:
     mode = "Colourmatic"
-    clear = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+    clear = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
     strikethrough = "\u001b[29m"
     underline = "\u001b[4m"
     italic = "\u001b[3m"
@@ -190,8 +190,10 @@ def generateCharacterList(number):
 def generateEvents():
     eventNum = random.randint(1, int(len(characterNames) / 2))
     eventList = []
+    if days % 3 == 0:
+        eventList.append("airdrop")
     while len(eventList) < eventNum:
-        events = ["saw_participant", "heard_participant", "trace", "attacked", "looting", "looting"]
+        events = ["saw_participant", "heard_participant", "trace", "attacked", "looting"]
         eventList.append(random.choice(events))
     return eventList
 
@@ -260,12 +262,12 @@ def runLoot(characters):
         else:
             if len(characterItems[characters[0]]) > 3:
                 if items[lootItem]["grade"] >= items[characterItems[characters[0]][0]]["grade"]:
-                    scrollingText(characterNames[characters[0]] + " drops their " + items[characterItems[characters[0]][0]]["name"].lower() + " to pick up the cache's " + items[lootItem]["name"].lower() + ".", 2, 0.01)
+                    scrollingText(characterNames[characters[0]] + " drops their " + format.red + items[characterItems[characters[0]][0]]["name"].lower() + format.end + " to pick up the cache's " + format.green + items[lootItem]["name"].lower() + format.end + ".", 2, 0.01)
                     log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"].lower() + ".")
                     characterItems[characters[0]][0] = lootItem
                     characterItemDurabilities[characters[0]][0] = items[lootItem]["durability"]
                 else:
-                    scrollingText(characterNames[characters[0]] + "'s " + items[characterItems[characters[0]][0]]["name"].lower() + " is better than the " + items[lootItem]["name"].lower() + ".", 2, 0.01)
+                    scrollingText(characterNames[characters[0]] + "'s " + format.green + items[characterItems[characters[0]][0]]["name"].lower() + format.end + " is better than the " + format.red + items[lootItem]["name"].lower() + format.end + ".", 2, 0.01)
             else:
                 characterItems[characters[0]].append(lootItem)
                 characterItemDurabilities[characters[0]].append(items[lootItem]["durability"])
@@ -276,8 +278,8 @@ def checkBreak(character):
     if len(characterItems[character]) > 0:
         if characterItemDurabilities[character][0] <= 0:
             scrollingText(format.red + characterNames[character] + items[characterItems[character][0]]["break"] + format.end, 2, 0.01)
-            characterItems.pop(0)
-            characterItemDurabilities.pop(0)
+            characterItems[character].pop(0)
+            characterItemDurabilities[character].pop(0)
             if len(characterItems[character]) > 0:
                 scrollingText(format.blue + characterNames[character] + " switches to their " + items[characterItems[character][0]]["name"] + "." + format.end, 2, 0.01)
             else:
@@ -290,9 +292,13 @@ def combat(characters, decision, ran):
     if npc[characterPlans[characters[0]]]["attacked"] == "flee":
         rand = random.randint(1, 4 + (characterAttributes[characters[1]][3] - characterAttributes[characters[0]][3]))
         if decision == 1:
+            print()
             scrollingText(format.blue + characterNames[characters[0]] + " attempts to run away." + format.end, 2, 0.01)
         if rand == 6:
+            if decision != 1:
+                print()
             scrollingText(format.green + characterNames[characters[0]] + " runs away." + format.end, 2, 0.01)
+            print()
             log.append(str(days) + ". " + characterNames[characters[0]] + " ran away.")
             ran = True
         else:
@@ -334,11 +340,12 @@ def combat(characters, decision, ran):
                 if weapon["type"] == "Ranged":
                     rand = rand + (characterAttributes[characters[charA]][2] * 5)
                 if rand <= weapon["accuracy"]:
-                    if decision == 1:
-                        scrollingText("The shot connects.   " + format.red + "-" + str(rand) + format.end, 2, 0.01)
                     dam = weapon["damage"]
                     if weapon["type"] == "Melee":
                         dam = dam + random.randint(0, characterAttributes[characters[charA]][1] * 5)  + random.randint(0, characterAttributes[characters[charA]][4] * 5)
+                    if weapon["type"] == "Ranged":
+                        dam = dam + random.randint(-10 , 10)
+                    origDam = dam
                     if characterArmour[characters[charB]] > 0:
                         if characterArmour[characters[charB]] - dam > 0:
                             characterArmour[characters[charB]] = characterArmour[characters[charB]] - dam
@@ -349,6 +356,8 @@ def combat(characters, decision, ran):
                     else:
                         characterHealth[characters[charB]] = characterHealth[characters[charB]] - dam
                     characterItemDurabilities[characters[charA]][0] = characterItemDurabilities[characters[charA]][0] - 1
+                    if decision == 1:
+                        scrollingText("The shot connects.   " + format.red + "-" + str(origDam) + format.end, 2, 0.01)
                 else:
                     if decision == 1:
                         scrollingText("The shot misses.", 2, 0.01)
@@ -550,6 +559,8 @@ def runEvents(eventList):
                 askToContinue()
             if eventList[run] == "looting":
                 looting()
+            if eventList[run] == "airdrop":
+                airdrop()
             run = run + 1
 
 def sawParticipant():
@@ -696,6 +707,19 @@ def looting():
             runLoot(characters)
     askToContinue()
 
+def airdrop():
+    characters = generateCharacterList(random.randint(1, int((len(characterNames) - len(deadCharacters) / 5))))
+    run = 0
+    scrollingText(format.bold + "Airdrops descend on the showdown's arena." + format.end, 2, 0.01)
+    print()
+    while run < len(characters):
+        tempChar = []
+        tempChar.append(characters[run])
+        runLoot(tempChar)
+        run = run + 1
+    print()
+    askToContinue()
+
 def nightfall():
     decision = ask("Nightfall actions:", 2, ["View characters", "View log", "Continue to day"], 0.05)
     if decision == 1:
@@ -719,7 +743,10 @@ def viewCharacters():
     options.append("Exit")
     while options[decision - 1] != "Exit":
         print()
-        decision = ask("View character:", 2, options, 0.05)
+        scrollingText("Character [" + format.red + "Health" + format.end + "] (" + format.green + "Equipped item" + format.end + ") {" + format.blue + "Kills" + format.end + "}", 2, 0.01)
+        scrollingText(format.red + "Dead character" + format.end + " {" + format.blue + "Kills" + format.end + "}", 2, 0.01)
+        print()
+        decision = ask("View character:\n", 2, options, 0.05)
         view = decision - 1
         print()
         if options[decision - 1] != "Exit":
@@ -768,8 +795,8 @@ def healAll():
     run = 0
     while run < len(characterHealth):
         if characterHealth[run] > 0:
-            if characterHealth[run] + 20 <= 100:
-                characterHealth[run] = characterHealth[run] + 20
+            if characterHealth[run] + 10 <= 100:
+                characterHealth[run] = characterHealth[run] + 10
             else:
                 characterHealth[run] = characterHealth[run] + (100 - characterHealth[run])
         run = run + 1

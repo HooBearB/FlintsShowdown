@@ -3,6 +3,7 @@
     
     "screwdriver": {
         "name": "Screwdriver",
+        "uncap": true,
         "grade": 1,
         "type": "Melee",
         "damage": 10,
@@ -20,6 +21,7 @@
     },
     "kitchenknife": {
         "name": "Kitchen knife",
+        "uncap": true,
         "grade": 1,
         "type": "Melee",
         "damage": 25,
@@ -37,6 +39,7 @@
     },
     "survivalknife": {
         "name": "Survival knife",
+        "uncap": true,
         "grade": 2,
         "type": "Melee",
         "damage": 20,
@@ -54,6 +57,7 @@
     },
     "hammer": {
         "name": "Hammer",
+        "uncap": true,
         "grade": 2,
         "type": "Melee",
         "damage": 10,
@@ -71,6 +75,7 @@
     },
     "axe": {
         "name": "Axe",
+        "uncap": true,
         "grade": 3,
         "type": "Melee",
         "damage": 65,
@@ -88,6 +93,7 @@
     },
     "spear": {
         "name": "Spear",
+        "uncap": true,
         "grade": 3,
         "type": "Melee",
         "damage": 60,
@@ -105,6 +111,7 @@
     },
     "machete": {
         "name": "Machete",
+        "uncap": true,
         "grade": 3,
         "type": "Melee",
         "damage": 40,
@@ -122,6 +129,7 @@
     },
     "golfclub": {
         "name": "Golf club",
+        "uncap": true,
         "grade": 3,
         "type": "Melee",
         "damage": 25,
@@ -139,6 +147,7 @@
     },
     "shovel": {
         "name": "Shovel",
+        "uncap": true,
         "grade": 3,
         "type": "Melee",
         "damage": 20,
@@ -156,6 +165,7 @@
     },
     "scythe": {
         "name": "Scythe",
+        "uncap": true,
         "grade": 5,
         "type": "Melee",
         "damage": 70,
@@ -173,6 +183,7 @@
     },
     "katana": {
         "name": "Katana",
+        "uncap": true,
         "grade": 5,
         "type": "Melee",
         "damage": 80,
@@ -190,6 +201,7 @@
     },
     "rapier": {
         "name": "Rapier",
+        "uncap": true,
         "grade": 4,
         "type": "Melee",
         "damage": 60,
@@ -207,6 +219,7 @@
     },
     "iceaxe": {
         "name": "Ice pick",
+        "uncap": true,
         "grade": 4,
         "type": "Melee",
         "damage": 30,
@@ -224,6 +237,7 @@
     },
     "bow": {
         "name": "Bow",
+        "uncap": true,
         "grade": 3,
         "type": "Ranged",
         "damage": 75,
@@ -241,6 +255,7 @@
     },
     "pocketpistol": {
         "name": "Pocket pistol",
+        "uncap": true,
         "grade": 2,
         "type": "Ranged",
         "damage": 25,
@@ -258,6 +273,7 @@
     },
     "pistol": {
         "name": "Pistol",
+        "uncap": true,
         "grade": 4,
         "type": "Ranged",
         "damage": 30,
@@ -275,6 +291,7 @@
     },
     "revolver": {
         "name": "Revolver",
+        "uncap": true,
         "grade": 4,
         "type": "Ranged",
         "damage": 90,
@@ -292,6 +309,7 @@
     },
     "magnum": {
         "name": "Magnum pistol",
+        "uncap": true,
         "grade": 4,
         "type": "Ranged",
         "damage": 85,
@@ -309,6 +327,7 @@
     },
     "huntingrifle": {
         "name": "Hunting rifle",
+        "uncap": true,
         "grade": 5,
         "type": "Ranged",
         "damage": 120,
@@ -326,6 +345,7 @@
     },
     "leverrifle": {
         "name": "Lever-action rifle",
+        "uncap": true,
         "grade": 5,
         "type": "Ranged",
         "damage": 90,
@@ -343,6 +363,7 @@
     },
     "shotgun": {
         "name": "Shotgun",
+        "uncap": true,
         "grade": 5,
         "type": "Ranged",
         "damage": 95,
@@ -360,6 +381,7 @@
     },
     "db": {
         "name": "Double barrel shotgun",
+        "uncap": true,
         "grade": 5,
         "type": "Ranged",
         "damage": 100,
@@ -377,6 +399,7 @@
     },
     "sawnoff": {
         "name": "Sawn-off shotgun",
+        "uncap": true,
         "grade": 4,
         "type": "Ranged",
         "damage": 110,
@@ -394,6 +417,7 @@
     },
     "smg": {
         "name": "Submachine gun",
+        "uncap": true,
         "grade": 4,
         "type": "Ranged",
         "damage": 15,
@@ -411,6 +435,7 @@
     },
     "carbine": {
         "name": "Carbine",
+        "uncap": true,
         "grade": 6,
         "type": "Ranged",
         "damage": 40,
@@ -431,16 +456,19 @@
 
     "stab": {
         "name": "Slash jacket",
+        "uncap": true,
         "type": "Armour",
         "ap": 25
     },
     "flak": {
         "name": "Flak jacket",
+        "uncap": true,
         "type": "Armour",
         "ap": 50
     },
     "eod": {
         "name": "EOD vest",
+        "uncap": false,
         "type": "Armour",
         "ap": 100
     }

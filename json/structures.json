@@ -1,0 +1,27 @@
+{
+    "list": ["forest", "cabin", "fort"],
+    "forest": {
+        "name": "Forest",
+        "display": ":",
+        "colour": "green",
+        "shelter": false,
+        "special": [],
+        "check": [0, 95]
+    },
+    "cabin": {
+        "name": "Cabin",
+        "display": "+",
+        "colour": "blue",
+        "shelter": true,
+        "special": [],
+        "check": [96, 97]
+    },
+    "fort": {
+        "name": "Fort",
+        "display": "#",
+        "colour": "red",
+        "shelter": false,
+        "special": [],
+        "check": [98, 100]
+    }
+}

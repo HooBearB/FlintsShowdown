@@ -252,27 +252,58 @@ def runLoot(characters):
     lootItem = random.choice(items["lootable"])
     if items[lootItem]["type"] == "Armour":
         characterArmour[characters[0]] = characterArmour[characters[0]] + items[lootItem]["ap"]
-        scrollingText(characterNames[characters[0]] + " picks up the " + format.green + items[lootItem]["name"].lower() + format.end + ".", 2, 0.01)
+        if items[lootItem]["uncap"] == True:
+            scrollingText(characterNames[characters[0]] + " picks up the " + format.green + items[lootItem]["name"].lower() + format.end + ".", 2, 0.01)
+        else:
+            scrollingText(characterNames[characters[0]] + " picks up the " + format.green + items[lootItem]["name"] + format.end + ".", 2, 0.01)
     else:
         if len(characterItems[characters[0]]) == 0:
             characterItems[characters[0]].append(lootItem)
             characterItemDurabilities[characters[0]].append(items[lootItem]["durability"])
-            scrollingText(characterNames[characters[0]] + " picks up the " + format.green + items[lootItem]["name"].lower() + format.end + ".", 2, 0.01)
-            log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"].lower() + ".")
+            if items[lootItem]["uncap"] == True:
+                scrollingText(characterNames[characters[0]] + " picks up the " + format.green + items[lootItem]["name"].lower() + format.end + ".", 2, 0.01)
+            else:
+                scrollingText(characterNames[characters[0]] + " picks up the " + format.green + items[lootItem]["name"] + format.end + ".", 2, 0.01)
+            if items[lootItem]["uncap"] == True:
+                log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"].lower() + ".")
+            else:
+                log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"] + ".")
         else:
             if len(characterItems[characters[0]]) > 3:
                 if items[lootItem]["grade"] >= items[characterItems[characters[0]][0]]["grade"]:
-                    scrollingText(characterNames[characters[0]] + " drops their " + format.red + items[characterItems[characters[0]][0]]["name"].lower() + format.end + " to pick up the cache's " + format.green + items[lootItem]["name"].lower() + format.end + ".", 2, 0.01)
+                    if items[characterItems[characters[0]][0]]["uncap"] == True:
+                        if items[lootItem]["uncap"] == True:
+                            scrollingText(characterNames[characters[0]] + " drops their " + format.red + items[characterItems[characters[0]][0]]["name"].lower() + format.end + " to pick up the cache's " + format.green + items[lootItem]["name"].lower() + format.end + ".", 2, 0.01)
+                        else:
+                            scrollingText(characterNames[characters[0]] + " drops their " + format.red + items[characterItems[characters[0]][0]]["name"].lower() + format.end + " to pick up the cache's " + format.green + items[lootItem]["name"] + format.end + ".", 2, 0.01)
+                    else:
+                        if items[lootItem]["uncap"] == True:
+                            scrollingText(characterNames[characters[0]] + " drops their " + format.red + items[characterItems[characters[0]][0]]["name"] + format.end + " to pick up the cache's " + format.green + items[lootItem]["name"].lower() + format.end + ".", 2, 0.01)
+                        else:
+                            scrollingText(characterNames[characters[0]] + " drops their " + format.red + items[characterItems[characters[0]][0]]["name"] + format.end + " to pick up the cache's " + format.green + items[lootItem]["name"] + format.end + ".", 2, 0.01)
                     log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"].lower() + ".")
                     characterItems[characters[0]][0] = lootItem
                     characterItemDurabilities[characters[0]][0] = items[lootItem]["durability"]
                 else:
-                    scrollingText(characterNames[characters[0]] + "'s " + format.green + items[characterItems[characters[0]][0]]["name"].lower() + format.end + " is better than the " + format.red + items[lootItem]["name"].lower() + format.end + ".", 2, 0.01)
+                    if items[characterItems[characters[0]][0]]["uncap"] == True:
+                        if items[lootItem]["uncap"] == True:
+                            scrollingText(characterNames[characters[0]] + " drops their " + format.red + items[characterItems[characters[0]][0]]["name"].lower() + format.end + " to pick up the cache's " + format.green + items[lootItem]["name"].lower() + format.end + ".", 2, 0.01)
+                        else:
+                            scrollingText(characterNames[characters[0]] + " drops their " + format.red + items[characterItems[characters[0]][0]]["name"].lower() + format.end + " to pick up the cache's " + format.green + items[lootItem]["name"] + format.end + ".", 2, 0.01)
+                    else:
+                        if items[lootItem]["uncap"] == True:
+                            scrollingText(characterNames[characters[0]] + " drops their " + format.red + items[characterItems[characters[0]][0]]["name"] + format.end + " to pick up the cache's " + format.green + items[lootItem]["name"].lower() + format.end + ".", 2, 0.01)
+                        else:
+                            scrollingText(characterNames[characters[0]] + " drops their " + format.red + items[characterItems[characters[0]][0]]["name"] + format.end + " to pick up the cache's " + format.green + items[lootItem]["name"] + format.end + ".", 2, 0.01)
             else:
                 characterItems[characters[0]].append(lootItem)
                 characterItemDurabilities[characters[0]].append(items[lootItem]["durability"])
-                scrollingText(characterNames[characters[0]] + " picks up the " + format.green + items[lootItem]["name"].lower() + format.end + ".", 2, 0.01)
-                log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"].lower() + ".")
+                if items[lootItem]["uncap"] == True:
+                    scrollingText(characterNames[characters[0]] + " picks up the " + format.green + items[lootItem]["name"].lower() + format.end + ".", 2, 0.01)
+                    log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"].lower() + ".")
+                else:
+                    scrollingText(characterNames[characters[0]] + " picks up the " + format.green + items[lootItem]["name"] + format.end + ".", 2, 0.01)
+                    log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"]  + ".")
 
 def checkBreak(character):
     if len(characterItems[character]) > 0:
@@ -379,7 +410,10 @@ def combat(characters, decision, ran):
                     charactersKilled[characters[charB]].append(characterNames[characters[charA]])
                     killedBy[characters[charA]] = characterNames[characters[charB]]
                     if characterItems[characters[charB]] != []:
-                        log.append(str(days) + ". " + characterNames[characters[charA]] + " was killed by " + characterNames[characters[charB]] + " with a " + items[characterItems[characters[charB]][0]]["name"].lower() +  ".")
+                        if items[characterItems[characters[charB]][0]]["uncap"] == True:
+                            log.append(str(days) + ". " + characterNames[characters[charA]] + " was killed by " + characterNames[characters[charB]] + " with a " + items[characterItems[characters[charB]][0]]["name"].lower() +  ".")
+                        else:
+                            log.append(str(days) + ". " + characterNames[characters[charA]] + " was killed by " + characterNames[characters[charB]] + " with a " + items[characterItems[characters[charB]][0]]["name"] +  ".")
                     else:
                         log.append(str(days) + ". " + characterNames[characters[charA]] + " was killed by " + characterNames[characters[charB]] + " with their" + format.italic + " fists." + format.end)
                     characterKills[characters[charB]] = characterKills[characters[charB]] + 1
@@ -390,7 +424,10 @@ def combat(characters, decision, ran):
                     charactersKilled[characters[charA]].append(characterNames[characters[charB]])
                     killedBy[characters[charB]] = characterNames[characters[charA]]
                     if characterItems[characters[charA]] != []:
-                        log.append(str(days) + ". " + characterNames[characters[charB]] + " was killed by " + characterNames[characters[charA]] + " with a " + items[characterItems[characters[charA]][0]]["name"].lower() +  ".")
+                        if items[characterItems[characters[charA]][0]]["uncap"] == True:
+                            log.append(str(days) + ". " + characterNames[characters[charB]] + " was killed by " + characterNames[characters[charA]] + " with a " + items[characterItems[characters[charA]][0]]["name"].lower() +  ".")
+                        else:
+                            log.append(str(days) + ". " + characterNames[characters[charB]] + " was killed by " + characterNames[characters[charA]] + " with a " + items[characterItems[characters[charA]][0]]["name"] +  ".")
                     else:
                         log.append(str(days) + ". " + characterNames[characters[charB]] + " was killed by " + characterNames[characters[charA]] + " with their" + format.italic + " fists." + format.end)
                     characterKills[characters[charA]] = characterKills[characters[charA]] + 1
@@ -651,11 +688,17 @@ def attacked(characters = []):
     ran = False
     scrollingText(format.bold + format.red + characterNames[characters[1]] + " engages " + characterNames[characters[0]] + "." + format.end, 2, 0.01)
     if len(characterItems[characters[1]]) > 0:
-        scrollingText(characterNames[characters[1]] + " has a " + items[characterItems[characters[1]][0]]["name"].lower() + ".", 2, 0.01)
+        if items[characterItems[characters[1]][0]]["uncap"] == True:
+            scrollingText(characterNames[characters[1]] + " has a " + items[characterItems[characters[1]][0]]["name"].lower() + ".", 2, 0.01)
+        else:
+            scrollingText(characterNames[characters[1]] + " has a " + items[characterItems[characters[1]][0]]["name"] + ".", 2, 0.01)
     else:
         scrollingText(characterNames[characters[1]] + " is using their fists.", 2, 0.01)
     if len(characterItems[characters[0]]) > 0:
-        scrollingText(characterNames[characters[0]] + " has a " + items[characterItems[characters[0]][0]]["name"].lower() + ".", 2, 0.01)
+        if items[characterItems[characters[0]][0]]["uncap"] == True:
+            scrollingText(characterNames[characters[0]] + " has a " + items[characterItems[characters[0]][0]]["name"].lower() + ".", 2, 0.01)
+        else:
+            scrollingText(characterNames[characters[0]] + " has a " + items[characterItems[characters[0]][0]]["name"] + ".", 2, 0.01)
     else:
         scrollingText(characterNames[characters[0]] + " is using their fists.", 2, 0.01)
     log.append(str(days) + ". " + characterNames[characters[0]] + " got attacked by " + characterNames[characters[1]] + ".")
@@ -671,11 +714,17 @@ def attack(characters = []):
     ran = False
     scrollingText(format.bold + format.red + characterNames[characters[0]] + " attacks " + characterNames[characters[1]] + "." + format.end, 2, 0.01)
     if len(characterItems[characters[0]]) > 0:
-        scrollingText(characterNames[characters[0]] + " has a " + items[characterItems[characters[0]][0]]["name"].lower() + ".", 2, 0.01)
+        if items[characterItems[characters[0]][0]]["uncap"] == True:
+            scrollingText(characterNames[characters[0]] + " has a " + items[characterItems[characters[0]][0]]["name"].lower() + ".", 2, 0.01)
+        else:
+            scrollingText(characterNames[characters[0]] + " has a " + items[characterItems[characters[0]][0]]["name"] + ".", 2, 0.01)
     else:
         scrollingText(characterNames[characters[0]] + " has is using their fists.", 2, 0.01)
     if len(characterItems[characters[1]]) > 0:
-        scrollingText(characterNames[characters[1]] + " has a " + items[characterItems[characters[1]][0]]["name"].lower() + ".", 2, 0.01)
+        if items[characterItems[characters[1]][0]]["uncap"] == True:
+            scrollingText(characterNames[characters[1]] + " has a " + items[characterItems[characters[1]][0]]["name"].lower() + ".", 2, 0.01)
+        else:
+            scrollingText(characterNames[characters[1]] + " has a " + items[characterItems[characters[1]][0]]["name"] + ".", 2, 0.01)
     else:
         scrollingText(characterNames[characters[1]] + " has is using their fists.", 2, 0.01)
     log.append(str(days) + ". " + characterNames[characters[0]] + " attacked " + characterNames[characters[1]] + ".")

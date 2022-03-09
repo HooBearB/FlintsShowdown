@@ -14,7 +14,7 @@
         "colour": "blue",
         "shelter": true,
         "special": [],
-        "check": [96, 97]
+        "check": [97, 98]
     },
     "fort": {
         "name": "Fort",
@@ -22,6 +22,6 @@
         "colour": "red",
         "shelter": false,
         "special": [],
-        "check": [98, 100]
+        "check": [99, 100]
     }
 }

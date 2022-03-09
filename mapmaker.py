@@ -62,3 +62,5 @@ def printMap(mapObject):
     
 map1 = generateMap(25, 25)
 printMap(map1)
+map2 = generateMap(5, 5)
+printMap(map2)

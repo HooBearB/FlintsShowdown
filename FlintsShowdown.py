@@ -2,7 +2,7 @@
 #  / ___/ / /    /_  _/  /  | / / /_  _/ /_/ /  __/     /  __/ / /_/ / / __  / / /__ / / / __ |  / __  / / /__ / / /  | / /
 # / ___/ / /___  _/ /_  / /||/ /   / /      /__  /     /__  / / __  / / /_/ / / // // / / /_/ / / /_/ / / // // / / /||/ /
 #/_/    /_____/ /____/ /_/ |__/   /_/      /____/     /____/ /_/ /_/ /_____/ /_______/ /_____/ /_____/ /_______/ /_/ |__/
-version = "0.2.0 ALT"
+version = "0.2.5"
 dateRelease = "February 27, 2022"
 #Project start: Jan 23, 2022
 #Current release push: Feb 27, 2022
@@ -19,9 +19,6 @@ TO DO:
     - Group meetups
     - Group combat
     - Inter-person dialogue (Custom support?)
-        - Flint and mule are in combat
-        - Flint says "remember what you sent me in our DMs?"
-        - Flint suplexes mule
 - More items
 - Improved NPCs
 '''

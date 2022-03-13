@@ -571,12 +571,15 @@ def printDayGUI():
     scrollingText(format.bold + format.blue + format.italic + "Day " + str(days) + "." + format.end, 2, 0.01)
     time.sleep(0.5)
     print()
-    runEvents(generateEvents())
-    time.sleep(0.5)
-    print()
-    scrollingText(format.bold + format.blue + format.italic + "Night falls." + format.end, 2, 0.01)
-    print()
-    nightfall()
+    if len(characterNames) - len(deadCharacters) > 1:
+        runEvents(generateEvents())
+        time.sleep(0.5)
+        print()
+        scrollingText(format.bold + format.blue + format.italic + "Night falls." + format.end, 2, 0.01)
+        print()
+        nightfall()
+    else:
+        printWinner()
 
 def runEvents(eventList):
     run = 0
@@ -856,7 +859,11 @@ def printWinner():
     scrollingText("They win.", 2, 0.01)
     print()
     scrollingText("           Kills: " + str(characterKills[run]), 2, 0.01)
-    scrollingText("Last used weapon: " + characterItems[run][0], 2, 0.01)
+    if len(characterItems[run]) > 0:
+        scrollingText("Last used weapon: " + items[characterItems[run][0]]["name"], 2, 0.01)
+    else:
+        scrollingText("Last used weapon: Fists", 2, 0.01)
+    print()
     askToContinue()
     mainMenu()
 

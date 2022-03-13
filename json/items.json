@@ -1,5 +1,5 @@
 {
-    "lootable": ["screwdriver", "kitchenknife", "survivalknife", "hammer", "axe", "machete", "golfclub", "shovel", "scythe", "katana", "iceaxe", "bow", "pocketpistol", "pistol", "revolver", "magnum", "huntingrifle", "leverrifle", "shotgun", "db", "sawnoff", "smg", "carbine", "stab", "flak", "eod"],
+    "lootable": ["screwdriver", "kitchenknife", "survivalknife", "hammer", "axe", "machete", "golfclub", "pipe", "shovel", "scythe", "katana", "iceaxe", "bow", "pocketpistol", "pistol", "revolver", "magnum", "huntingrifle", "leverrifle", "shotgun", "db", "sawnoff", "smg", "carbine", "stab", "flak", "eod"],
     
     "screwdriver": {
         "name": "Screwdriver",
@@ -139,9 +139,27 @@
         "ready": " prepares to swing their golf club.",
         "attack": " swings their golf club at ",
         "break": "'s club head comes off, breaking it.",
-        "1": "                  _",
-        "2": " ________________| \\",
-        "3": "╵----------------|_|",
+        "1": "                 _",
+        "2": " _______________| \\",
+        "3": "╵---------------|_|",
+        "4": "",
+        "5": ""
+    },
+    "pipe": {
+        "name": "Pipe",
+        "uncap": true,
+        "grade": 3,
+        "type": "Melee",
+        "damage": 30,
+        "accuracy": 75,
+        "durability": 20,
+        "faildamage": false,
+        "ready": " holds their pipe above their head.",
+        "attack": " swings their pipe at ",
+        "break": "'s pipe breaks.",
+        "1": " _____________",
+        "2": "|___________  |",
+        "3": "       ╵-╵  |-|",
         "4": "",
         "5": ""
     },
@@ -233,6 +251,27 @@
         "2": "|__|____|__| |",
         "3": "           | |",
         "4": "           |/",
+        "5": ""
+    },
+
+
+    
+    "brick": {
+        "name": "Brick",
+        "uncap": true,
+        "grade": 2,
+        "type": "Ranged",
+        "damage": 40,
+        "accuracy" : 40,
+        "durability": 1,
+        "faildamage": true,
+        "ready": " prepares to throw their brick.",
+        "attack": " throws their brick at ",
+        "break": " the brick shatters from the blow!",
+        "1": " _____________",
+        "2": "|             |",
+        "3": "| () () () () |",
+        "4": "|_____________|",
         "5": ""
     },
     "bow": {

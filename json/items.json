@@ -1,5 +1,5 @@
 {
-    "lootable": ["screwdriver", "kitchenknife", "survivalknife", "hammer", "axe", "machete", "golfclub", "pipe", "shovel", "scythe", "katana", "iceaxe", "bow", "pocketpistol", "pistol", "revolver", "magnum", "huntingrifle", "leverrifle", "shotgun", "db", "sawnoff", "smg", "carbine", "stab", "flak", "eod"],
+    "lootable": ["screwdriver", "kitchenknife", "survivalknife", "hammer", "axe", "machete", "golfclub", "pipe", "shovel", "scythe", "katana", "iceaxe", "brick", "bow", "pocketpistol", "pistol", "revolver", "magnum", "huntingrifle", "leverrifle", "shotgun", "db", "sawnoff", "smg", "carbine", "stab", "flak", "eod"],
     
     "screwdriver": {
         "name": "Screwdriver",

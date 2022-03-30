@@ -132,7 +132,27 @@ def mainMenu():
 def createCFS():
     modname = askString("What would you like to name this CFS folder?", 0)
     directory = os.path.dirname(__file__)
-    filename = os.path.join(directory, (r'json/cfs'))
-    os.makedirs(os.path.join(filename + modname))
+    filename = os.path.join(directory, (r'json/cfs/'))
+    dirName = os.path.join(filename + modname)
+    os.makedirs(dirName)
+    followCFS(dirName)
+
+def openCFS():
+    directory = os.path.dirname(__file__)
+    filename = os.path.join(directory, (r'json/cfs/'))
+    dirList = os.listdir(filename)
+    print("")
+    if len(dirList) != 0:
+        decision = ask("Which file should be opened?", 0, dirList)
+        followCFS(dirList(decision))
+    else:
+        print("No CFS folders in directory!")
+        decision = ask("Would you like to create a CFS folder?", 0, ["Yes", "No"])
+        if decision == 1:
+            createCFS()
+        if decision == 2:
+            mainMenu()
+
+def followCFS(folder):
 
 mainMenu()

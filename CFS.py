@@ -154,5 +154,6 @@ def openCFS():
             mainMenu()
 
 def followCFS(folder):
+    x = x + 1
 
 mainMenu()

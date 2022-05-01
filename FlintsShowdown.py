@@ -56,50 +56,6 @@ class format:
     blue = "\u001b[36m"
     green = "\u001b[32m"
 
-def askOpen(message, indent):
-    run = 0
-    while run < indent:
-        print(" ", end = "")
-        run = run + 1
-    print(message)
-    run = 0
-    while run <= indent:
-        print(" ", end = "")
-        run = run + 1
-    decision = input("> ")
-    while type(decision) != int:
-        try:
-            decision = int(decision)
-        except:
-            run = 0
-            while run <= indent:
-                print(" ", end = "")
-                run = run + 1
-            print("Invalid input!")
-            run = 0
-            while run <= indent:
-                print(" ", end = "")
-                run = run + 1
-            decision = input("> ")
-    return decision
-
-def askString(message, indent):
-    run = 0
-    while run <= indent:
-        print(" ", end = "")
-        run = run + 1
-    print(message)
-    run = 0
-    while run <= indent:
-        print(" ", end = "")
-        run = run + 1
-    decision = input("> ")
-    return decision
-
-def askToContinue():
-    x = input("  Press " + format.bold + "enter" + format.end + " to continue.   ")
-    print(format.clear)
-
 def generateCharacterList(number):
     charList = []
     while len(charList) < number:
@@ -133,7 +89,7 @@ def checkRelint(data, filename):
 
 def relint(data, issues, filename):
     print()
-    decision = ask("Data file is out of date. Would you like to relint it?", ["Yes", "No"])
+    decision = moose.askOption("Data file is out of date. Would you like to relint it?", ["Yes", "No"])
     if decision == 1:
         run = 0
         while run < len(issues):
@@ -141,7 +97,7 @@ def relint(data, issues, filename):
                 data["version"] = version
             run = run + 1
         moose.scrollingText("Data relinted.")
-        askToContinue()
+        moose.askToContinue()
         run = 0
         newData = {}
         newData["length"] = data["length"]
@@ -390,7 +346,7 @@ def mainMenu():
     print("          ╵-╵   " + format.end + format.bold + format.blue + " /____/ /_/ /_/ /_____/ /_______/ /_____/ /_____/ /_______/ /_/ |__/" + format.end + format.italic + format.bold)
     print()
     moose.scrollingText("v" + version + " / " + dateRelease + " build" + format.end, 2, 0.02)
-    decision = ask("", ["Start new game", "Create characters", "Add/remove mods", "Settings", "Exit"], delay = 0.02)
+    decision = moose.askOption("", ["Start new game", "Create characters", "Add/remove mods", "Settings", "Exit"], delay = 0.02)
     if decision == 1:
         startSim()
     if decision == 2:
@@ -430,7 +386,7 @@ def startSim():
         run = run + 1
     if len(characterSaves) != 0:
         characterSaves.append("Exit")
-        filenumber = ask("Load characters:", characterSaves)
+        filenumber = moose.askOption("Load characters:", characterSaves)
         if characterSaves[filenumber - 1] != "Exit":
             file = os.path.join(foldername, os.path.join(characterSaves[filenumber - 1]))
             data = json.load(open(file, "r"))
@@ -456,7 +412,7 @@ def startSim():
     else:
         print()
         moose.scrollingText("Directory is empty!")
-        askToContinue()
+        moose.askToContinue()
         mainMenu()
     characterHealth = []
     while len(characterHealth) <= len(characterNames):
@@ -520,7 +476,7 @@ def runEvents(eventList):
                 trace()
             if eventList[run] == "attacked":
                 attacked()
-                askToContinue()
+                moose.askToContinue()
             if eventList[run] == "looting":
                 looting()
             if eventList[run] == "airdrop":
@@ -554,7 +510,7 @@ def sawParticipant():
             attacked(characters)
         else:
             moose.scrollingText(format.green + characterNames[characters[0]] + " successfully negotiates with " + characterNames[characters[1]] + "." + format.end)
-    askToContinue()
+    moose.askToContinue()
 
 def heardParticipant():
     characters = generateCharacterList(2)
@@ -584,7 +540,7 @@ def heardParticipant():
             moose.scrollingText(characterNames[characters[0]] + " fails to find anyone.")
     if npc[characterPlans[characters[0]]]["heard_participant"] == "flee":
         moose.scrollingText(characterNames[characters[0]] + " runs away.")
-    askToContinue()
+    moose.askToContinue()
 
 def trace():
     characters = generateCharacterList(2)
@@ -605,7 +561,7 @@ def trace():
             attacked(characters)
         else:
             moose.scrollingText(characterNames[characters[0]] + " hides.")
-    askToContinue()
+    moose.askToContinue()
         
 def attacked(characters = []):
     if characters == []:
@@ -630,7 +586,7 @@ def attacked(characters = []):
         moose.scrollingText(characterNames[characters[0]] + " is using their fists.")
     log.append(str(days) + ". " + characterNames[characters[0]] + " got attacked by " + characterNames[characters[1]] + ".")
     print()
-    decision = ask("Would you like to view this combat turn by turn?", ["Turn by turn", "Skip to result"])
+    decision = moose.askOption("Would you like to view this combat turn by turn?", ["Turn by turn", "Skip to result"])
     combat(characters, decision, ran)
 
 def attack(characters = []):
@@ -656,7 +612,7 @@ def attack(characters = []):
         moose.scrollingText(characterNames[characters[1]] + " has is using their fists.")
     log.append(str(days) + ". " + characterNames[characters[0]] + " attacked " + characterNames[characters[1]] + ".")
     print()
-    decision = ask("Would you like to view this combat turn by turn?", ["Turn by turn", "Skip to result"])
+    decision = moose.askOption("Would you like to view this combat turn by turn?", ["Turn by turn", "Skip to result"])
     newCharacters = []
     run = len(characters) - 1
     while run >= 0:
@@ -681,7 +637,7 @@ def looting():
             attack(characters)
         else:
             runLoot(characters)
-    askToContinue()
+    moose.askToContinue()
 
 def airdrop():
     characters = generateCharacterList(random.randint(1, int((len(characterNames) - len(deadCharacters) / 5))))
@@ -694,10 +650,10 @@ def airdrop():
         runLoot(tempChar)
         run = run + 1
     print()
-    askToContinue()
+    moose.askToContinue()
 
 def nightfall():
-    decision = ask("Nightfall actions:", ["View characters", "View log", "Continue to day"], delay = 0.05)
+    decision = moose.askOption("Nightfall actions:", ["View characters", "View log", "Continue to day"], delay = 0.05)
     if decision == 1:
         viewCharacters()
     if decision == 2:
@@ -722,7 +678,7 @@ def viewCharacters():
         moose.scrollingText("Character [" + format.red + "Health" + format.end + "] (" + format.green + "Equipped item" + format.end + ") {" + format.blue + "Kills" + format.end + "}")
         moose.scrollingText(format.red + "Dead character" + format.end + " {" + format.blue + "Kills" + format.end + "}")
         print()
-        decision = ask("View character:\n", options, delay = 0.05)
+        decision = moose.askOption("View character:\n", options, delay = 0.05)
         view = decision - 1
         print()
         if options[decision - 1] != "Exit":
@@ -755,7 +711,7 @@ def viewCharacters():
                 run = run + 1
             if len(characterItems[view]) == 0:
                 moose.scrollingText(format.bold + format.italic + "Inventory is empty!" + format.end)
-        askToContinue()
+        moose.askToContinue()
     nightfall()
 
 def viewLog():
@@ -764,7 +720,7 @@ def viewLog():
     while run < len(log):
         moose.scrollingText(log[run])
         run = run + 1
-    askToContinue()
+    moose.askToContinue()
     nightfall()
 
 def healAll():
@@ -791,7 +747,7 @@ def printWinner():
     else:
         moose.scrollingText("Last used weapon: Fists")
     print()
-    askToContinue()
+    moose.askToContinue()
     mainMenu()
 
 def selectSimMode():
@@ -822,7 +778,7 @@ def selectSimMode():
     moose.scrollingText("- All have same attributes", 4, 0.01)
     time.sleep(0.5)
     print()
-    decision = ask("Select a creation mode:", ["Detailed", "Adaptable", "Simple"])
+    decision = moose.askOption("Select a creation mode:", ["Detailed", "Adaptable", "Simple"])
     if decision == 1:
         creationMode = "det"
     if decision == 2:
@@ -885,7 +841,7 @@ def createCharacters(currentCharacter = 0):
         print("       Strength: " + str(characterAttributes[currentCharacter][3]))
         print("  Communication: " + str(characterAttributes[currentCharacter][4]))
         print()
-        decision = ask("Character editor:", methods)
+        decision = moose.askOption("Character editor:", methods)
         if methods[decision - 1] == "Name":
             changeCharacterName(currentCharacter)
         if methods[decision - 1] == "NPC plan":
@@ -902,7 +858,7 @@ def createCharacters(currentCharacter = 0):
             saveLoadCharacters()
     print(format.clear)
     moose.scrollingText("Are you sure you want to exit?")
-    decision = ask("Make sure you have your sheet saved before exiting.", ["Save sheet", "Back to character creation", "Exit"])
+    decision = moose.askOption("Make sure you have your sheet saved before exiting.", ["Save sheet", "Back to character creation", "Exit"])
     if decision == 1:
         directToSave()
         mainMenu()
@@ -913,7 +869,7 @@ def createCharacters(currentCharacter = 0):
 
 def changeCharacterName(curChar):
     print()
-    characterNames[curChar] = askString("Choose character name:", 2)
+    characterNames[curChar] = moose.askString("Choose character name:")
     print(format.clear)
 
 def changeCharacterPlan(curChar):
@@ -924,7 +880,7 @@ def changeCharacterPlan(curChar):
     while run < len(npc["npclist"]):
         npclist.append(npc[npc["npclist"][run]]["name"])
         run = run + 1
-    decision = ask("Choose character's NPC plan", npclist)
+    decision = moose.askOption("Choose character's NPC plan", npclist)
     print(format.clear)
     print(npc[npc["npclist"][decision - 1]]["triangle1"])
     print(npc[npc["npclist"][decision - 1]]["triangle2"])
@@ -933,7 +889,7 @@ def changeCharacterPlan(curChar):
     print(npc[npc["npclist"][decision - 1]]["triangle5"])
     print()
     moose.scrollingText(npc[npc["npclist"][decision - 1]]["description"])
-    flow = ask("", ["Set this as character plan", "Return to plan selection"], delay = 0.05)
+    flow = moose.askOption("", ["Set this as character plan", "Return to plan selection"], delay = 0.05)
     if flow == 1:
         characterPlans[curChar] = npc["npclist"][decision - 1]
     else:
@@ -948,36 +904,36 @@ def changeCharacterAttributes(curChar):
     print("      Endurance: " + str(characterAttributes[curChar][2]))
     print("       Strength: " + str(characterAttributes[curChar][3]))
     print("  Communication: " + str(characterAttributes[curChar][4]))
-    decision = ask("", ["Change melee", "Change ranged", "Change endurance", "Change strength", "Change communication", "Exit"])
+    decision = moose.askOption("", ["Change melee", "Change ranged", "Change endurance", "Change strength", "Change communication", "Exit"])
     while decision != 6:
         if decision == 1:
             print()
-            characterAttributes[curChar][0] = askOpen("Choose value for melee:", 2)
+            characterAttributes[curChar][0] = moose.askOpen("Choose value for melee:", 2)
         if decision == 2:
             print()
-            characterAttributes[curChar][1] = askOpen("Choose value for ranged:", 2)
+            characterAttributes[curChar][1] = moose.askOpen("Choose value for ranged:", 2)
         if decision == 3:
             print()
-            characterAttributes[curChar][2] = askOpen("Choose value for endurance:", 2)
+            characterAttributes[curChar][2] = moose.askOpen("Choose value for endurance:", 2)
         if decision == 4:
             print()
-            characterAttributes[curChar][3] = askOpen("Choose value for strength:", 2)
+            characterAttributes[curChar][3] = moose.askOpen("Choose value for strength:", 2)
         if decision == 5:
             print()
-            characterAttributes[curChar][4] = askOpen("Choose value for communication:", 2)
+            characterAttributes[curChar][4] = moose.askOpen("Choose value for communication:", 2)
         print(format.clear)
         print("          Melee: " + str(characterAttributes[curChar][0]))
         print("         Ranged: " + str(characterAttributes[curChar][1]))
         print("      Endurance: " + str(characterAttributes[curChar][2]))
         print("       Strength: " + str(characterAttributes[curChar][3]))
         print("  Communication: " + str(characterAttributes[curChar][4]))
-        decision = ask("", ["Change melee", "Change ranged", "Change endurance", "Change strength", "Change communication", "Exit"])
+        decision = moose.askOption("", ["Change melee", "Change ranged", "Change endurance", "Change strength", "Change communication", "Exit"])
     print(format.clear)
 
 def switchCharacter(curChar, currentCharacters):
     print(format.clear)
     print("  ")
-    switch = ask("Current characters:", currentCharacters, lookingFor = curChar)
+    switch = moose.askOption("Current characters:", currentCharacters, lookingFor = curChar)
     switch = switch - 1
     print(format.clear)
     return switch
@@ -996,7 +952,7 @@ def deleteCharacter(currChar):
     global characterAttributes
 
     print()
-    decision = ask("Would you really like to delete this character?", ["Yes", "No"], delay = 0.05)
+    decision = moose.askOption("Would you really like to delete this character?", ["Yes", "No"], delay = 0.05)
     if decision == 1:
         characterNames.pop(currChar)
         characterPlans.pop(currChar)
@@ -1011,7 +967,7 @@ def saveLoadCharacters():
     global creationMode
 
     print()
-    decision = ask("Load or save characters?", ["Load", "Save", "Back to character creation"])
+    decision = moose.askOption("Load or save characters?", ["Load", "Save", "Back to character creation"])
     if decision == 1:
         directory = os.path.dirname(__file__)
         foldername = os.path.join(directory, ('characterSaves/'))
@@ -1024,13 +980,13 @@ def saveLoadCharacters():
             run = run + 1
         if len(characterSaves) != 0:
             characterSaves.append("Exit")
-            filenumber = ask("Load characters:", characterSaves)
+            filenumber = moose.askOption("Load characters:", characterSaves)
             if characterSaves[filenumber - 1] != "Exit":
                 file = os.path.join(foldername, os.path.join(characterSaves[filenumber - 1]))
                 data = json.load(open(file, "r"))
                 if data["creationmode"] != creationMode:
                     print()
-                    decision = ask("This file was created in a different mode, would you like to switch to the file's mode?", 2, ["Change mode to file", "Back to character creation"], 0.01)
+                    decision = moose.askOption("This file was created in a different mode, would you like to switch to the file's mode?", ["Change mode to file", "Back to character creation"])
                     if decision == 1:
                         creationMode = data["creationmode"]
                     if decision == 2:
@@ -1055,7 +1011,7 @@ def saveLoadCharacters():
         else:
             print()
             print("  Directory is empty!")
-            askToContinue()
+            moose.askToContinue()
     if decision == 2:
         run = 0
         data = {}
@@ -1074,7 +1030,7 @@ def saveLoadCharacters():
         print()
         directory = os.path.dirname(__file__)
         foldername = os.path.join(directory, ('characterSaves/'))
-        filename = askString("Name this character set:", 2)
+        filename = moose.askString("Name this character set:")
         filename = os.path.join(foldername, filename + r'.json')
         file = open(filename, "w")
         json.dump(data, file, separators = (',', ':'), indent = 4)
@@ -1098,7 +1054,7 @@ def directToSave():
     print()
     directory = os.path.dirname(__file__)
     foldername = os.path.join(directory, ('characterSaves/'))
-    filename = askString("Name this character set:", 2)
+    filename = moose.askString("Name this character set:")
     filename = os.path.join(foldername, filename + r'.json')
     file = open(filename, "w")
     json.dump(data, file, separators = (',', ':'), indent = 4)
@@ -1117,10 +1073,10 @@ def settings():
     print()
     print("  Display mode: " + format.mode)
     print()
-    decision = ask("Change settings:", 2, ["Change display mode"], 0.01)
+    decision = moose.askOption("Change settings:", ["Change display mode"])
     if decision == 1:
         print()
-        newmode = ask("Set display mode:", 2, ["Colourmatic", "Markdown formatting", "Plain text"], 0.01)
+        newmode = moose.askOption("Set display mode:", ["Colourmatic", "Markdown formatting", "Plain text"])
         if newmode == 1:
             class format:
                 mode = "Colourmatic"

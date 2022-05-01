@@ -27,6 +27,7 @@ import random
 import os
 import time
 import json
+import MOOSERecoded as moose
 
 directory = os.path.dirname(__file__)
 filename = os.path.join(directory, (r'json/items.json'))
@@ -54,82 +55,6 @@ class format:
     red = "\u001b[31m"
     blue = "\u001b[36m"
     green = "\u001b[32m"
-
-def scrollingText(message, indent, delay):
-    run = 0
-    while run < indent:
-        print(" ", end = "")
-        run = run + 1
-    run = 0
-    while run < len(message):
-        print(message[run : run + 1], end = "")
-        time.sleep(delay)
-        run = run + 1
-    print("")
-
-def ask(message, indent, options, delay, lookingFor = ""):
-    run = 0
-    while run < indent:
-        print(" ", end = "")
-        run = run + 1
-    print(message)
-    runline = 0
-    while runline < len(options):
-        if runline == lookingFor:
-            print("  - ", end = "")
-        else:
-            run = 0
-            while run <= indent + 1:
-                print(" ", end = "")
-                run = run + 1
-        print(str(runline + 1) + ". " + options[runline])
-        time.sleep(delay)
-        runline = runline + 1
-    run = 0
-    while run <= indent:
-        print(" ", end = "")
-        run = run + 1
-    decision = input("> ")
-    while type(decision) != int:
-        try:
-            decision = int(decision)
-        except:
-            run = 0
-            while run <= indent:
-                print(" ", end = "")
-                run = run + 1
-            print("Invalid input!")
-            run = 0
-            while run <= indent:
-                print(" ", end = "")
-                run = run + 1
-            decision = input("> ")
-    while decision < 1 or decision > len(options):
-        run = 0
-        while run <= indent:
-            print(" ", end = "")
-            run = run + 1
-        print("Invalid input!")
-        run = 0
-        while run <= indent:
-            print(" ", end = "")
-            run = run + 1
-        decision = input("> ")
-        while type(decision) != int:
-            try:
-                decision = int(decision)
-            except:
-                run = 0
-                while run <= indent:
-                    print(" ", end = "")
-                    run = run + 1
-                print("Invalid input!")
-                run = 0
-                while run <= indent:
-                    print(" ", end = "")
-                    run = run + 1
-                decision = input("> ")
-    return decision
 
 def askOpen(message, indent):
     run = 0
@@ -208,14 +133,14 @@ def checkRelint(data, filename):
 
 def relint(data, issues, filename):
     print()
-    decision = ask("Data file is out of date. Would you like to relint it?", 2, ["Yes", "No"], 0.01)
+    decision = ask("Data file is out of date. Would you like to relint it?", ["Yes", "No"])
     if decision == 1:
         run = 0
         while run < len(issues):
             if issues[run] == "version":
                 data["version"] = version
             run = run + 1
-        scrollingText("Data relinted.", 2, 0.01)
+        moose.scrollingText("Data relinted.")
         askToContinue()
         run = 0
         newData = {}
@@ -250,17 +175,17 @@ def runLoot(characters):
     if items[lootItem]["type"] == "Armour":
         characterArmour[characters[0]] = characterArmour[characters[0]] + items[lootItem]["ap"]
         if items[lootItem]["uncap"] == True:
-            scrollingText(characterNames[characters[0]] + " picks up the " + format.green + items[lootItem]["name"].lower() + format.end + ".", 2, 0.01)
+            moose.scrollingText(characterNames[characters[0]] + " picks up the " + format.green + items[lootItem]["name"].lower() + format.end + ".")
         else:
-            scrollingText(characterNames[characters[0]] + " picks up the " + format.green + items[lootItem]["name"] + format.end + ".", 2, 0.01)
+            moose.scrollingText(characterNames[characters[0]] + " picks up the " + format.green + items[lootItem]["name"] + format.end + ".")
     else:
         if len(characterItems[characters[0]]) == 0:
             characterItems[characters[0]].append(lootItem)
             characterItemDurabilities[characters[0]].append(items[lootItem]["durability"])
             if items[lootItem]["uncap"] == True:
-                scrollingText(characterNames[characters[0]] + " picks up the " + format.green + items[lootItem]["name"].lower() + format.end + ".", 2, 0.01)
+                moose.scrollingText(characterNames[characters[0]] + " picks up the " + format.green + items[lootItem]["name"].lower() + format.end + ".")
             else:
-                scrollingText(characterNames[characters[0]] + " picks up the " + format.green + items[lootItem]["name"] + format.end + ".", 2, 0.01)
+                moose.scrollingText(characterNames[characters[0]] + " picks up the " + format.green + items[lootItem]["name"] + format.end + ".")
             if items[lootItem]["uncap"] == True:
                 log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"].lower() + ".")
             else:
@@ -270,48 +195,48 @@ def runLoot(characters):
                 if items[lootItem]["grade"] >= items[characterItems[characters[0]][0]]["grade"]:
                     if items[characterItems[characters[0]][0]]["uncap"] == True:
                         if items[lootItem]["uncap"] == True:
-                            scrollingText(characterNames[characters[0]] + " drops their " + format.red + items[characterItems[characters[0]][0]]["name"].lower() + format.end + " to pick up the cache's " + format.green + items[lootItem]["name"].lower() + format.end + ".", 2, 0.01)
+                            moose.scrollingText(characterNames[characters[0]] + " drops their " + format.red + items[characterItems[characters[0]][0]]["name"].lower() + format.end + " to pick up the cache's " + format.green + items[lootItem]["name"].lower() + format.end + ".")
                         else:
-                            scrollingText(characterNames[characters[0]] + " drops their " + format.red + items[characterItems[characters[0]][0]]["name"].lower() + format.end + " to pick up the cache's " + format.green + items[lootItem]["name"] + format.end + ".", 2, 0.01)
+                            moose.scrollingText(characterNames[characters[0]] + " drops their " + format.red + items[characterItems[characters[0]][0]]["name"].lower() + format.end + " to pick up the cache's " + format.green + items[lootItem]["name"] + format.end + ".")
                     else:
                         if items[lootItem]["uncap"] == True:
-                            scrollingText(characterNames[characters[0]] + " drops their " + format.red + items[characterItems[characters[0]][0]]["name"] + format.end + " to pick up the cache's " + format.green + items[lootItem]["name"].lower() + format.end + ".", 2, 0.01)
+                            moose.scrollingText(characterNames[characters[0]] + " drops their " + format.red + items[characterItems[characters[0]][0]]["name"] + format.end + " to pick up the cache's " + format.green + items[lootItem]["name"].lower() + format.end + ".")
                         else:
-                            scrollingText(characterNames[characters[0]] + " drops their " + format.red + items[characterItems[characters[0]][0]]["name"] + format.end + " to pick up the cache's " + format.green + items[lootItem]["name"] + format.end + ".", 2, 0.01)
+                            moose.scrollingText(characterNames[characters[0]] + " drops their " + format.red + items[characterItems[characters[0]][0]]["name"] + format.end + " to pick up the cache's " + format.green + items[lootItem]["name"] + format.end + ".")
                     log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"].lower() + ".")
                     characterItems[characters[0]][0] = lootItem
                     characterItemDurabilities[characters[0]][0] = items[lootItem]["durability"]
                 else:
                     if items[characterItems[characters[0]][0]]["uncap"] == True:
                         if items[lootItem]["uncap"] == True:
-                            scrollingText(characterNames[characters[0]] + " drops their " + format.red + items[characterItems[characters[0]][0]]["name"].lower() + format.end + " to pick up the cache's " + format.green + items[lootItem]["name"].lower() + format.end + ".", 2, 0.01)
+                            moose.scrollingText(characterNames[characters[0]] + " drops their " + format.red + items[characterItems[characters[0]][0]]["name"].lower() + format.end + " to pick up the cache's " + format.green + items[lootItem]["name"].lower() + format.end + ".")
                         else:
-                            scrollingText(characterNames[characters[0]] + " drops their " + format.red + items[characterItems[characters[0]][0]]["name"].lower() + format.end + " to pick up the cache's " + format.green + items[lootItem]["name"] + format.end + ".", 2, 0.01)
+                            moose.scrollingText(characterNames[characters[0]] + " drops their " + format.red + items[characterItems[characters[0]][0]]["name"].lower() + format.end + " to pick up the cache's " + format.green + items[lootItem]["name"] + format.end + ".")
                     else:
                         if items[lootItem]["uncap"] == True:
-                            scrollingText(characterNames[characters[0]] + " drops their " + format.red + items[characterItems[characters[0]][0]]["name"] + format.end + " to pick up the cache's " + format.green + items[lootItem]["name"].lower() + format.end + ".", 2, 0.01)
+                            moose.scrollingText(characterNames[characters[0]] + " drops their " + format.red + items[characterItems[characters[0]][0]]["name"] + format.end + " to pick up the cache's " + format.green + items[lootItem]["name"].lower() + format.end + ".")
                         else:
-                            scrollingText(characterNames[characters[0]] + " drops their " + format.red + items[characterItems[characters[0]][0]]["name"] + format.end + " to pick up the cache's " + format.green + items[lootItem]["name"] + format.end + ".", 2, 0.01)
+                            moose.scrollingText(characterNames[characters[0]] + " drops their " + format.red + items[characterItems[characters[0]][0]]["name"] + format.end + " to pick up the cache's " + format.green + items[lootItem]["name"] + format.end + ".")
             else:
                 characterItems[characters[0]].append(lootItem)
                 characterItemDurabilities[characters[0]].append(items[lootItem]["durability"])
                 if items[lootItem]["uncap"] == True:
-                    scrollingText(characterNames[characters[0]] + " picks up the " + format.green + items[lootItem]["name"].lower() + format.end + ".", 2, 0.01)
+                    moose.scrollingText(characterNames[characters[0]] + " picks up the " + format.green + items[lootItem]["name"].lower() + format.end + ".")
                     log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"].lower() + ".")
                 else:
-                    scrollingText(characterNames[characters[0]] + " picks up the " + format.green + items[lootItem]["name"] + format.end + ".", 2, 0.01)
+                    moose.scrollingText(characterNames[characters[0]] + " picks up the " + format.green + items[lootItem]["name"] + format.end + ".")
                     log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"]  + ".")
 
 def checkBreak(character):
     if len(characterItems[character]) > 0:
         if characterItemDurabilities[character][0] <= 0:
-            scrollingText(format.red + characterNames[character] + items[characterItems[character][0]]["break"] + format.end, 2, 0.01)
+            moose.scrollingText(format.red + characterNames[character] + items[characterItems[character][0]]["break"] + format.end)
             characterItems[character].pop(0)
             characterItemDurabilities[character].pop(0)
             if len(characterItems[character]) > 0:
-                scrollingText(format.blue + characterNames[character] + " switches to their " + items[characterItems[character][0]]["name"] + "." + format.end, 2, 0.01)
+                moose.scrollingText(format.blue + characterNames[character] + " switches to their " + items[characterItems[character][0]]["name"] + "." + format.end)
             else:
-                scrollingText(format.blue + characterNames[character] + " drops it." + format.end, 2, 0.01)
+                moose.scrollingText(format.blue + characterNames[character] + " drops it." + format.end)
 
 def combat(characters, decision, ran):
     global deadCharacters
@@ -321,17 +246,17 @@ def combat(characters, decision, ran):
         rand = random.randint(1, 4 + (characterAttributes[characters[1]][3] - characterAttributes[characters[0]][3]))
         if decision == 1:
             print()
-            scrollingText(format.blue + characterNames[characters[0]] + " attempts to run away." + format.end, 2, 0.01)
+            moose.scrollingText(format.blue + characterNames[characters[0]] + " attempts to run away." + format.end)
         if rand == 6:
             if decision != 1:
                 print()
-            scrollingText(format.green + characterNames[characters[0]] + " runs away." + format.end, 2, 0.01)
+            moose.scrollingText(format.green + characterNames[characters[0]] + " runs away." + format.end)
             print()
             log.append(str(days) + ". " + characterNames[characters[0]] + " ran away.")
             ran = True
         else:
             if decision == 1:
-                scrollingText(format.red + characterNames[characters[0]] + " fails to run away." + format.end, 2, 0.01)
+                moose.scrollingText(format.red + characterNames[characters[0]] + " fails to run away." + format.end)
     charA = 1
     charB = 0
     if ran != True:
@@ -352,17 +277,17 @@ def combat(characters, decision, ran):
                     else:
                         characterHealth[characters[charB]] = characterHealth[characters[charB]] - rand
                     if decision == 1:
-                        scrollingText(characterNames[characters[charA]] + " " + random.choice(hits) + " " + characterNames[characters[charB]] + ".   " + format.red + "-" + str(rand) + format.end, 2, 0.01)
+                        moose.scrollingText(characterNames[characters[charA]] + " " + random.choice(hits) + " " + characterNames[characters[charB]] + ".   " + format.red + "-" + str(rand) + format.end)
                 else:
                     if decision == 1:
-                        scrollingText(characterNames[characters[charA]] + " misses their shot.", 2, 0.01)
+                        moose.scrollingText(characterNames[characters[charA]] + " misses their shot.")
             else:
                 if decision == 1:
-                    scrollingText(characterNames[characters[charA]] + items[characterItems[characters[charA]][0]]["ready"], 2, 0.01)
+                    moose.scrollingText(characterNames[characters[charA]] + items[characterItems[characters[charA]][0]]["ready"])
                 rand = random.randint(1, 100)
                 weapon = items[characterItems[characters[charA]][0]]
                 if decision == 1:
-                    scrollingText(characterNames[characters[charA]] + items[characterItems[characters[charA]][0]]["attack"] + characterNames[characters[charB]] + ".", 2, 0.01)
+                    moose.scrollingText(characterNames[characters[charA]] + items[characterItems[characters[charA]][0]]["attack"] + characterNames[characters[charB]] + ".")
                 if weapon["type"] == "Melee":
                     rand = rand + (characterAttributes[characters[charA]][1] * 5)
                 if weapon["type"] == "Ranged":
@@ -385,10 +310,10 @@ def combat(characters, decision, ran):
                         characterHealth[characters[charB]] = characterHealth[characters[charB]] - dam
                     characterItemDurabilities[characters[charA]][0] = characterItemDurabilities[characters[charA]][0] - 1
                     if decision == 1:
-                        scrollingText("The shot connects.   " + format.red + "-" + str(origDam) + format.end, 2, 0.01)
+                        moose.scrollingText("The shot connects.   " + format.red + "-" + str(origDam) + format.end)
                 else:
                     if decision == 1:
-                        scrollingText("The shot misses.", 2, 0.01)
+                        moose.scrollingText("The shot misses.")
                     if items[characterItems[characters[charA]][0]]["faildamage"] == True:
                         characterItemDurabilities[characters[charA]][0] = characterItemDurabilities[characters[charA]][0] - 1
             checkBreak(characters[charA])
@@ -403,7 +328,7 @@ def combat(characters, decision, ran):
             if ran == True or characterHealth[characters[charA]] <= 0 or characterHealth[characters[charB]] <= 0:
                 if characterHealth[characters[charA]] <= 0:
                     print()
-                    scrollingText(characterNames[characters[charA]] + " succumbs to their wounds, and dies.", 2, 0.01)
+                    moose.scrollingText(characterNames[characters[charA]] + " succumbs to their wounds, and dies.")
                     charactersKilled[characters[charB]].append(characterNames[characters[charA]])
                     killedBy[characters[charA]] = characterNames[characters[charB]]
                     if characterItems[characters[charB]] != []:
@@ -417,7 +342,7 @@ def combat(characters, decision, ran):
                     print()
                     deadCharacters.append(characterNames[characters[charA]])
                 if characterHealth[characters[charB]] <= 0:
-                    scrollingText(characterNames[characters[charB]] + " succumbs to their wounds, and dies.", 2, 0.01)
+                    moose.scrollingText(characterNames[characters[charB]] + " succumbs to their wounds, and dies.")
                     charactersKilled[characters[charA]].append(characterNames[characters[charB]])
                     killedBy[characters[charB]] = characterNames[characters[charA]]
                     if characterItems[characters[charA]] != []:
@@ -435,14 +360,14 @@ def combat(characters, decision, ran):
             if rand == 1:
                 rand = random.randint(1, 4 + (characterAttributes[characters[charB]][3] - characterAttributes[characters[charA]][3]))
                 if decision == 1:
-                    scrollingText(format.blue + characterNames[characters[charB]] + " attempts to run away." + format.end, 2, 0.01)
+                    moose.scrollingText(format.blue + characterNames[characters[charB]] + " attempts to run away." + format.end)
                 if rand == 6:
-                    scrollingText(format.green + characterNames[characters[charB]] + " runs away." + format.end, 2, 0.01)
+                    moose.scrollingText(format.green + characterNames[characters[charB]] + " runs away." + format.end)
                     log.append(str(days) + ". " + characterNames[characters[charB]] + " ran away.")
                     ran = True
                 else:
                     if decision == 1:
-                        scrollingText(format.red + characterNames[characters[charB]] + " fails to run away." + format.end, 2, 0.01)
+                        moose.scrollingText(format.red + characterNames[characters[charB]] + " fails to run away." + format.end)
 
 
 
@@ -464,16 +389,18 @@ def mainMenu():
     print("  \_╷_╷_╷_|  __|" + format.end + format.bold + format.blue + "  /__  / / __  / / /_/ / / // // / / /_/ / / /_/ / / // // / / /||/ /" + format.end + format.bold + format.red)
     print("          ╵-╵   " + format.end + format.bold + format.blue + " /____/ /_/ /_/ /_____/ /_______/ /_____/ /_____/ /_______/ /_/ |__/" + format.end + format.italic + format.bold)
     print()
-    scrollingText("v" + version + " / " + dateRelease + " build" + format.end, 2, 0.02)
-    decision = ask("", 2, ["Start new game", "Create characters", "Settings", "Exit"], 0.03)
+    moose.scrollingText("v" + version + " / " + dateRelease + " build" + format.end, 2, 0.02)
+    decision = ask("", ["Start new game", "Create characters", "Add/remove mods", "Settings", "Exit"], delay = 0.02)
     if decision == 1:
         startSim()
     if decision == 2:
         selectSimMode()
         createCharacters()
     if decision == 3:
-        settings()
+        loadMods()
     if decision == 4:
+        settings()
+    if decision == 5:
         raise Exception("Exited game.")
 
 def startSim():
@@ -503,7 +430,7 @@ def startSim():
         run = run + 1
     if len(characterSaves) != 0:
         characterSaves.append("Exit")
-        filenumber = ask("Load characters:", 2, characterSaves, 0.01)
+        filenumber = ask("Load characters:", characterSaves)
         if characterSaves[filenumber - 1] != "Exit":
             file = os.path.join(foldername, os.path.join(characterSaves[filenumber - 1]))
             data = json.load(open(file, "r"))
@@ -528,7 +455,7 @@ def startSim():
             mainMenu()
     else:
         print()
-        scrollingText("Directory is empty!", 2, 0.01)
+        moose.scrollingText("Directory is empty!")
         askToContinue()
         mainMenu()
     characterHealth = []
@@ -568,14 +495,14 @@ def sim():
 def printDayGUI():
     print(format.clear)
     time.sleep(0.5)
-    scrollingText(format.bold + format.blue + format.italic + "Day " + str(days) + "." + format.end, 2, 0.01)
+    moose.scrollingText(format.bold + format.blue + format.italic + "Day " + str(days) + "." + format.end)
     time.sleep(0.5)
     print()
     if len(characterNames) - len(deadCharacters) > 1:
         runEvents(generateEvents())
         time.sleep(0.5)
         print()
-        scrollingText(format.bold + format.blue + format.italic + "Night falls." + format.end, 2, 0.01)
+        moose.scrollingText(format.bold + format.blue + format.italic + "Night falls." + format.end)
         print()
         nightfall()
     else:
@@ -602,7 +529,7 @@ def runEvents(eventList):
 
 def sawParticipant():
     characters = generateCharacterList(2)
-    scrollingText(characterNames[characters[0]] + " sees " + characterNames[characters[1]] + ".", 2, 0.01)
+    moose.scrollingText(characterNames[characters[0]] + " sees " + characterNames[characters[1]] + ".")
     log.append(str(days) + ". " + characterNames[characters[0]] + " saw " + characterNames[characters[1]] + ".")
     time.sleep(0.5)
     if npc[characterPlans[characters[0]]]["saw_participant"] == "loud":
@@ -612,72 +539,72 @@ def sawParticipant():
         if rand == 6:
             attacked(characters)
         else:
-            scrollingText(characterNames[characters[0]] + " hides.", 2, 0.01)
+            moose.scrollingText(characterNames[characters[0]] + " hides.")
     if npc[characterPlans[characters[0]]]["saw_participant"] == "flee":
         rand = random.randint(1, 8)
         if rand == 4:
             attacked(characters)
         else:
-            scrollingText(characterNames[characters[0]] + " runs away.", 2, 0.01)
+            moose.scrollingText(characterNames[characters[0]] + " runs away.")
     if npc[characterPlans[characters[0]]]["saw_participant"] == "communicate":
-        scrollingText(format.blue + characterNames[characters[0]] + " attempts to negotiate with " + characterNames[characters[1]] + "." + format.end, 2, 0.01)
+        moose.scrollingText(format.blue + characterNames[characters[0]] + " attempts to negotiate with " + characterNames[characters[1]] + "." + format.end)
         rand = random.randint(1, 4)
         if rand == 4:
-            scrollingText(format.red + characterNames[characters[1]] + " didn't like that." + format.end, 2, 0.01)
+            moose.scrollingText(format.red + characterNames[characters[1]] + " didn't like that." + format.end)
             attacked(characters)
         else:
-            scrollingText(format.green + characterNames[characters[0]] + " successfully negotiates with " + characterNames[characters[1]] + "." + format.end, 2, 0.01)
+            moose.scrollingText(format.green + characterNames[characters[0]] + " successfully negotiates with " + characterNames[characters[1]] + "." + format.end)
     askToContinue()
 
 def heardParticipant():
     characters = generateCharacterList(2)
-    scrollingText(characterNames[characters[0]] + " hears something.", 2, 0.01)
+    moose.scrollingText(characterNames[characters[0]] + " hears something.")
     log.append(str(days) + ". " + characterNames[characters[0]] + " heard something.")
     time.sleep(0.5)
     if npc[characterPlans[characters[0]]]["heard_participant"] == "loud":
         rand = random.randint(1, 4)
         if rand == 4:
-            scrollingText(characterNames[characters[0]] + " finds " + characterNames[characters[1]] + ".", 2, 0.01)
+            moose.scrollingText(characterNames[characters[0]] + " finds " + characterNames[characters[1]] + ".")
             attack(characters)
         else:
-            scrollingText(characterNames[characters[0]] + " searches the area, but doesn't find anyone.", 2, 0.01)
+            moose.scrollingText(characterNames[characters[0]] + " searches the area, but doesn't find anyone.")
     if npc[characterPlans[characters[0]]]["heard_participant"] == "stealth":
         rand = random.randint(1, 6)
         if rand == 6:
-            scrollingText(characterNames[characters[1]] + " finds " + characterNames[characters[0]] + ".", 2, 0.01)
+            moose.scrollingText(characterNames[characters[1]] + " finds " + characterNames[characters[0]] + ".")
             attacked(characters)
         else:
-            scrollingText(characterNames[characters[0]] + " hides.", 2, 0.01)
+            moose.scrollingText(characterNames[characters[0]] + " hides.")
     if npc[characterPlans[characters[0]]]["heard_participant"] == "seek":
         rand = random.randint(1, 2)
         if rand == 2:
-            scrollingText(characterNames[characters[0]] + " finds " + characterNames[characters[1]] + ".", 2, 0.01)
+            moose.scrollingText(characterNames[characters[0]] + " finds " + characterNames[characters[1]] + ".")
             attack(characters)
         else:
-            scrollingText(characterNames[characters[0]] + " fails to find anyone.", 2, 0.01)
+            moose.scrollingText(characterNames[characters[0]] + " fails to find anyone.")
     if npc[characterPlans[characters[0]]]["heard_participant"] == "flee":
-        scrollingText(characterNames[characters[0]] + " runs away.", 2, 0.01)
+        moose.scrollingText(characterNames[characters[0]] + " runs away.")
     askToContinue()
 
 def trace():
     characters = generateCharacterList(2)
-    scrollingText(characterNames[characters[0]] + " notices footprints in the mud.", 2, 0.01)
+    moose.scrollingText(characterNames[characters[0]] + " notices footprints in the mud.")
     log.append(str(days) + ". " + characterNames[characters[0]] + " noticed a trace of someone.")
     time.sleep(0.5)
     if npc[characterPlans[characters[0]]]["trace"] == "loud":
         rand = random.randint(1, 10)
         if rand == 10:
-            scrollingText(characterNames[characters[0]] + " finds " + characterNames[characters[1]] + ".", 2, 0.01)
+            moose.scrollingText(characterNames[characters[0]] + " finds " + characterNames[characters[1]] + ".")
             attack(characters)
         else:
-            scrollingText(characterNames[characters[0]] + " fails to find anyone.", 2, 0.01)
+            moose.scrollingText(characterNames[characters[0]] + " fails to find anyone.")
     if npc[characterPlans[characters[0]]]["trace"] == "stealth":
         rand = random.randint(1, 16)
         if rand == 16:
-            scrollingText(characterNames[characters[1]] + " finds " + characterNames[characters[0]] + ".", 2, 0.01)
+            moose.scrollingText(characterNames[characters[1]] + " finds " + characterNames[characters[0]] + ".")
             attacked(characters)
         else:
-            scrollingText(characterNames[characters[0]] + " hides.", 2, 0.01)
+            moose.scrollingText(characterNames[characters[0]] + " hides.")
     askToContinue()
         
 def attacked(characters = []):
@@ -686,24 +613,24 @@ def attacked(characters = []):
     if len(characters) == 1:
         characters.append(generateCharacterList(1))
     ran = False
-    scrollingText(format.bold + format.red + characterNames[characters[1]] + " engages " + characterNames[characters[0]] + "." + format.end, 2, 0.01)
+    moose.scrollingText(format.bold + format.red + characterNames[characters[1]] + " engages " + characterNames[characters[0]] + "." + format.end)
     if len(characterItems[characters[1]]) > 0:
         if items[characterItems[characters[1]][0]]["uncap"] == True:
-            scrollingText(characterNames[characters[1]] + " has a " + items[characterItems[characters[1]][0]]["name"].lower() + ".", 2, 0.01)
+            moose.scrollingText(characterNames[characters[1]] + " has a " + items[characterItems[characters[1]][0]]["name"].lower() + ".")
         else:
-            scrollingText(characterNames[characters[1]] + " has a " + items[characterItems[characters[1]][0]]["name"] + ".", 2, 0.01)
+            moose.scrollingText(characterNames[characters[1]] + " has a " + items[characterItems[characters[1]][0]]["name"] + ".")
     else:
-        scrollingText(characterNames[characters[1]] + " is using their fists.", 2, 0.01)
+        moose.scrollingText(characterNames[characters[1]] + " is using their fists.")
     if len(characterItems[characters[0]]) > 0:
         if items[characterItems[characters[0]][0]]["uncap"] == True:
-            scrollingText(characterNames[characters[0]] + " has a " + items[characterItems[characters[0]][0]]["name"].lower() + ".", 2, 0.01)
+            moose.scrollingText(characterNames[characters[0]] + " has a " + items[characterItems[characters[0]][0]]["name"].lower() + ".")
         else:
-            scrollingText(characterNames[characters[0]] + " has a " + items[characterItems[characters[0]][0]]["name"] + ".", 2, 0.01)
+            moose.scrollingText(characterNames[characters[0]] + " has a " + items[characterItems[characters[0]][0]]["name"] + ".")
     else:
-        scrollingText(characterNames[characters[0]] + " is using their fists.", 2, 0.01)
+        moose.scrollingText(characterNames[characters[0]] + " is using their fists.")
     log.append(str(days) + ". " + characterNames[characters[0]] + " got attacked by " + characterNames[characters[1]] + ".")
     print()
-    decision = ask("Would you like to view this combat turn by turn?", 2, ["Turn by turn", "Skip to result"], 0.01)
+    decision = ask("Would you like to view this combat turn by turn?", ["Turn by turn", "Skip to result"])
     combat(characters, decision, ran)
 
 def attack(characters = []):
@@ -712,24 +639,24 @@ def attack(characters = []):
     if len(characters) == 1:
         characters.append(generateCharacterList(1))
     ran = False
-    scrollingText(format.bold + format.red + characterNames[characters[0]] + " attacks " + characterNames[characters[1]] + "." + format.end, 2, 0.01)
+    moose.scrollingText(format.bold + format.red + characterNames[characters[0]] + " attacks " + characterNames[characters[1]] + "." + format.end)
     if len(characterItems[characters[0]]) > 0:
         if items[characterItems[characters[0]][0]]["uncap"] == True:
-            scrollingText(characterNames[characters[0]] + " has a " + items[characterItems[characters[0]][0]]["name"].lower() + ".", 2, 0.01)
+            moose.scrollingText(characterNames[characters[0]] + " has a " + items[characterItems[characters[0]][0]]["name"].lower() + ".")
         else:
-            scrollingText(characterNames[characters[0]] + " has a " + items[characterItems[characters[0]][0]]["name"] + ".", 2, 0.01)
+            moose.scrollingText(characterNames[characters[0]] + " has a " + items[characterItems[characters[0]][0]]["name"] + ".")
     else:
-        scrollingText(characterNames[characters[0]] + " has is using their fists.", 2, 0.01)
+        moose.scrollingText(characterNames[characters[0]] + " has is using their fists.")
     if len(characterItems[characters[1]]) > 0:
         if items[characterItems[characters[1]][0]]["uncap"] == True:
-            scrollingText(characterNames[characters[1]] + " has a " + items[characterItems[characters[1]][0]]["name"].lower() + ".", 2, 0.01)
+            moose.scrollingText(characterNames[characters[1]] + " has a " + items[characterItems[characters[1]][0]]["name"].lower() + ".")
         else:
-            scrollingText(characterNames[characters[1]] + " has a " + items[characterItems[characters[1]][0]]["name"] + ".", 2, 0.01)
+            moose.scrollingText(characterNames[characters[1]] + " has a " + items[characterItems[characters[1]][0]]["name"] + ".")
     else:
-        scrollingText(characterNames[characters[1]] + " has is using their fists.", 2, 0.01)
+        moose.scrollingText(characterNames[characters[1]] + " has is using their fists.")
     log.append(str(days) + ". " + characterNames[characters[0]] + " attacked " + characterNames[characters[1]] + ".")
     print()
-    decision = ask("Would you like to view this combat turn by turn?", 2, ["Turn by turn", "Skip to result"], 0.01)
+    decision = ask("Would you like to view this combat turn by turn?", ["Turn by turn", "Skip to result"])
     newCharacters = []
     run = len(characters) - 1
     while run >= 0:
@@ -739,7 +666,7 @@ def attack(characters = []):
 
 def looting():
     characters = generateCharacterList(2)
-    scrollingText(characterNames[characters[0]] + " notices a cache near their location.", 2, 0.01)
+    moose.scrollingText(characterNames[characters[0]] + " notices a cache near their location.")
     if npc[characterPlans[characters[0]]]["looting"] == "loud":
         rand = random.randint(1, 6)
         if rand == 1:
@@ -759,7 +686,7 @@ def looting():
 def airdrop():
     characters = generateCharacterList(random.randint(1, int((len(characterNames) - len(deadCharacters) / 5))))
     run = 0
-    scrollingText(format.bold + "Airdrops descend on the showdown's arena." + format.end, 2, 0.01)
+    moose.scrollingText(format.bold + "Airdrops descend on the showdown's arena." + format.end)
     print()
     while run < len(characters):
         tempChar = []
@@ -770,7 +697,7 @@ def airdrop():
     askToContinue()
 
 def nightfall():
-    decision = ask("Nightfall actions:", 2, ["View characters", "View log", "Continue to day"], 0.05)
+    decision = ask("Nightfall actions:", ["View characters", "View log", "Continue to day"], delay = 0.05)
     if decision == 1:
         viewCharacters()
     if decision == 2:
@@ -792,32 +719,32 @@ def viewCharacters():
     options.append("Exit")
     while options[decision - 1] != "Exit":
         print()
-        scrollingText("Character [" + format.red + "Health" + format.end + "] (" + format.green + "Equipped item" + format.end + ") {" + format.blue + "Kills" + format.end + "}", 2, 0.01)
-        scrollingText(format.red + "Dead character" + format.end + " {" + format.blue + "Kills" + format.end + "}", 2, 0.01)
+        moose.scrollingText("Character [" + format.red + "Health" + format.end + "] (" + format.green + "Equipped item" + format.end + ") {" + format.blue + "Kills" + format.end + "}")
+        moose.scrollingText(format.red + "Dead character" + format.end + " {" + format.blue + "Kills" + format.end + "}")
         print()
-        decision = ask("View character:\n", 2, options, 0.05)
+        decision = ask("View character:\n", options, delay = 0.05)
         view = decision - 1
         print()
         if options[decision - 1] != "Exit":
-            scrollingText(format.bold + characterNames[view] + format.end, 2, 0.01)
-            scrollingText("Health: " + format.red + format.bold + str(characterHealth[view]) + format.end, 2, 0.01)
+            moose.scrollingText(format.bold + characterNames[view] + format.end)
+            moose.scrollingText("Health: " + format.red + format.bold + str(characterHealth[view]) + format.end)
             if characterArmour[view] > 0:
-                scrollingText("Armour: " + format.blue + format.bold + str(characterArmour[view]) + format.end, 2, 0.01)
+                moose.scrollingText("Armour: " + format.blue + format.bold + str(characterArmour[view]) + format.end)
             if characterNames[view] in deadCharacters:
-                scrollingText("Killed by: " + killedBy[view], 2, 0.01)
-            scrollingText("Kills: " + str(characterKills[view]), 2, 0.01)
+                moose.scrollingText("Killed by: " + killedBy[view])
+            moose.scrollingText("Kills: " + str(characterKills[view]))
             if len(charactersKilled[view]) > 0:
                 run = 0
                 while run < len(charactersKilled[view]):
-                    scrollingText(str(run + 1) + ". " + charactersKilled[view][run], 2, 0.01)
+                    moose.scrollingText(str(run + 1) + ". " + charactersKilled[view][run])
                     run = run + 1
             print()
-            scrollingText("Inventory:", 2, 0.01)
+            moose.scrollingText("Inventory:")
             run = 0
             while run < len(characterItems[view]):
                 currItem = items[characterItems[view][run]]
-                scrollingText(format.bold + currItem["name"] + format.end, 2, 0.01)
-                scrollingText(format.green + str(characterItemDurabilities[view][run]) + format.end + "/" + format.blue + str(currItem["durability"]) + format.end, 2, 0.01)
+                moose.scrollingText(format.bold + currItem["name"] + format.end)
+                moose.scrollingText(format.green + str(characterItemDurabilities[view][run]) + format.end + "/" + format.blue + str(currItem["durability"]) + format.end)
                 linerun = 1
                 while linerun <= 5:
                     if currItem[str(linerun)] != "":
@@ -827,7 +754,7 @@ def viewCharacters():
                 print()
                 run = run + 1
             if len(characterItems[view]) == 0:
-                scrollingText(format.bold + format.italic + "Inventory is empty!" + format.end, 2, 0.01)
+                moose.scrollingText(format.bold + format.italic + "Inventory is empty!" + format.end)
         askToContinue()
     nightfall()
 
@@ -835,7 +762,7 @@ def viewLog():
     run = 0
     print()
     while run < len(log):
-        scrollingText(log[run], 2, 0.01)
+        moose.scrollingText(log[run])
         run = run + 1
     askToContinue()
     nightfall()
@@ -855,14 +782,14 @@ def printWinner():
     while characterNames[run] in deadCharacters:
         run = run + 1
     print(format.clear)
-    scrollingText(format.green + characterNames[run] + format.end + " is the last one alive.", 2, 0.01)
-    scrollingText("They win.", 2, 0.01)
+    moose.scrollingText(format.green + characterNames[run] + format.end + " is the last one alive.")
+    moose.scrollingText("They win.")
     print()
-    scrollingText("           Kills: " + str(characterKills[run]), 2, 0.01)
+    moose.scrollingText("           Kills: " + str(characterKills[run]))
     if len(characterItems[run]) > 0:
-        scrollingText("Last used weapon: " + items[characterItems[run][0]]["name"], 2, 0.01)
+        moose.scrollingText("Last used weapon: " + items[characterItems[run][0]]["name"])
     else:
-        scrollingText("Last used weapon: Fists", 2, 0.01)
+        moose.scrollingText("Last used weapon: Fists")
     print()
     askToContinue()
     mainMenu()
@@ -874,28 +801,28 @@ def selectSimMode():
     global characterAttributes
     print(format.clear)
     time.sleep(0.5)
-    scrollingText(";showdown.detailed", 2, 0.01)
+    moose.scrollingText(";showdown.detailed")
     time.sleep(0.3)
-    scrollingText("- Full simulation", 4, 0.01)
-    scrollingText("- Choose NPC plan", 4, 0.01)
-    scrollingText("- Custom attributes", 4, 0.01)
-    time.sleep(0.3)
-    print()
-    scrollingText(";showdown.adaptable", 2, 0.01)
-    time.sleep(0.3)
-    scrollingText("- Full simulation", 4, 0.01)
-    scrollingText("- Random NPC plan", 4, 0.01)
-    scrollingText("- Custom attributes", 4, 0.01)
+    moose.scrollingText("- Full simulation", 4, 0.01)
+    moose.scrollingText("- Choose NPC plan", 4, 0.01)
+    moose.scrollingText("- Custom attributes", 4, 0.01)
     time.sleep(0.3)
     print()
-    scrollingText(";showdown.simple", 2, 0.01)
+    moose.scrollingText(";showdown.adaptable")
     time.sleep(0.3)
-    scrollingText("- Partial simulation", 4, 0.01)
-    scrollingText("- Random NPC plan", 4, 0.01)
-    scrollingText("- All have same attributes", 4, 0.01)
+    moose.scrollingText("- Full simulation", 4, 0.01)
+    moose.scrollingText("- Random NPC plan", 4, 0.01)
+    moose.scrollingText("- Custom attributes", 4, 0.01)
+    time.sleep(0.3)
+    print()
+    moose.scrollingText(";showdown.simple")
+    time.sleep(0.3)
+    moose.scrollingText("- Partial simulation", 4, 0.01)
+    moose.scrollingText("- Random NPC plan", 4, 0.01)
+    moose.scrollingText("- All have same attributes", 4, 0.01)
     time.sleep(0.5)
     print()
-    decision = ask("Select a creation mode:", 2, ["Detailed", "Adaptable", "Simple"], 0.01)
+    decision = ask("Select a creation mode:", ["Detailed", "Adaptable", "Simple"])
     if decision == 1:
         creationMode = "det"
     if decision == 2:
@@ -946,11 +873,11 @@ def createCharacters(currentCharacter = 0):
         methods.append("Delete character")
         methods.append("Import/export character set")
         methods.append("Exit")
-        scrollingText("CHARACTER CREATION", 2, 0.015)
+        moose.scrollingText("CHARACTER CREATION", delay = 0.025)
         print()
-        scrollingText("Name: " + characterNames[currentCharacter], 2, 0.01)
-        scrollingText("Plan: " + npc[characterPlans[currentCharacter]]["name"], 2, 0.01)
-        scrollingText("Current character: #" + str(currentCharacter + 1), 2, 0.01)
+        moose.scrollingText("Name: " + characterNames[currentCharacter])
+        moose.scrollingText("Plan: " + npc[characterPlans[currentCharacter]]["name"])
+        moose.scrollingText("Current character: #" + str(currentCharacter + 1))
         print()
         print("          Melee: " + str(characterAttributes[currentCharacter][0]))
         print("         Ranged: " + str(characterAttributes[currentCharacter][1]))
@@ -958,7 +885,7 @@ def createCharacters(currentCharacter = 0):
         print("       Strength: " + str(characterAttributes[currentCharacter][3]))
         print("  Communication: " + str(characterAttributes[currentCharacter][4]))
         print()
-        decision = ask("Character editor:", 2, methods, 0.01)
+        decision = ask("Character editor:", methods)
         if methods[decision - 1] == "Name":
             changeCharacterName(currentCharacter)
         if methods[decision - 1] == "NPC plan":
@@ -974,8 +901,8 @@ def createCharacters(currentCharacter = 0):
         if methods[decision - 1] == "Import/export character set":
             saveLoadCharacters()
     print(format.clear)
-    scrollingText("Are you sure you want to exit?", 2, 0.01)
-    decision = ask("Make sure you have your sheet saved before exiting.", 2, ["Save sheet", "Back to character creation", "Exit"], 0.01)
+    moose.scrollingText("Are you sure you want to exit?")
+    decision = ask("Make sure you have your sheet saved before exiting.", ["Save sheet", "Back to character creation", "Exit"])
     if decision == 1:
         directToSave()
         mainMenu()
@@ -997,7 +924,7 @@ def changeCharacterPlan(curChar):
     while run < len(npc["npclist"]):
         npclist.append(npc[npc["npclist"][run]]["name"])
         run = run + 1
-    decision = ask("Choose character's NPC plan", 2, npclist, 0.01)
+    decision = ask("Choose character's NPC plan", npclist)
     print(format.clear)
     print(npc[npc["npclist"][decision - 1]]["triangle1"])
     print(npc[npc["npclist"][decision - 1]]["triangle2"])
@@ -1005,8 +932,8 @@ def changeCharacterPlan(curChar):
     print(npc[npc["npclist"][decision - 1]]["triangle4"])
     print(npc[npc["npclist"][decision - 1]]["triangle5"])
     print()
-    scrollingText(npc[npc["npclist"][decision - 1]]["description"], 2, 0.01)
-    flow = ask("", 2, ["Set this as character plan", "Return to plan selection"], 0.05)
+    moose.scrollingText(npc[npc["npclist"][decision - 1]]["description"])
+    flow = ask("", ["Set this as character plan", "Return to plan selection"], delay = 0.05)
     if flow == 1:
         characterPlans[curChar] = npc["npclist"][decision - 1]
     else:
@@ -1021,7 +948,7 @@ def changeCharacterAttributes(curChar):
     print("      Endurance: " + str(characterAttributes[curChar][2]))
     print("       Strength: " + str(characterAttributes[curChar][3]))
     print("  Communication: " + str(characterAttributes[curChar][4]))
-    decision = ask("", 2, ["Change melee", "Change ranged", "Change endurance", "Change strength", "Change communication", "Exit"], 0.01)
+    decision = ask("", ["Change melee", "Change ranged", "Change endurance", "Change strength", "Change communication", "Exit"])
     while decision != 6:
         if decision == 1:
             print()
@@ -1044,13 +971,13 @@ def changeCharacterAttributes(curChar):
         print("      Endurance: " + str(characterAttributes[curChar][2]))
         print("       Strength: " + str(characterAttributes[curChar][3]))
         print("  Communication: " + str(characterAttributes[curChar][4]))
-        decision = ask("", 2, ["Change melee", "Change ranged", "Change endurance", "Change strength", "Change communication", "Exit"], 0.01)
+        decision = ask("", ["Change melee", "Change ranged", "Change endurance", "Change strength", "Change communication", "Exit"])
     print(format.clear)
 
 def switchCharacter(curChar, currentCharacters):
     print(format.clear)
     print("  ")
-    switch = ask("Current characters:", 2, currentCharacters, 0.01, curChar)
+    switch = ask("Current characters:", currentCharacters, lookingFor = curChar)
     switch = switch - 1
     print(format.clear)
     return switch
@@ -1069,7 +996,7 @@ def deleteCharacter(currChar):
     global characterAttributes
 
     print()
-    decision = ask("Would you really like to delete this character?", 2, ["Yes", "No"], 0.05)
+    decision = ask("Would you really like to delete this character?", ["Yes", "No"], delay = 0.05)
     if decision == 1:
         characterNames.pop(currChar)
         characterPlans.pop(currChar)
@@ -1084,7 +1011,7 @@ def saveLoadCharacters():
     global creationMode
 
     print()
-    decision = ask("Load or save characters?", 2, ["Load", "Save", "Back to character creation"], 0.01)
+    decision = ask("Load or save characters?", ["Load", "Save", "Back to character creation"])
     if decision == 1:
         directory = os.path.dirname(__file__)
         foldername = os.path.join(directory, ('characterSaves/'))
@@ -1097,7 +1024,7 @@ def saveLoadCharacters():
             run = run + 1
         if len(characterSaves) != 0:
             characterSaves.append("Exit")
-            filenumber = ask("Load characters:", 2, characterSaves, 0.01)
+            filenumber = ask("Load characters:", characterSaves)
             if characterSaves[filenumber - 1] != "Exit":
                 file = os.path.join(foldername, os.path.join(characterSaves[filenumber - 1]))
                 data = json.load(open(file, "r"))
@@ -1177,10 +1104,16 @@ def directToSave():
     json.dump(data, file, separators = (',', ':'), indent = 4)
     print(format.clear)
 
+def loadMods():
+    directory = os.path.dirname(__file__)
+    dirname = os.path.join(directory, (r'json/cfs/'))
+    dirlist = os.listdir(dirname)
+    
+
 def settings():
     global format
     print(format.clear)
-    scrollingText("SETTINGS", 2, 0.015)
+    moose.scrollingText("SETTINGS", delay = 0.025)
     print()
     print("  Display mode: " + format.mode)
     print()
@@ -1231,4 +1164,5 @@ def settings():
 
 
 
+moose.displayLogo()
 mainMenu()

@@ -346,3 +346,4 @@ def askString(message, indent = 2):
 def askToContinue():
     #Asks to continue, x is an unused variable
     x = input("  Press " + format.bold + "enter" + format.end + " to continue.   ")
+    print(format.clear)

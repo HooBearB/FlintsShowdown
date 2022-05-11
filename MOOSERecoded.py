@@ -68,12 +68,12 @@ def ansiTest():
     print(format.strikethrough + "Strikethrough" + format.end)
     print(format.italic + "Italic" + format.end)
     print(format.bold + "Bold" + format.end)
-    print(format.dim + "Dimmed" + format.end)
     print(format.red + "Red" + format.end)
     print(format.magenta + "Magenta" + format.end)
     print(format.blue + "Blue" + format.end)
     print(format.green + "Green" + format.end)
     print(format.yellow + "Yellow" + format.end)
+    print("White")
 
 #Prints out a string bit by bit, giving the impression of text that scrolls across the screen
 #   message: What to print out in the beginning (String)

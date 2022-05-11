@@ -908,19 +908,19 @@ def changeCharacterAttributes(curChar):
     while decision != 6:
         if decision == 1:
             print()
-            characterAttributes[curChar][0] = moose.askOpen("Choose value for melee:", 2)
+            characterAttributes[curChar][0] = moose.askOpen("Choose value for melee:")
         if decision == 2:
             print()
-            characterAttributes[curChar][1] = moose.askOpen("Choose value for ranged:", 2)
+            characterAttributes[curChar][1] = moose.askOpen("Choose value for ranged:")
         if decision == 3:
             print()
-            characterAttributes[curChar][2] = moose.askOpen("Choose value for endurance:", 2)
+            characterAttributes[curChar][2] = moose.askOpen("Choose value for endurance:")
         if decision == 4:
             print()
-            characterAttributes[curChar][3] = moose.askOpen("Choose value for strength:", 2)
+            characterAttributes[curChar][3] = moose.askOpen("Choose value for strength:")
         if decision == 5:
             print()
-            characterAttributes[curChar][4] = moose.askOpen("Choose value for communication:", 2)
+            characterAttributes[curChar][4] = moose.askOpen("Choose value for communication:")
         print(format.clear)
         print("          Melee: " + str(characterAttributes[curChar][0]))
         print("         Ranged: " + str(characterAttributes[curChar][1]))
@@ -1121,4 +1121,5 @@ def settings():
 
 
 moose.displayLogo()
+time.sleep(1)
 mainMenu()

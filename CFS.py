@@ -1,5 +1,6 @@
 import json
 import os
+import MOOSERecoded as moose
 
 class format:
     mode = "Colourmatic"
@@ -118,10 +119,10 @@ def askString(message, indent):
     return decision
 
 def mainMenu():
-    print(format.red + format.bold + "   ______" + format.end + format.bold + format.green + "  ______" + format.end + format.bold + format.blue + "  ______" + format.end)
-    print(format.red + format.bold + "  / ____/" + format.end + format.bold + format.green + " / ____/" + format.end + format.bold + format.blue + " / ____/" + format.end)
-    print(format.red + format.bold + " / /___" + format.end + format.bold + format.green + "  / ____/" + format.end + format.bold + format.blue + " /___  /" + format.end)
-    print(format.red + format.bold + "/_____/" + format.end + format.bold + format.green + " /_/    " + format.end + format.bold + format.blue + " /_____/" + format.end)
+    print(format.blue + format.bold + "   ______" + format.end + format.bold + format.red + "  ______" + format.end + format.bold + format.green + "  ______" + format.end)
+    print(format.blue + format.bold + "  / ____/" + format.end + format.bold + format.red + " / ____/" + format.end + format.bold + format.green + " / ____/" + format.end)
+    print(format.blue + format.bold + " / /___" + format.end + format.bold + format.red + "  / ____/" + format.end + format.bold + format.green + " /___  /" + format.end)
+    print(format.blue + format.bold + "/_____/" + format.end + format.bold + format.red + " /_/    " + format.end + format.bold + format.green + " /_____/" + format.end)
     print()
     decision = ask("For Flint's Showdown 0.2.5\n", 0, ["Start new mod file", "Open mod file"])
     if decision == 1:
@@ -156,4 +157,7 @@ def openCFS():
 def followCFS(folder):
     x = x + 1
 
+print()
+moose.ansiTest()
+print(format.clear)
 mainMenu()

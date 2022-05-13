@@ -967,7 +967,7 @@ def saveLoadCharacters():
     global creationMode
 
     print()
-    decision = moose.askOption("Load or save characters?", ["Load", "Save", "Back to character creation"])
+    decision = moose.askOption("What do you want to do with this character sheet?", ["Load", "Save", "Copy characters to new file", "Back to character creation"])
     if decision == 1:
         directory = os.path.dirname(__file__)
         foldername = os.path.join(directory, ('characterSaves/'))
@@ -1034,6 +1034,34 @@ def saveLoadCharacters():
         filename = os.path.join(foldername, filename + r'.json')
         file = open(filename, "w")
         json.dump(data, file, separators = (',', ':'), indent = 4)
+    if decision == 3:
+        selected = []
+        charList = characterNames
+        charNumbers = []
+        x = 0
+        while x < len(characterNames):
+            charNumbers.append(x)
+            x = x + 1
+        charList.append("Exit")
+        print()
+        decision = moose.askOption("Choose copying mode:", ["Add characters", "Remove characters", "Copy to file", "Exit"])
+        data = {}
+        if decision == 1:
+            decision = moose.askOption("Choose characters to copy:", charList)
+            while charList[decision] != "Exit":
+                if len(selected) > 0:
+                    x = 0
+                    while x < len(selected):
+                        ending = ", "
+                        print(characterNames[selected[x]], end = ending)
+                        x = x + 1
+                        if x == len(selected):
+                            ending = ""
+                decision = moose.askOption("Choose characters to copy:", charList)
+                selected.append(charNumbers[decision])
+                charNumbers.pop(decision)
+                charList.pop(decision)
+    
     print(format.clear)
 
 def directToSave():

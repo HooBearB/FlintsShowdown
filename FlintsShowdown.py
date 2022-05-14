@@ -1042,26 +1042,30 @@ def saveLoadCharacters():
         while x < len(characterNames):
             charNumbers.append(x)
             x = x + 1
-        charList.append("Exit")
-        print()
-        decision = moose.askOption("Choose copying mode:", ["Add characters", "Remove characters", "Copy to file", "Exit"])
-        data = {}
-        if decision == 1:
-            decision = moose.askOption("Choose characters to copy:", charList)
-            while charList[decision] != "Exit":
-                if len(selected) > 0:
-                    x = 0
-                    while x < len(selected):
-                        ending = ", "
-                        print(characterNames[selected[x]], end = ending)
-                        x = x + 1
-                        if x == len(selected):
-                            ending = ""
-                decision = moose.askOption("Choose characters to copy:", charList)
-                selected.append(charNumbers[decision])
-                charNumbers.pop(decision)
-                charList.pop(decision)
-    
+        charList.append("Complete copy")
+        charList.append("Cancel copy")
+        print(moose.format.clear)
+        decision = 0
+        while charList[decision] != "Complete copy" and charList[decision] != "Cancel copy":
+            decision = moose.askOption("Choose characters to copy:", charList, lookingFor = selected) - 1
+            selected.append(decision)
+            print(moose.format.clear)
+        if charList[decision] == "Complete copy":
+            data = {}
+            data["length"] = len(characterNames)
+            data["creationmode"] = creationMode
+            run = 0
+            while run < len(characterNames):
+                if run in selected:
+                    data[str(run)] = {}
+                    data[str(run)]["name"] = characterNames[run]
+                    data[str(run)]["plan"] = characterPlans[run]
+                    data[str(run)]["melee"] = characterAttributes[run][0]
+                    data[str(run)]["ranged"] = characterAttributes[run][1]
+                    data[str(run)]["endurance"] = characterAttributes[run][2]
+                    data[str(run)]["strength"] = characterAttributes[run][3]
+                    data[str(run)]["communication"] = characterAttributes[run][4]
+                run = run + 1
     print(format.clear)
 
 def directToSave():

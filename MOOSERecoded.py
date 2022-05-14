@@ -100,7 +100,7 @@ def scrollingText(message, indent = 2, delay = 0.02, increment = 1):
 #   indent: How far from the edge of the terminal to start printing objects (Positive integer, default 2)
 #   delay: How long to wait between printing list objects (Positive float, default 0)
 #   lookingFor: What line to print a special string that indicates a selected object (Positive integer, default -1 to prevent usage)
-def askOption(message, options, indent = 2, delay = 0, lookingFor = -1):
+def askOption(message, options, indent = 2, delay = 0, lookingFor = []):
     #Prints out indent
     run = 0
     while run < indent:
@@ -111,7 +111,7 @@ def askOption(message, options, indent = 2, delay = 0, lookingFor = -1):
     runline = 0
     while runline < len(options):
         #Checks if running line corresponds to the line that the program is looking for
-        if runline == lookingFor:
+        if runline in lookingFor:
             #Prints selection indicator and makes the line bold
             print("  - " + format.bold, end = "")
         else:

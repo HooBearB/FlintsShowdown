@@ -3,9 +3,9 @@
 # / ___/ / /___  _/ /_  / /||/ /   / /      /__  /     /__  / / __  / / /_/ / / // // / / /_/ / / /_/ / / // // / / /||/ /
 #/_/    /_____/ /____/ /_/ |__/   /_/      /____/     /____/ /_/ /_/ /_____/ /_______/ /_____/ /_____/ /_______/ /_/ |__/
 version = "0.3.0"
-dateRelease = "April 30, 2022"
+dateRelease = "May 15, 2022"
 #Project start: Jan 23, 2022
-#Current release push: Apr 30, 2022
+#Current release push: May 15, 2022
 
 '''
 TO DO:
@@ -198,7 +198,7 @@ def combat(characters, decision, ran):
     global deadCharacters
     if decision == 1:
         print()
-    if npc[characterPlans[characters[0]]]["attacked"] == "flee":
+    if npc[characterPlans[characters[0]]]["attacked"] == "flee" or characterHealth[characters[0]] < 50:
         rand = random.randint(1, 4 + (characterAttributes[characters[1]][3] - characterAttributes[characters[0]][3]))
         if decision == 1:
             print()

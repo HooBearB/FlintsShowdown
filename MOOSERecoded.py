@@ -12,6 +12,8 @@
 #v0.1
 #Created by: Flint
 #Maintained and added to by: (Insert the name of the guy I'm gonna bribe into looking at my shitty code)
+#Some content in this file may be modified to fit the project in which this file is bundled with, to get an unedited copy, 
+#check https://github.com/HooBearB/MOOSE-recoded when it becomes public.
 
 import time
 

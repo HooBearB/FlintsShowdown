@@ -933,7 +933,7 @@ def changeCharacterAttributes(curChar):
 def switchCharacter(curChar, currentCharacters):
     print(format.clear)
     print("  ")
-    switch = moose.askOption("Current characters:", currentCharacters, lookingFor = curChar)
+    switch = moose.askOption("Current characters:", currentCharacters, lookingFor = [curChar])
     switch = switch - 1
     print(format.clear)
     return switch
@@ -1037,34 +1037,53 @@ def saveLoadCharacters():
     if decision == 3:
         selected = []
         charList = characterNames
-        charNumbers = []
-        x = 0
-        while x < len(characterNames):
-            charNumbers.append(x)
-            x = x + 1
         charList.append("Complete copy")
         charList.append("Cancel copy")
         print(moose.format.clear)
         decision = 0
         while charList[decision] != "Complete copy" and charList[decision] != "Cancel copy":
             decision = moose.askOption("Choose characters to copy:", charList, lookingFor = selected) - 1
-            selected.append(decision)
+            if charList[decision] != "Complete copy" and charList[decision] != "Cancel copy":
+                selected.append(decision)
             print(moose.format.clear)
         if charList[decision] == "Complete copy":
             data = {}
-            data["length"] = len(characterNames)
+            data["length"] = len(selected)
             data["creationmode"] = creationMode
             run = 0
-            while run < len(characterNames):
-                if run in selected:
-                    data[str(run)] = {}
-                    data[str(run)]["name"] = characterNames[run]
-                    data[str(run)]["plan"] = characterPlans[run]
-                    data[str(run)]["melee"] = characterAttributes[run][0]
-                    data[str(run)]["ranged"] = characterAttributes[run][1]
-                    data[str(run)]["endurance"] = characterAttributes[run][2]
-                    data[str(run)]["strength"] = characterAttributes[run][3]
-                    data[str(run)]["communication"] = characterAttributes[run][4]
+            while run < len(selected):
+                data[str(run)] = {}
+                data[str(run)]["name"] = characterNames[selected[run]]
+                data[str(run)]["plan"] = characterPlans[selected[run]]
+                data[str(run)]["melee"] = characterAttributes[selected[run]][0]
+                data[str(run)]["ranged"] = characterAttributes[selected[run]][1]
+                data[str(run)]["endurance"] = characterAttributes[selected[run]][2]
+                data[str(run)]["strength"] = characterAttributes[selected[run]][3]
+                data[str(run)]["communication"] = characterAttributes[selected[run]][4]
+                run = run + 1
+            print()
+            directory = os.path.dirname(__file__)
+            foldername = os.path.join(directory, ('characterSaves/'))
+            filename = moose.askString("Name the new character set:")
+            filename = os.path.join(foldername, filename + r'.json')
+            file = open(filename, "w")
+            json.dump(data, file, separators = (',', ':'), indent = 4)
+            file.close()
+            data = json.load(open(filename, "r"))
+            characterNames = []
+            characterPlans = []
+            characterAttributes = []
+            run = 0
+            while run < data["length"]:
+                characterNames.append(data[str(run)]["name"])
+                characterPlans.append(data[str(run)]["plan"])
+                templist = []
+                templist.append(data[str(run)]["melee"])
+                templist.append(data[str(run)]["ranged"])
+                templist.append(data[str(run)]["endurance"])
+                templist.append(data[str(run)]["strength"])
+                templist.append(data[str(run)]["communication"])
+                characterAttributes.append(templist)
                 run = run + 1
     print(format.clear)
 

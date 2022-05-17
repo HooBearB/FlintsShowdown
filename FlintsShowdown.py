@@ -10,10 +10,9 @@ dateRelease = "May 15, 2022"
 '''
 TO DO:
 - Dialogue
-- Hunger system???? Y'know, like the hunger games???????????
+- Hunger system
 - Appendage system, getting wounded affects combat, etc
-- Armour
-- Medical supplies, maybe using them heals specific parts
+- Medical supplies, maybe having different items heal different parts
 - Crafting (Maybe?)
 - Factions/grouping
     - Group meetups

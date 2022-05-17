@@ -196,9 +196,21 @@ def checkBreak(character):
 
 def combat(characters, decision, ran):
     global deadCharacters
+    determination = [10, 10]
     if decision == 1:
         print()
-    if npc[characterPlans[characters[0]]]["attacked"] == "flee" or characterHealth[characters[0]] < 50:
+    if len(characterItems[characters[0]]) > 0:
+        aGrade = items[characterItems[characters[0]][0]]["grade"]
+    else:
+        aGrade = 0
+    if len(characterItems[characters[1]]) > 0:
+        bGrade = items[characterItems[characters[1]][0]]["grade"]
+    else:
+        bGrade = 0
+    gradediff = []
+    gradediff.append(aGrade - bGrade)
+    gradediff.append(bGrade - aGrade)
+    if npc[characterPlans[characters[0]]]["attacked"] == "flee" or characterHealth[characters[0]] < 50 or gradediff[0] < 0:
         rand = random.randint(1, 4 + (characterAttributes[characters[1]][3] - characterAttributes[characters[0]][3]))
         if decision == 1:
             print()
@@ -213,6 +225,7 @@ def combat(characters, decision, ran):
         else:
             if decision == 1:
                 moose.scrollingText(format.red + characterNames[characters[0]] + " fails to run away." + format.end)
+                determination[0] = determination[0] - 1
     charA = 1
     charB = 0
     if ran != True:
@@ -237,6 +250,7 @@ def combat(characters, decision, ran):
                 else:
                     if decision == 1:
                         moose.scrollingText(characterNames[characters[charA]] + " misses their shot.")
+                        determination[charA] = determination[charA] - 1
             else:
                 if decision == 1:
                     moose.scrollingText(characterNames[characters[charA]] + items[characterItems[characters[charA]][0]]["ready"])
@@ -255,6 +269,7 @@ def combat(characters, decision, ran):
                     if weapon["type"] == "Ranged":
                         dam = dam + random.randint(-10 , 10)
                     origDam = dam
+                    determination[charB] = determination[charB] - (dam / 100)
                     if characterArmour[characters[charB]] > 0:
                         if characterArmour[characters[charB]] - dam > 0:
                             characterArmour[characters[charB]] = characterArmour[characters[charB]] - dam
@@ -313,17 +328,21 @@ def combat(characters, decision, ran):
                     deadCharacters.append(characterNames[characters[charB]])
                 break
             rand = random.randint(1, 6)
-            if rand == 1:
+            if rand == 1 or characterHealth[characters[charB]] < 50 or gradediff[charB] < 0 or determination[charB] <= 0:
                 rand = random.randint(1, 4 + (characterAttributes[characters[charB]][3] - characterAttributes[characters[charA]][3]))
                 if decision == 1:
                     moose.scrollingText(format.blue + characterNames[characters[charB]] + " attempts to run away." + format.end)
-                if rand == 6:
-                    moose.scrollingText(format.green + characterNames[characters[charB]] + " runs away." + format.end)
+                if rand == 6 or determination[charA] < 5:
+                    if determination[charA] < 5:
+                        moose.scrollingText(format.green + characterNames[characters[charA]] + " lets " + characterNames[characters[charB]] + " get away." + format.end)
+                    else:
+                        moose.scrollingText(format.green + characterNames[characters[charB]] + " runs away." + format.end)
                     log.append(str(days) + ". " + characterNames[characters[charB]] + " ran away.")
                     ran = True
                 else:
                     if decision == 1:
                         moose.scrollingText(format.red + characterNames[characters[charB]] + " fails to run away." + format.end)
+                        determination[charB] = determination[charB] - 1
 
 
 

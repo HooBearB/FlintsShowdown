@@ -57,11 +57,20 @@ class format:
 
 def generateCharacterList(number):
     charList = []
-    while len(charList) < number:
-        rand = random.randint(0, len(characterNames) - 1)
-        if rand not in charList:
-            if characterNames[rand] not in deadCharacters:
-                charList.append(rand)
+    livingCharacters = []
+    x = 0
+    while x < len(characterNames):
+        if characterNames[x] not in deadCharacters:
+            livingCharacters.append(x)
+        x = x + 1
+    if number > livingCharacters:
+        return livingCharacters
+    else:
+        while len(charList) < number:
+            rand = random.randint(0, len(characterNames) - 1)
+            if rand not in charList:
+                if characterNames[rand] not in deadCharacters:
+                    charList.append(rand)
     return charList
 
 def generateEvents():
@@ -738,7 +747,7 @@ def viewLog():
     run = 0
     print()
     while run < len(log):
-        moose.scrollingText(log[run])
+        print(log[run])
         run = run + 1
     moose.askToContinue()
     nightfall()

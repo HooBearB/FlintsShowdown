@@ -88,14 +88,16 @@ def checkRelint(data, filename):
 
 def relint(data, issues, filename):
     print()
-    decision = moose.askOption("Data file is out of date. Would you like to relint it?", ["Yes", "No"])
+    decision = moose.askOption("Data file is out of date. Would you like to use it anyway?", ["Yes", "No"])
     if decision == 1:
         run = 0
         while run < len(issues):
             if issues[run] == "version":
                 data["version"] = version
             run = run + 1
+        print()
         moose.scrollingText("Data relinted.")
+        print()
         moose.askToContinue()
         run = 0
         newData = {}
@@ -620,14 +622,14 @@ def attack(characters = []):
         else:
             moose.scrollingText(characterNames[characters[0]] + " has a " + items[characterItems[characters[0]][0]]["name"] + ".")
     else:
-        moose.scrollingText(characterNames[characters[0]] + " has is using their fists.")
+        moose.scrollingText(characterNames[characters[0]] + " is using their fists.")
     if len(characterItems[characters[1]]) > 0:
         if items[characterItems[characters[1]][0]]["uncap"] == True:
             moose.scrollingText(characterNames[characters[1]] + " has a " + items[characterItems[characters[1]][0]]["name"].lower() + ".")
         else:
             moose.scrollingText(characterNames[characters[1]] + " has a " + items[characterItems[characters[1]][0]]["name"] + ".")
     else:
-        moose.scrollingText(characterNames[characters[1]] + " has is using their fists.")
+        moose.scrollingText(characterNames[characters[1]] + " is using their fists.")
     log.append(str(days) + ". " + characterNames[characters[0]] + " attacked " + characterNames[characters[1]] + ".")
     print()
     decision = moose.askOption("Would you like to view this combat turn by turn?", ["Turn by turn", "Skip to result"])

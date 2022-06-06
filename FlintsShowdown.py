@@ -2,8 +2,8 @@
 #  / ___/ / /    /_  _/  /  | / / /_  _/ /_/ /  __/     /  __/ / /_/ / / __  / / /__ / / / __ |  / __  / / /__ / / /  | / /
 # / ___/ / /___  _/ /_  / /||/ /   / /      /__  /     /__  / / __  / / /_/ / / // // / / /_/ / / /_/ / / // // / / /||/ /
 #/_/    /_____/ /____/ /_/ |__/   /_/      /____/     /____/ /_/ /_/ /_____/ /_______/ /_____/ /_____/ /_______/ /_/ |__/
-version = "0.3.0"
-dateRelease = "May 19, 2022"
+version = "0.3.5"
+dateRelease = "May 29, 2022"
 #Project start: Jan 23, 2022
 #Current release push: May 19, 2022
 
@@ -28,6 +28,7 @@ import time
 import json
 import MOOSERecoded as moose
 
+# Attempts to load individual json files that are used by the program
 directory = os.path.dirname(__file__)
 filename = os.path.join(directory, (r'json/items.json'))
 items = json.load(open(filename, "r"))
@@ -42,6 +43,8 @@ npc = json.load(open(filename, "r"))
  / // /   / /  _/ /_  / /__  _/ /_   / /    / /
 /____/   /_/  /____/ /____/ /____/  /_/    /_/
 """
+# Defines ANSI format codes to be used later on
+# Make sure your terminal supports ANSI before filing a bug report
 class format:
     mode = "Colourmatic"
     clear = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
@@ -55,65 +58,97 @@ class format:
     blue = "\u001b[36m"
     green = "\u001b[32m"
 
+# Pulls a list of characters from the living character set for use in other functions
 def generateCharacterList(number):
+    # The returned list, empty at the start
     charList = []
+    # List of those living, used to gather characters for charList
     livingCharacters = []
+    # Opens loop
     x = 0
     while x < len(characterNames):
+        # Checks to see if the read character is dead
         if characterNames[x] not in deadCharacters:
+            # Adds read character to the livingCharacters if it is alive
             livingCharacters.append(x)
         x = x + 1
-    if number > livingCharacters:
+    # Checks to see if the requested number of characters is greater than the amount living
+    if number > len(livingCharacters):
+        # Returns full list of livingCharacters if so
         return livingCharacters
     else:
+        # Returns partial list of livingCharacters if not
         while len(charList) < number:
             rand = random.randint(0, len(characterNames) - 1)
             if rand not in charList:
                 if characterNames[rand] not in deadCharacters:
                     charList.append(rand)
+    # Returns list of characters
     return charList
 
+# Generates a list of events for the day depending on the initial amount of characters
 def generateEvents():
+    # Determines the amount of events happening for this day depending on the amount of characters at start
     eventNum = random.randint(1, int(len(characterNames) / 2))
+    # Opens list of events
     eventList = []
+    # Adds an airdrop to the start of the event list every 3 days
     if days % 3 == 0:
         eventList.append("airdrop")
+    # Defines a list of event codes
+    events = ["saw_participant", "heard_participant", "trace", "attacked", "looting"]
+    # Loops checks to see if the length of events meets the required number for that day
     while len(eventList) < eventNum:
-        events = ["saw_participant", "heard_participant", "trace", "attacked", "looting"]
+        # Finds and adds a random event from the list of event codes
         eventList.append(random.choice(events))
     return eventList
 
+# Checks to see if a character file's data is up to date with the current build
 def checkRelint(data, filename):
+    # Opens issue list
     issues = []
     try:
+        # Attempts to find version value
         version = data["version"]
+        # If listed version is not equal to program version, adds version correction to the list of issues
         if data["version"] != version:
             issues.append(data["version"])
+    # If version is not found in the file, add it to the list of issues
     except:
         issues.append("version")
+    # If there are issues within the list, send it to the relint() function
     if len(issues) > 0:
         relintedData = relint(data, issues, filename)
         return relintedData
 
 def relint(data, issues, filename):
+    # Asks user if they want the program to change the file
     print()
     decision = moose.askOption("Data file is out of date. Would you like to use it anyway?", ["Yes", "No"])
+    # If they decide yes, run through issues list
     if decision == 1:
         run = 0
+        # Runs through issues
         while run < len(issues):
+            # If "version" tag is in list, add current version to the version tag
             if issues[run] == "version":
                 data["version"] = version
             run = run + 1
+        # Prints out relint statement and waits for user
         print()
         moose.scrollingText("Data relinted.")
         print()
         moose.askToContinue()
         run = 0
+        # Opens dict type for saving
         newData = {}
+        # Adds preliminary info
         newData["length"] = data["length"]
         newData["version"] = version
         newData["creationmode"] = data["creationmode"]
+        # Adds info for each character 
         while run < data["length"]:
+            # Opens character dict
             newData[str(run)] = {}
             newData[str(run)]["name"] = data[str(run)]["name"]
             newData[str(run)]["plan"] = data[str(run)]["plan"]
@@ -123,22 +158,34 @@ def relint(data, issues, filename):
             newData[str(run)]["strength"] = data[str(run)]["strength"]
             newData[str(run)]["communication"] = data[str(run)]["communication"]
             run = run + 1
+        # Finds root directory
         directory = os.path.dirname(__file__)
+        # Navigates to characterSaves folder within directory
         foldername = os.path.join(directory, ('characterSaves/'))
+        # Finds file path
         filename = os.path.join(foldername, filename)
+        # Opens file for writing
         file = open(filename, "w")
+        # Dumps all data
         json.dump(newData, file, separators = (',', ':'), indent = 4)
+        # Returns and stores relinted data
         return newData
+    # Returns to menu if the user chooses not to have the program change file
     if decision == 2:
         mainMenu()
 
+# Determines, processes, and prints out loot given to characters
 def runLoot(characters):
+    # Globalizes the lists of items, their durabilities, and character armour values, all affected by loot gained in this function
     global characterItems
     global characterItemDurabilities
     global characterArmour
     
+    # Grabs a random item from the item table
     lootItem = random.choice(items["lootable"])
+    # Checks to see if the gained item is armour
     if items[lootItem]["type"] == "Armour":
+        
         characterArmour[characters[0]] = characterArmour[characters[0]] + items[lootItem]["ap"]
         if items[lootItem]["uncap"] == True:
             moose.scrollingText(characterNames[characters[0]] + " picks up the " + format.green + items[lootItem]["name"].lower() + format.end + ".")

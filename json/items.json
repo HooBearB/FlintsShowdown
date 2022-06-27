@@ -490,6 +490,24 @@
         "4": "|__/  /  |(/|  |",
         "5": "     /__/    \\__\\"
     },
+    "mrlp": {
+        "name": "Multi-rocket launcher platform",
+        "uncap": true,
+        "grade": 10,
+        "type": "Ranged",
+        "damage": 99999999999999,
+        "accuracy": 100,
+        "durability": 4,
+        "faildamage": true,
+        "ready": " readies their FUCKING ROCKET LAUNCHERRRRRRR.",
+        "attack": " fires their FUCKING ROCKET LAUNCHERRRRRRR at ",
+        "break": "'s FUCKING ROCKET LAUNCHERRRRRRR emits several snapping noises. It's empty.",
+        "1": "         ╷-_",
+        "2": " ________|--╵----╷_____________",
+        "3": "|╷------╷|_______|_____________|",
+        "4": "||______||(/|___________/",
+        "5": "|_______/---"
+    },
 
 
 

@@ -185,61 +185,61 @@ def runLoot(characters):
     lootItem = random.choice(items["lootable"])
     # Checks to see if the gained item is armour
     if items[lootItem]["type"] == "Armour":
-        
+        # Adds the armour value to the current character's armour
         characterArmour[characters[0]] = characterArmour[characters[0]] + items[lootItem]["ap"]
+        # Prints out the armour pickup message
         if items[lootItem]["uncap"] == True:
             moose.scrollingText(characterNames[characters[0]] + " picks up the " + format.green + items[lootItem]["name"].lower() + format.end + ".")
         else:
             moose.scrollingText(characterNames[characters[0]] + " picks up the " + format.green + items[lootItem]["name"] + format.end + ".")
+    # If item is not armour...
     else:
-        if len(characterItems[characters[0]]) == 0:
+        # If character is over capacity...
+        if len(characterItems[characters[0]]) > 3:
+            # Compare gained item grade over the currently equipped item
+            if items[lootItem]["grade"] >= items[characterItems[characters[0]][0]]["grade"]:
+                # Checks the uncap value for the currently equipped item
+                if items[characterItems[characters[0]][0]]["uncap"] == True:
+                    if items[lootItem]["uncap"] == True:
+                        # Both lower
+                        moose.scrollingText(characterNames[characters[0]] + " drops their " + format.red + items[characterItems[characters[0]][0]]["name"].lower() + format.end + " to pick up the cache's " + format.green + items[lootItem]["name"].lower() + format.end + ".")
+                    else:
+                        # Current lower, loot upper
+                        moose.scrollingText(characterNames[characters[0]] + " drops their " + format.red + items[characterItems[characters[0]][0]]["name"].lower() + format.end + " to pick up the cache's " + format.green + items[lootItem]["name"] + format.end + ".")
+                else:
+                    if items[lootItem]["uncap"] == True:
+                        # Current upper, loot lower
+                        moose.scrollingText(characterNames[characters[0]] + " drops their " + format.red + items[characterItems[characters[0]][0]]["name"] + format.end + " to pick up the cache's " + format.green + items[lootItem]["name"].lower() + format.end + ".")
+                    else:
+                        # Both upper
+                        moose.scrollingText(characterNames[characters[0]] + " drops their " + format.red + items[characterItems[characters[0]][0]]["name"] + format.end + " to pick up the cache's " + format.green + items[lootItem]["name"] + format.end + ".")
+                # Appends event to log
+                log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"].lower() + ".")
+                
+                characterItems[characters[0]][0] = lootItem
+                characterItemDurabilities[characters[0]][0] = items[lootItem]["durability"]
+            else:
+                if items[characterItems[characters[0]][0]]["uncap"] == True:
+                    if items[lootItem]["uncap"] == True:
+                        moose.scrollingText(characterNames[characters[0]] + " drops their " + format.red + items[characterItems[characters[0]][0]]["name"].lower() + format.end + " to pick up the cache's " + format.green + items[lootItem]["name"].lower() + format.end + ".")
+                    else:
+                        moose.scrollingText(characterNames[characters[0]] + " drops their " + format.red + items[characterItems[characters[0]][0]]["name"].lower() + format.end + " to pick up the cache's " + format.green + items[lootItem]["name"] + format.end + ".")
+                else:
+                    if items[lootItem]["uncap"] == True:
+                        moose.scrollingText(characterNames[characters[0]] + " drops their " + format.red + items[characterItems[characters[0]][0]]["name"] + format.end + " to pick up the cache's " + format.green + items[lootItem]["name"].lower() + format.end + ".")
+                    else:
+                        moose.scrollingText(characterNames[characters[0]] + " drops their " + format.red + items[characterItems[characters[0]][0]]["name"] + format.end + " to pick up the cache's " + format.green + items[lootItem]["name"] + format.end + ".")
+        else:
             characterItems[characters[0]].append(lootItem)
             characterItemDurabilities[characters[0]].append(items[lootItem]["durability"])
             if items[lootItem]["uncap"] == True:
                 moose.scrollingText(characterNames[characters[0]] + " picks up the " + format.green + items[lootItem]["name"].lower() + format.end + ".")
-            else:
-                moose.scrollingText(characterNames[characters[0]] + " picks up the " + format.green + items[lootItem]["name"] + format.end + ".")
-            if items[lootItem]["uncap"] == True:
                 log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"].lower() + ".")
             else:
-                log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"] + ".")
-        else:
-            if len(characterItems[characters[0]]) > 3:
-                if items[lootItem]["grade"] >= items[characterItems[characters[0]][0]]["grade"]:
-                    if items[characterItems[characters[0]][0]]["uncap"] == True:
-                        if items[lootItem]["uncap"] == True:
-                            moose.scrollingText(characterNames[characters[0]] + " drops their " + format.red + items[characterItems[characters[0]][0]]["name"].lower() + format.end + " to pick up the cache's " + format.green + items[lootItem]["name"].lower() + format.end + ".")
-                        else:
-                            moose.scrollingText(characterNames[characters[0]] + " drops their " + format.red + items[characterItems[characters[0]][0]]["name"].lower() + format.end + " to pick up the cache's " + format.green + items[lootItem]["name"] + format.end + ".")
-                    else:
-                        if items[lootItem]["uncap"] == True:
-                            moose.scrollingText(characterNames[characters[0]] + " drops their " + format.red + items[characterItems[characters[0]][0]]["name"] + format.end + " to pick up the cache's " + format.green + items[lootItem]["name"].lower() + format.end + ".")
-                        else:
-                            moose.scrollingText(characterNames[characters[0]] + " drops their " + format.red + items[characterItems[characters[0]][0]]["name"] + format.end + " to pick up the cache's " + format.green + items[lootItem]["name"] + format.end + ".")
-                    log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"].lower() + ".")
-                    characterItems[characters[0]][0] = lootItem
-                    characterItemDurabilities[characters[0]][0] = items[lootItem]["durability"]
-                else:
-                    if items[characterItems[characters[0]][0]]["uncap"] == True:
-                        if items[lootItem]["uncap"] == True:
-                            moose.scrollingText(characterNames[characters[0]] + " drops their " + format.red + items[characterItems[characters[0]][0]]["name"].lower() + format.end + " to pick up the cache's " + format.green + items[lootItem]["name"].lower() + format.end + ".")
-                        else:
-                            moose.scrollingText(characterNames[characters[0]] + " drops their " + format.red + items[characterItems[characters[0]][0]]["name"].lower() + format.end + " to pick up the cache's " + format.green + items[lootItem]["name"] + format.end + ".")
-                    else:
-                        if items[lootItem]["uncap"] == True:
-                            moose.scrollingText(characterNames[characters[0]] + " drops their " + format.red + items[characterItems[characters[0]][0]]["name"] + format.end + " to pick up the cache's " + format.green + items[lootItem]["name"].lower() + format.end + ".")
-                        else:
-                            moose.scrollingText(characterNames[characters[0]] + " drops their " + format.red + items[characterItems[characters[0]][0]]["name"] + format.end + " to pick up the cache's " + format.green + items[lootItem]["name"] + format.end + ".")
-            else:
-                characterItems[characters[0]].append(lootItem)
-                characterItemDurabilities[characters[0]].append(items[lootItem]["durability"])
-                if items[lootItem]["uncap"] == True:
-                    moose.scrollingText(characterNames[characters[0]] + " picks up the " + format.green + items[lootItem]["name"].lower() + format.end + ".")
-                    log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"].lower() + ".")
-                else:
-                    moose.scrollingText(characterNames[characters[0]] + " picks up the " + format.green + items[lootItem]["name"] + format.end + ".")
-                    log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"]  + ".")
+                moose.scrollingText(characterNames[characters[0]] + " picks up the " + format.green + items[lootItem]["name"] + format.end + ".")
+                log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"]  + ".")
 
+# Checks to see if an item in a character's inventory has broken or not 
 def checkBreak(character):
     if len(characterItems[character]) > 0:
         if characterItemDurabilities[character][0] <= 0:

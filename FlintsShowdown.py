@@ -167,7 +167,7 @@ def relint(data, issues, filename):
         # Opens file for writing
         file = open(filename, "w")
         # Dumps all data
-        json.dump(newData, file, separators = (',', ':'), indent = 4)
+        json.dump(newData, file, separators = (', ', ': '), indent = 4)
         # Returns and stores relinted data
         return newData
     # Returns to menu if the user chooses not to have the program change file
@@ -1109,7 +1109,7 @@ def saveLoadCharacters():
         filename = moose.askString("Name this character set:")
         filename = os.path.join(foldername, filename + r'.json')
         file = open(filename, "w")
-        json.dump(data, file, separators = (',', ':'), indent = 4)
+        json.dump(data, file, separators = (', ', ': '), indent = 4)
     if decision == 3:
         selected = []
         charList = characterNames
@@ -1143,7 +1143,7 @@ def saveLoadCharacters():
             filename = moose.askString("Name the new character set:")
             filename = os.path.join(foldername, filename + r'.json')
             file = open(filename, "w")
-            json.dump(data, file, separators = (',', ':'), indent = 4)
+            json.dump(data, file, separators = (', ', ': '), indent = 4)
             file.close()
             data = json.load(open(filename, "r"))
             characterNames = []
@@ -1184,7 +1184,7 @@ def directToSave():
     filename = moose.askString("Name this character set:")
     filename = os.path.join(foldername, filename + r'.json')
     file = open(filename, "w")
-    json.dump(data, file, separators = (',', ':'), indent = 4)
+    json.dump(data, file, separators = (', ', ': '), indent = 4)
     print(format.clear)
 
 def loadMods():

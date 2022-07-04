@@ -461,9 +461,9 @@ def startSim():
             characterSaves.pop(run)
         run = run + 1
     if len(characterSaves) != 0:
-        characterSaves.append("Exit")
+        characterSaves.append("Back to main manu")
         filenumber = moose.askOption("Load characters:", characterSaves)
-        if characterSaves[filenumber - 1] != "Exit":
+        if characterSaves[filenumber - 1] != "Back to main manu":
             file = os.path.join(foldername, os.path.join(characterSaves[filenumber - 1]))
             data = json.load(open(file, "r"))
             checkRelint(data, characterSaves[filenumber - 1])
@@ -854,13 +854,15 @@ def selectSimMode():
     moose.scrollingText("- All have same attributes", 4, 0.01)
     time.sleep(0.5)
     print()
-    decision = moose.askOption("Select a creation mode:", ["Detailed", "Adaptable", "Simple"])
+    decision = moose.askOption("Select a creation mode:", ["Detailed", "Adaptable", "Simple", "Back to main manu"])
     if decision == 1:
         creationMode = "det"
     if decision == 2:
         creationMode = "ada"
     if decision == 3:
         creationMode = "sim"
+    if decision == 4:
+        mainMenu()
     characterNames = ["Joe Generic"]
     characterPlans = ["offensive"]
     characterAttributes = [[0, 0, 0, 0, 0]]
@@ -1191,7 +1193,7 @@ def loadMods():
     directory = os.path.dirname(__file__)
     dirname = os.path.join(directory, (r'json/cfs/'))
     dirlist = os.listdir(dirname)
-    
+    dirlist.append("Back to main menu")
 
 def settings():
     global format
@@ -1200,7 +1202,7 @@ def settings():
     print()
     print("  Display mode: " + format.mode)
     print()
-    decision = moose.askOption("Change settings:", ["Change display mode"])
+    decision = moose.askOption("Change settings:", ["Change display mode", "Back to main menu"])
     if decision == 1:
         print()
         newmode = moose.askOption("Set display mode:", ["Colourmatic", "Markdown formatting", "Plain text"])

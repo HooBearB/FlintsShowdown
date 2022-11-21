@@ -3,9 +3,9 @@
 # / ___/ / /___  _/ /_  / /||/ /   / /      /__  /     /__  / / __  / / /_/ / / // // / / /_/ / / /_/ / / // // / / /||/ /
 #/_/    /_____/ /____/ /_/ |__/   /_/      /____/     /____/ /_/ /_/ /_____/ /_______/ /_____/ /_____/ /_______/ /_/ |__/
 version = "0.3.5"
-dateRelease = "May 29, 2022"
+dateRelease = "August 20, 2022"
 #Project start: Jan 23, 2022
-#Current release push: May 19, 2022
+#Current release push: August 20, 2022
 
 '''
 TO DO:

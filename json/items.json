@@ -1,5 +1,8 @@
 {
-    "lootable": ["screwdriver", "kitchenknife", "survivalknife", "hammer", "axe", "machete", "golfclub", "pipe", "shovel", "scythe", "katana", "iceaxe", "brick", "bow", "pocketpistol", "pistol", "revolver", "magnum", "huntingrifle", "leverrifle", "shotgun", "db", "sawnoff", "smg", "carbine", "stab", "flak", "eod"],
+    "lootable": ["screwdriver", "kitchenknife", "survivalknife", "hammer", "axe", "machete", "golfclub",
+    "pipe", "shovel", "scythe", "katana", "iceaxe", "brick", "bow", "pocketpistol", "pistol", "revolver",
+    "magnum", "huntingrifle", "leverrifle", "shotgun", "db", "sawnoff", "smg", "carbine", "stab", "flak",
+    "eod"],
     
     "screwdriver": {
         "name": "Screwdriver",
@@ -472,24 +475,6 @@
         "4": "     |╷|",
         "5": "     |_|"
     },
-    "mg": {
-        "name": "Machine gun",
-        "uncap": true,
-        "grade": 10,
-        "type": "Ranged",
-        "damage": 35,
-        "accuracy": 55,
-        "durability": 100,
-        "faildamage": true,
-        "ready": " readies their machine gun.",
-        "attack": " fires their machine gun at ",
-        "break": "'s machine gun belt runs out. It's empty.",
-        "1": "            ",
-        "2": " _____╷-╵--------|______",
-        "3": "|   _|   __╷==-╷_|--╷╷--╵",
-        "4": "|__/ /  /(/|   |    ||",
-        "5": "    /__/   |___|    ||"
-    },
     "carbine": {
         "name": "Carbine",
         "uncap": true,
@@ -507,6 +492,24 @@
         "3": "| ____|  ▘_______|------╵",
         "4": "|__/  /  |(/|  |",
         "5": "     /__/    \\__\\"
+    },
+    "mg": {
+        "name": "Machine gun",
+        "uncap": true,
+        "grade": 10,
+        "type": "Ranged",
+        "damage": 35,
+        "accuracy": 55,
+        "durability": 100,
+        "faildamage": true,
+        "ready": " readies their machine gun.",
+        "attack": " fires their machine gun at ",
+        "break": "'s machine gun belt runs out. It's empty.",
+        "1": "            ",
+        "2": " _____╷-╵--------|______",
+        "3": "|   _|   __╷==-╷_|--╷╷--╵",
+        "4": "|__/ /  /(/|   |    ||",
+        "5": "    /__/   |___|    ||"
     },
     "mrlp": {
         "name": "Multi-rocket launcher platform",

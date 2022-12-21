@@ -34,6 +34,9 @@ filename = os.path.join(directory, (r'json/items.json'))
 items = json.load(open(filename, "r"))
 filename = os.path.join(directory, (r'json/npcs.json'))
 npc = json.load(open(filename, "r"))
+filename = os.path.join(directory, (r'json/dialogue.json'))
+dialogue = json.load(open(filename, "r"))
+usedmods = []
 
 
 
@@ -421,8 +424,8 @@ def mainMenu():
     print("  \_╷_╷_╷_|  __|" + format.end + format.bold + format.blue + "  /__  / / __  / / /_/ / / // // / / /_/ / / /_/ / / // // / / /||/ /" + format.end + format.bold + format.red)
     print("          ╵-╵   " + format.end + format.bold + format.blue + " /____/ /_/ /_/ /_____/ /_______/ /_____/ /_____/ /_______/ /_/ |__/" + format.end + format.italic + format.bold)
     print()
-    moose.scrollingText("v" + version + " / " + dateRelease + " build" + format.end, 2, 0.02)
-    decision = moose.askOption("", ["Start new game", "Create characters", "Add/remove mods", "Settings", "Exit"], delay = 0.02)
+    moose.scrollingText("v" + version + " / " + dateRelease + " build" + format.end)
+    decision = moose.askOption("", ["Start new game", "Create characters", "Enable/disable mods", "Settings", "Exit"], delay = 0.02)
     if decision == 1:
         startSim()
     if decision == 2:
@@ -433,7 +436,7 @@ def mainMenu():
     if decision == 4:
         settings()
     if decision == 5:
-        raise Exception("Exited game.")
+        raise Exception("Exited game... I think.")
 
 def startSim():
     global creationMode
@@ -1173,7 +1176,7 @@ def directToSave():
     while run < len(characterNames):
         data[str(run)] = {}
         data[str(run)]["name"] = characterNames[run]
-        data[str(run)]["plan"] = characterPlans[run]
+        data[str(run)]["plan"] = characterPlans[run] 
         data[str(run)]["melee"] = characterAttributes[run][0]
         data[str(run)]["ranged"] = characterAttributes[run][1]
         data[str(run)]["endurance"] = characterAttributes[run][2]
@@ -1190,10 +1193,73 @@ def directToSave():
     print(format.clear)
 
 def loadMods():
+    global items
+    global npc
+    global dialogue
+    global usedmods
+
+    print(moose.format.clear)
     directory = os.path.dirname(__file__)
-    dirname = os.path.join(directory, (r'json/cfs/'))
+    dirname = os.path.join(directory, (r'json/mods/'))
     dirlist = os.listdir(dirname)
-    dirlist.append("Back to main menu")
+    openlist = []
+    opendir = []
+    x = 0
+    while x < len(dirlist):
+        dir = moose.jason.openFile(r'mods/' + dirlist[x], omitType = True)
+        opendir.append(dir)
+        openlist.append(dir["modname"])
+        x = x + 1
+    openlist.append("Reset to default")
+    openlist.append("Return to main menu")
+    if len(openlist) <= 1:
+        moose.scrollingText("You have no mods in the folder!")
+        moose.scrollingText("Place mod files in the /json/mods/ folder to have them show up here.\n")
+        moose.askToContinue()
+    else:
+        mod = 1
+        while openlist[mod - 1] != "Return to main menu":
+            print(moose.format.clear)
+            mod = moose.askOption("Choose a mod to load:", openlist, lookingFor = usedmods)
+            if openlist[mod - 1] == "Reset to default":
+                directory = os.path.dirname(__file__)
+                filename = os.path.join(directory, (r'json/items.json'))
+                items = json.load(open(filename, "r"))
+                filename = os.path.join(directory, (r'json/npcs.json'))
+                npc = json.load(open(filename, "r"))
+                filename = os.path.join(directory, (r'json/dialogue.json'))
+                dialogue = json.load(open(filename, "r"))
+                usedmods = []
+            else:
+                if openlist[mod - 1] != "Return to main menu":
+                    openmod = opendir[mod - 1]
+                    category = openmod["category"]
+                    if category == "items":
+                        if openmod["overwrite"]:
+                            items = mod
+                        else:
+                            nowLoot = items["lootable"]
+                            newLoot = openmod["lootable"]
+                            items.update(openmod)
+                            items["lootable"] = nowLoot + newLoot
+                    if category == "npc":
+                        if openmod["overwrite"]:
+                            npc = mod
+                        else:
+                            nowPlan = npc["npclist"]
+                            newPlan = openmod["npclist"]
+                            npc.update(openmod)
+                            npc["npclist"] = nowPlan + newPlan
+                    if category == "dialogue":
+                        if openmod["overwrite"]:
+                            dialogue = mod
+                        else:
+                            nowPack = dialogue["packs"]
+                            newPack = openmod["packs"]
+                            dialogue.update(openmod)
+                            dialogue["packs"] = nowPack + newPack
+                    usedmods.append(mod - 1)
+    mainMenu()
 
 def settings():
     global format

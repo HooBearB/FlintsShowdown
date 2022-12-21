@@ -1,0 +1,14 @@
+{
+    "modname": "Hapless Dialogue Packs",
+    "description": "Quirky catchphrases and kind words from your favourite pack of braindead jackals.",
+    "category": "dialogue",
+    "overwrite": false,
+
+    "packs": ["bent"],
+
+    "bent": {
+        "getMelee": [],
+        "getRanged": [],
+        "": []
+    }
+}

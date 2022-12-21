@@ -12,12 +12,11 @@
 #v0.1
 #Created by: Flint
 #Maintained and added to by: (Insert the name of the guy I'm gonna bribe into looking at my shitty code)
-#Some content in this file may be modified to fit the project in which this file is bundled with, to get an unedited copy, 
-#check https://github.com/HooBearB/MOOSE-recoded when it becomes public.
 
 import time
+import os
+import json
 
-#Provides ANSI colour and format information
 class format:
     mode = "Colour"
     clear = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
@@ -70,19 +69,19 @@ def ansiTest():
     print(format.strikethrough + "Strikethrough" + format.end)
     print(format.italic + "Italic" + format.end)
     print(format.bold + "Bold" + format.end)
+    print(format.dim + "Dimmed" + format.end)
     print(format.red + "Red" + format.end)
     print(format.magenta + "Magenta" + format.end)
     print(format.blue + "Blue" + format.end)
     print(format.green + "Green" + format.end)
     print(format.yellow + "Yellow" + format.end)
-    print("White")
 
 #Prints out a string bit by bit, giving the impression of text that scrolls across the screen
 #   message: What to print out in the beginning (String)
 #   indent: How far from the edge of the terminal printing should begin, in spaces (Positive integer, default 2)
 #   increment: How many letters should print out in one loop (Positive integer, default 1)
 #   delay: How long to wait between loops (Positive float, default 0.02)
-def scrollingText(message, indent = 2, delay = 0.02, increment = 1):
+def scrollingText(message, indent = 2, increment = 1, delay = 0.02):
     #Prints out indent from edge
     run = 0
     while run < indent:
@@ -96,13 +95,14 @@ def scrollingText(message, indent = 2, delay = 0.02, increment = 1):
         run = run + increment
     print("")
 
+
 #Asks for user input given a list of options
 #   message: What to print out in the beginning (String)
 #   options: What to print out in list form for the player to choose from (String table)
 #   indent: How far from the edge of the terminal to start printing objects (Positive integer, default 2)
 #   delay: How long to wait between printing list objects (Positive float, default 0)
-#   lookingFor: What line to print a special string that indicates a selected object (Positive integer, default -1 to prevent usage)
-def askOption(message, options, indent = 2, delay = 0, lookingFor = []):
+#   lookingFor: What line to print a special string that indicates a selected object (Positive integer, default [-1] to prevent usage)
+def askOption(message, options, indent = 2, delay = 0, lookingFor = [-1]):
     #Prints out indent
     run = 0
     while run < indent:
@@ -348,4 +348,49 @@ def askString(message, indent = 2):
 def askToContinue():
     #Asks to continue, x is an unused variable
     x = input("  Press " + format.bold + "enter" + format.end + " to continue.   ")
-    print(format.clear)
+
+class jason:
+    #Opens a file and dumps the JSON data into a dictionary object
+    #   file: Path from the current file's directory (String, path-like)
+    def openFile(file, omitType = False):
+        #Finds root directory of running file
+        directory = os.path.dirname(__file__)
+        #Gets file path to file in /json/ folder that is found in root directory
+        if omitType:
+            filename = os.path.join(directory, (r'json/' + file))
+        else:
+            filename = os.path.join(directory, (r'json/' + file + r'.json'))
+        #Attempts to find file in /json/ folder found in root directory
+        try:
+            items = json.load(open(filename, "r"))
+        #Print error message if failure is inevitably encountered
+        except:
+            print(format.red + format.bold + "Error: Could not find json file at " + filename + " using JSONHandler.py" + format.end)
+            items = "None"
+        #Returns JSON content within file
+        return items
+
+    #Saves data to a given folder under a set file name
+    #   name: What to save the file under (String)
+    #   folder: Where to save the file (String)
+    #   data: What to write in the file (Any type of data that can be stored in a JSON file)
+    def saveFile(name, folder, data):
+        #Finds root directory of running file
+        directory = os.path.dirname(__file__)
+        #Gets file path to file in /json/ folder that is found in root directory
+        filename = os.path.join(directory, (folder + r'/' + name + r'.json'))
+        #Opens file
+        file = open(filename, "w")
+        #Dumps data into file
+        json.dump(data, file, separators = (',', ': '), indent = 4)
+
+    #Tries to grab a value from a given dictionary
+    #   root: The root object to pull from (Dictionary)
+    #   find: What you want to attempt to pull from the root (String)
+    #   setTo: What to use as the value to if there is no given value in the root (Any)
+    def tryGrab(root, find, setTo):
+        try:
+            x = root[find]
+        except:
+            x = setTo
+        return x

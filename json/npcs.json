@@ -1,5 +1,6 @@
 {
     "npclist": ["offensive", "defensive", "runner", "crawler", "paranoid", "diplomat"],
+    
     "template": {
         "name": "template",
         "saw_participant": ["loud", "stealth", "flee", "communicate"],

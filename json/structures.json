@@ -1,5 +1,9 @@
 {
+    "modname": "Default",
+    "category": "locations",
+
     "list": ["forest", "cabin", "fort"],
+    
     "forest": {
         "name": "Forest",
         "display": ":",

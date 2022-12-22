@@ -374,11 +374,11 @@ class jason:
     #   name: What to save the file under (String)
     #   folder: Where to save the file (String)
     #   data: What to write in the file (Any type of data that can be stored in a JSON file)
-    def saveFile(name, folder, data):
+    def saveFile(name, data, folder = r''):
         #Finds root directory of running file
         directory = os.path.dirname(__file__)
         #Gets file path to file in /json/ folder that is found in root directory
-        filename = os.path.join(directory, (folder + r'/' + name + r'.json'))
+        filename = os.path.join(directory, (folder + name + r'.json'))
         #Opens file
         file = open(filename, "w")
         #Dumps data into file

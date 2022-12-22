@@ -3,9 +3,9 @@
 # / ___/ / /___  _/ /_  / /||/ /   / /      /__  /     /__  / / __  / / /_/ / / // // / / /_/ / / /_/ / / // // / / /||/ /
 #/_/    /_____/ /____/ /_/ |__/   /_/      /____/     /____/ /_/ /_/ /_____/ /_______/ /_____/ /_____/ /_______/ /_/ |__/
 version = "0.3.5"
-dateRelease = "August 20, 2022"
+dateRelease = "December 25, 2022"
 #Project start: Jan 23, 2022
-#Current release push: August 20, 2022
+#Current release push: December 25, 2022
 
 '''
 TO DO:
@@ -30,6 +30,9 @@ import MOOSERecoded as moose
 
 # Attempts to load individual json files that are used by the program
 directory = os.path.dirname(__file__)
+filename = os.path.join(directory, (r'usersettings.json'))
+usr = json.load(open(filename, "r"))
+
 filename = os.path.join(directory, (r'json/items.json'))
 items = json.load(open(filename, "r"))
 filename = os.path.join(directory, (r'json/npcs.json'))
@@ -37,6 +40,7 @@ npc = json.load(open(filename, "r"))
 filename = os.path.join(directory, (r'json/dialogue.json'))
 dialogue = json.load(open(filename, "r"))
 usedmods = []
+usedmodtitles = []
 
 
 
@@ -60,6 +64,28 @@ class format:
     red = "\u001b[31m"
     blue = "\u001b[36m"
     green = "\u001b[32m"
+
+def checkAnsi():
+    if usr["ansiCompat"] == None:
+        print("Running first time setup...\n")
+        onColour = moose.askOption("Does weird text show up here? --->" + "\u001b[0m", ["Yes", "No"])
+        if onColour == 1:
+            class format:
+                mode = "Plain text"
+                clear = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+                strikethrough = ""
+                underline = ""
+                italic = ""
+                dim = ""
+                bold = ""
+                end = ""
+                red = ""
+                blue = ""
+                green = ""
+            usr["ansiCompat"] = False
+        else:
+            usr["ansiCompat"] = True
+        moose.jason.saveFile(r'usersettings', usr)
 
 # Pulls a list of characters from the living character set for use in other functions
 def generateCharacterList(number):
@@ -217,7 +243,8 @@ def runLoot(characters):
                         # Both upper
                         moose.scrollingText(characterNames[characters[0]] + " drops their " + format.red + items[characterItems[characters[0]][0]]["name"] + format.end + " to pick up the cache's " + format.green + items[lootItem]["name"] + format.end + ".")
                 # Appends event to log
-                log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"].lower() + ".")
+                event = {"day": days, "type": "loot", "chars": [characterNames[characters[0]]], "event": characterNames[characters[0]] + " picked up the " + items[lootItem]["name"].lower() + ".", "item": lootItem}
+                log.append(event)
                 
                 characterItems[characters[0]][0] = lootItem
                 characterItemDurabilities[characters[0]][0] = items[lootItem]["durability"]
@@ -237,10 +264,12 @@ def runLoot(characters):
             characterItemDurabilities[characters[0]].append(items[lootItem]["durability"])
             if items[lootItem]["uncap"] == True:
                 moose.scrollingText(characterNames[characters[0]] + " picks up the " + format.green + items[lootItem]["name"].lower() + format.end + ".")
-                log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"].lower() + ".")
+                event = {"day": days, "type": "loot", "chars": [characterNames[characters[0]]], "event": characterNames[characters[0]] + " picked up the " + items[lootItem]["name"].lower() + ".", "item": lootItem}
+                log.append(event)
             else:
                 moose.scrollingText(characterNames[characters[0]] + " picks up the " + format.green + items[lootItem]["name"] + format.end + ".")
-                log.append(str(days) + ". " + characterNames[characters[0]] + " picked up the " + items[lootItem]["name"]  + ".")
+                event = {"day": days, "type": "loot", "chars": [characterNames[characters[0]]], "event": characterNames[characters[0]] + " picked up the " + items[lootItem]["name"]  + ".", "item": lootItem}
+                log.append(event)
 
 # Checks to see if an item in a character's inventory has broken or not 
 def checkBreak(character):
@@ -253,6 +282,81 @@ def checkBreak(character):
                 moose.scrollingText(format.blue + characterNames[character] + " switches to their " + items[characterItems[character][0]]["name"] + "." + format.end)
             else:
                 moose.scrollingText(format.blue + characterNames[character] + " drops it." + format.end)
+
+def filterLog(setfilters, readlog):
+    returnlog = readlog
+    filterrun = 0
+    while filterrun < len(setfilters):
+        instruction = setfilters[filterrun][0]
+        if instruction == "char":
+            logrun = 0
+            while logrun < len(readlog):
+                if not setfilters[filterrun][1] in log[logrun]["chars"]:
+                    log.pop(logrun)
+                logrun = logrun + 1
+        if instruction == "loot":
+            if len(setfilters[filterrun]) > 1:
+                logrun = 0
+                while logrun < len(readlog):
+                    if log[logrun]["type"] == "loot":
+                        if setfilters[filterrun][1] != log[logrun]["item"]:
+                            log.pop(logrun)
+                    logrun = logrun + 1
+            else:
+                logrun = 0
+                while logrun < len(readlog):
+                    if log[logrun]["type"] != "loot":
+                        log.pop(logrun)
+                    logrun = logrun + 1
+        if instruction == "combat":
+            logrun = 0
+            while logrun < len(readlog):
+                if log[logrun]["type"] != "combat":
+                    log.pop(logrun)
+                logrun = logrun + 1
+        if instruction == "escape":
+            logrun = 0
+            while logrun < len(readlog):
+                if log[logrun]["type"] != "escape":
+                    log.pop(logrun)
+                logrun = logrun + 1
+        if instruction == "trace":
+            logrun = 0
+            while logrun < len(readlog):
+                if log[logrun]["type"] != "trace":
+                    log.pop(logrun)
+                logrun = logrun + 1
+        if instruction == "day":
+            logrun = 0
+            while logrun < len(readlog):
+                if log[logrun]["day"] != setfilters[filterrun][1]:
+                    log.pop(logrun)
+                logrun = logrun + 1
+        filterrun = filterrun + 1
+    return returnlog
+
+def stringFilters(filters):
+    filterstrings = []
+    run = 0
+    while run < len(filters):
+        if filters[run][0] == "loot":
+            if len(filters[run]) > 1:
+                string = "Filter by item looted: " + filters[run][1]
+            else:
+                string = "Filter by loot event"
+        if filters[run][0] == "combat":
+            string = "Filter by combat event"
+        if filters[run][0] == "escape":
+            string = "Filter by escape event"
+        if filters[run][0] == "trace":
+            string = "Filter by trace event"
+        if filters[run][0] == "char":
+            string = "Filter by character: " + characterNames[filters[run][1]]
+        if filters[run][0] == "day":
+            string = "Filter by day: " + filters[run][1]
+        filterstrings.append(string)
+        run = run + 1
+    return filterstrings
 
 def combat(characters, decision, ran):
     global deadCharacters
@@ -280,7 +384,8 @@ def combat(characters, decision, ran):
                 print()
             moose.scrollingText(format.green + characterNames[characters[0]] + " runs away." + format.end)
             print()
-            log.append(str(days) + ". " + characterNames[characters[0]] + " ran away.")
+            event = {"day": days, "type": "escape", "chars": [characterNames[characters[0]], characterNames[characters[1]]], "event": characterNames[characters[0]] + " ran away from " + characterNames[characters[1]] + "."}
+            log.append(event)
             ran = True
         else:
             if decision == 1:
@@ -364,11 +469,14 @@ def combat(characters, decision, ran):
                     killedBy[characters[charA]] = characterNames[characters[charB]]
                     if characterItems[characters[charB]] != []:
                         if items[characterItems[characters[charB]][0]]["uncap"] == True:
-                            log.append(str(days) + ". " + characterNames[characters[charA]] + " was killed by " + characterNames[characters[charB]] + " with a " + items[characterItems[characters[charB]][0]]["name"].lower() +  ".")
+                            event = {"day": days, "type": "death", "chars": [characterNames[characters[0]], characterNames[characters[1]]], "event": characterNames[characters[charA]] + " was killed by " + characterNames[characters[charB]] + " with a " + items[characterItems[characters[charB]][0]]["name"].lower() +  "."}
+                            log.append(event)
                         else:
-                            log.append(str(days) + ". " + characterNames[characters[charA]] + " was killed by " + characterNames[characters[charB]] + " with a " + items[characterItems[characters[charB]][0]]["name"] +  ".")
+                            event = {"day": days, "type": "death", "chars": [characterNames[characters[0]], characterNames[characters[1]]], "event": characterNames[characters[charA]] + " was killed by " + characterNames[characters[charB]] + " with a " + items[characterItems[characters[charB]][0]]["name"] +  "."}
+                            log.append(event)
                     else:
-                        log.append(str(days) + ". " + characterNames[characters[charA]] + " was killed by " + characterNames[characters[charB]] + " with their" + format.italic + " fists." + format.end)
+                        event = {"day": days, "type": "death", "chars": [characterNames[characters[0]], characterNames[characters[1]]], "event": characterNames[characters[charA]] + " was killed by " + characterNames[characters[charB]] + " with their" + format.italic + " fists." + format.end}
+                        log.append(event)
                     characterKills[characters[charB]] = characterKills[characters[charB]] + 1
                     print()
                     deadCharacters.append(characterNames[characters[charA]])
@@ -378,11 +486,14 @@ def combat(characters, decision, ran):
                     killedBy[characters[charB]] = characterNames[characters[charA]]
                     if characterItems[characters[charA]] != []:
                         if items[characterItems[characters[charA]][0]]["uncap"] == True:
-                            log.append(str(days) + ". " + characterNames[characters[charB]] + " was killed by " + characterNames[characters[charA]] + " with a " + items[characterItems[characters[charA]][0]]["name"].lower() +  ".")
+                            event = {"day": days, "type": "death", "chars": [characterNames[characters[0]], characterNames[characters[1]]], "event": characterNames[characters[charB]] + " was killed by " + characterNames[characters[charA]] + " with a " + items[characterItems[characters[charA]][0]]["name"].lower() +  "."}
+                            log.append(event)
                         else:
-                            log.append(str(days) + ". " + characterNames[characters[charB]] + " was killed by " + characterNames[characters[charA]] + " with a " + items[characterItems[characters[charA]][0]]["name"] +  ".")
+                            event = {"day": days, "type": "death", "chars": [characterNames[characters[0]], characterNames[characters[1]]], "event": characterNames[characters[charB]] + " was killed by " + characterNames[characters[charA]] + " with a " + items[characterItems[characters[charA]][0]]["name"] +  "."}
+                            log.append(event)
                     else:
-                        log.append(str(days) + ". " + characterNames[characters[charB]] + " was killed by " + characterNames[characters[charA]] + " with their" + format.italic + " fists." + format.end)
+                        event = {"day": days, "type": "death", "chars": [characterNames[characters[0]], characterNames[characters[1]]], "event": characterNames[characters[charB]] + " was killed by " + characterNames[characters[charA]] + " with their" + format.italic + " fists." + format.end}
+                        log.append(event)
                     characterKills[characters[charA]] = characterKills[characters[charA]] + 1
                     print()
                     deadCharacters.append(characterNames[characters[charB]])
@@ -397,7 +508,9 @@ def combat(characters, decision, ran):
                         moose.scrollingText(format.green + characterNames[characters[charA]] + " lets " + characterNames[characters[charB]] + " get away." + format.end)
                     else:
                         moose.scrollingText(format.green + characterNames[characters[charB]] + " runs away." + format.end)
-                    log.append(str(days) + ". " + characterNames[characters[charB]] + " ran away.")
+                    characterNames[characters[0]] + " saw " + characterNames[characters[1]] + "."
+                    event = {"day": days, "type": "escape", "chars": [characterNames[characters[0]], characterNames[characters[1]]], "event": characterNames[characters[charB]] + " ran away from " + characterNames[characters[charA]] + "."}
+                    log.append(event)
                     ran = True
                 else:
                     if decision == 1:
@@ -556,6 +669,7 @@ def runEvents(eventList):
             if eventList[run] == "attacked":
                 attacked()
                 moose.askToContinue()
+                print(format.clear)
             if eventList[run] == "looting":
                 looting()
             if eventList[run] == "airdrop":
@@ -565,7 +679,8 @@ def runEvents(eventList):
 def sawParticipant():
     characters = generateCharacterList(2)
     moose.scrollingText(characterNames[characters[0]] + " sees " + characterNames[characters[1]] + ".")
-    log.append(str(days) + ". " + characterNames[characters[0]] + " saw " + characterNames[characters[1]] + ".")
+    event = {"day": days, "type": "trace", "chars": [characterNames[characters[0]], characterNames[characters[1]]], "event": characterNames[characters[0]] + " saw " + characterNames[characters[1]] + "."}
+    log.append(event)
     time.sleep(0.5)
     if npc[characterPlans[characters[0]]]["saw_participant"] == "loud":
         attack(characters)
@@ -590,11 +705,13 @@ def sawParticipant():
         else:
             moose.scrollingText(format.green + characterNames[characters[0]] + " successfully negotiates with " + characterNames[characters[1]] + "." + format.end)
     moose.askToContinue()
+    print(format.clear)
 
 def heardParticipant():
     characters = generateCharacterList(2)
     moose.scrollingText(characterNames[characters[0]] + " hears something.")
-    log.append(str(days) + ". " + characterNames[characters[0]] + " heard something.")
+    event = {"day": days, "type": "trace", "chars": [characterNames[characters[0]], characterNames[characters[1]]], "event": characterNames[characters[0]] + " heard something."}
+    log.append(event)
     time.sleep(0.5)
     if npc[characterPlans[characters[0]]]["heard_participant"] == "loud":
         rand = random.randint(1, 4)
@@ -620,11 +737,13 @@ def heardParticipant():
     if npc[characterPlans[characters[0]]]["heard_participant"] == "flee":
         moose.scrollingText(characterNames[characters[0]] + " runs away.")
     moose.askToContinue()
+    print(format.clear)
 
 def trace():
     characters = generateCharacterList(2)
     moose.scrollingText(characterNames[characters[0]] + " notices footprints in the mud.")
-    log.append(str(days) + ". " + characterNames[characters[0]] + " noticed a trace of someone.")
+    event = {"day": days, "type": "trace", "chars": [characterNames[characters[0]], characterNames[characters[1]]], "event": characterNames[characters[0]] + " noticed a trace of someone."}
+    log.append(event)
     time.sleep(0.5)
     if npc[characterPlans[characters[0]]]["trace"] == "loud":
         rand = random.randint(1, 10)
@@ -641,6 +760,7 @@ def trace():
         else:
             moose.scrollingText(characterNames[characters[0]] + " hides.")
     moose.askToContinue()
+    print(format.clear)
         
 def attacked(characters = []):
     if characters == []:
@@ -663,7 +783,8 @@ def attacked(characters = []):
             moose.scrollingText(characterNames[characters[0]] + " has a " + items[characterItems[characters[0]][0]]["name"] + ".")
     else:
         moose.scrollingText(characterNames[characters[0]] + " is using their fists.")
-    log.append(str(days) + ". " + characterNames[characters[0]] + " got attacked by " + characterNames[characters[1]] + ".")
+    event = {"day": days, "type": "combat", "chars": [characterNames[characters[0]], characterNames[characters[1]]], "event": characterNames[characters[0]] + " got attacked by " + characterNames[characters[1]] + "."}
+    log.append(event)
     print()
     decision = moose.askOption("Would you like to view this combat turn by turn?", ["Turn by turn", "Skip to result"])
     combat(characters, decision, ran)
@@ -689,7 +810,8 @@ def attack(characters = []):
             moose.scrollingText(characterNames[characters[1]] + " has a " + items[characterItems[characters[1]][0]]["name"] + ".")
     else:
         moose.scrollingText(characterNames[characters[1]] + " is using their fists.")
-    log.append(str(days) + ". " + characterNames[characters[0]] + " attacked " + characterNames[characters[1]] + ".")
+    event = {"day": days, "type": "combat", "chars": [characterNames[characters[0]], characterNames[characters[1]]], "event": characterNames[characters[0]] + " attacked " + characterNames[characters[1]] + "."}
+    log.append(event)
     print()
     decision = moose.askOption("Would you like to view this combat turn by turn?", ["Turn by turn", "Skip to result"])
     newCharacters = []
@@ -717,6 +839,7 @@ def looting():
         else:
             runLoot(characters)
     moose.askToContinue()
+    print(format.clear)
 
 def airdrop():
     characters = generateCharacterList(random.randint(1, int((len(characterNames) - len(deadCharacters) / 5))))
@@ -730,6 +853,7 @@ def airdrop():
         run = run + 1
     print()
     moose.askToContinue()
+    print(format.clear)
 
 def nightfall():
     decision = moose.askOption("Nightfall actions:", ["View characters", "View log", "Continue to day"], delay = 0.05)
@@ -791,15 +915,69 @@ def viewCharacters():
             if len(characterItems[view]) == 0:
                 moose.scrollingText(format.bold + format.italic + "Inventory is empty!" + format.end)
         moose.askToContinue()
+        print(format.clear)
     nightfall()
 
 def viewLog():
-    run = 0
-    print()
-    while run < len(log):
-        print(log[run])
-        run = run + 1
-    moose.askToContinue()
+    print(format.clear)
+    option = moose.askOption("Viewing log:", ["View with filter", "View full log", "Exit log viewer"])
+    if option == 1:
+        filters = []
+        filteredlog = []
+        option = 0
+        while option != 3:
+            print(format.clear)
+            if len(filters) == 0:
+                print("Add a filter to view the log!")
+            else:
+                if len(filteredlog) == 0:
+                    moose.scrollingText("Filters didn't return anything! Remove some filters to see more.")
+                else:
+                    run = 0
+                    while run < len(filteredlog):
+                        filteredlog[run]["event"]
+                        run = run + 1
+            option = moose.askOption("", ["Add filters", "Remove filters", "Exit"])
+            if option == 1:
+                print(format.clear)
+                option = moose.askOption("Select filter type:", ["Sort by character", "Sort by type", "Sort by day", "Exit"])
+                if option == 1:
+                    print(format.clear)
+                    option = moose.askOption("Select character", characterNames)
+                    filters.append(["char", option - 1])
+                if option == 2:
+                    print(format.clear)
+                    option = moose.askOption("Select filter type", ["Item found", "Combat", "Escape", "Trace", "None"])
+                    if option == 1:
+                        print(format.clear)
+                        option = moose.askOption("Filter by specific item or show all looting events?", ["Filter by item", "Show all", "None"])
+                        if option == 1:
+                            print(format.clear)
+                            itemid = moose.askOption("Choose item to filter by:", items["lootable"])
+                            filters.append(["loot", items["lootable"][itemid]])
+                        if option == 2:
+                            filters.append(["loot"])
+                    if option == 2:
+                        filters.append(["combat"])
+                    if option == 3:
+                        filters.append(["escape"])
+                    if option == 4:
+                        filters.append(["trace"])
+                if option == 3:
+                    print(format.clear)
+                    filters.append(["day", moose.askOpen("Filter by day: (1 - " + str(days) + ")", min = 1, max = days)])
+            if option == 2:
+                filterstrings = stringFilters(filters)
+                filters.pop(moose.askOption("Choose a filter to remove", filterstrings))
+            filteredlog = filterLog(filters, log)
+                
+    if option == 2:
+        run = 0
+        while run < len(log):
+            print(log[run])
+            time.sleep(0.05)
+            run = run + 1
+        moose.askToContinue()
     nightfall()
 
 def healAll():
@@ -809,7 +987,7 @@ def healAll():
             if characterHealth[run] + 10 <= 100:
                 characterHealth[run] = characterHealth[run] + 10
             else:
-                characterHealth[run] = characterHealth[run] + (100 - characterHealth[run])
+                characterHealth[run] = 100
         run = run + 1
 
 def printWinner():
@@ -836,25 +1014,25 @@ def selectSimMode():
     global characterAttributes
     print(format.clear)
     time.sleep(0.5)
-    moose.scrollingText(";showdown.detailed")
+    moose.scrollingText("Detailed showdown")
     time.sleep(0.3)
-    moose.scrollingText("- Full simulation", 4, 0.01)
-    moose.scrollingText("- Choose NPC plan", 4, 0.01)
-    moose.scrollingText("- Custom attributes", 4, 0.01)
-    time.sleep(0.3)
-    print()
-    moose.scrollingText(";showdown.adaptable")
-    time.sleep(0.3)
-    moose.scrollingText("- Full simulation", 4, 0.01)
-    moose.scrollingText("- Random NPC plan", 4, 0.01)
-    moose.scrollingText("- Custom attributes", 4, 0.01)
+    moose.scrollingText("- Full simulation", indent = 4, delay = 0.01)
+    moose.scrollingText("- Choose NPC plan", indent = 4, delay = 0.01)
+    moose.scrollingText("- Custom attributes", indent = 4, delay = 0.01)
     time.sleep(0.3)
     print()
-    moose.scrollingText(";showdown.simple")
+    moose.scrollingText("Adaptable simulation")
     time.sleep(0.3)
-    moose.scrollingText("- Partial simulation", 4, 0.01)
-    moose.scrollingText("- Random NPC plan", 4, 0.01)
-    moose.scrollingText("- All have same attributes", 4, 0.01)
+    moose.scrollingText("- Full simulation", indent = 4, delay = 0.01)
+    moose.scrollingText("- Random NPC plan", indent = 4, delay = 0.01)
+    moose.scrollingText("- Custom attributes", indent = 4, delay = 0.01)
+    time.sleep(0.3)
+    print()
+    moose.scrollingText("Simple logic")
+    time.sleep(0.3)
+    moose.scrollingText("- Partial simulation", indent = 4, delay = 0.01)
+    moose.scrollingText("- Random NPC plan", indent = 4, delay = 0.01)
+    moose.scrollingText("- All have same attributes", indent = 4, delay = 0.01)
     time.sleep(0.5)
     print()
     decision = moose.askOption("Select a creation mode:", ["Detailed", "Adaptable", "Simple", "Back to main manu"])
@@ -1093,6 +1271,7 @@ def saveLoadCharacters():
             print()
             print("  Directory is empty!")
             moose.askToContinue()
+            print(format.clear)
     if decision == 2:
         run = 0
         data = {}
@@ -1120,13 +1299,13 @@ def saveLoadCharacters():
         charList = characterNames
         charList.append("Complete copy")
         charList.append("Cancel copy")
-        print(moose.format.clear)
+        print(format.clear)
         decision = 0
         while charList[decision] != "Complete copy" and charList[decision] != "Cancel copy":
             decision = moose.askOption("Choose characters to copy:", charList, lookingFor = selected) - 1
             if charList[decision] != "Complete copy" and charList[decision] != "Cancel copy":
                 selected.append(decision)
-            print(moose.format.clear)
+            print(format.clear)
         if charList[decision] == "Complete copy":
             data = {}
             data["length"] = len(selected)
@@ -1198,7 +1377,7 @@ def loadMods():
     global dialogue
     global usedmods
 
-    print(moose.format.clear)
+    print(format.clear)
     directory = os.path.dirname(__file__)
     dirname = os.path.join(directory, (r'json/mods/'))
     dirlist = os.listdir(dirname)
@@ -1219,7 +1398,7 @@ def loadMods():
     else:
         mod = 1
         while openlist[mod - 1] != "Return to main menu":
-            print(moose.format.clear)
+            print(format.clear)
             mod = moose.askOption("Choose a mod to load:", openlist, lookingFor = usedmods)
             if openlist[mod - 1] == "Reset to default":
                 directory = os.path.dirname(__file__)
@@ -1230,6 +1409,7 @@ def loadMods():
                 filename = os.path.join(directory, (r'json/dialogue.json'))
                 dialogue = json.load(open(filename, "r"))
                 usedmods = []
+                usedmodtitles = []
             else:
                 if openlist[mod - 1] != "Return to main menu":
                     openmod = opendir[mod - 1]
@@ -1259,6 +1439,7 @@ def loadMods():
                             dialogue.update(openmod)
                             dialogue["packs"] = nowPack + newPack
                     usedmods.append(mod - 1)
+                    usedmodtitles.append(openmod["modname"])
     mainMenu()
 
 def settings():
@@ -1317,4 +1498,5 @@ def settings():
 
 moose.displayLogo()
 time.sleep(1)
+checkAnsi()
 mainMenu()

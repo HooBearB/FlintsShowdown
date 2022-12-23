@@ -1,5 +1,7 @@
 {
-    "packs": [""],
+    "packs": ["basic"],
 
-    "": {}
+    "basic": {
+        "name": "Basic"
+    }
 }

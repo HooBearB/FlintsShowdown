@@ -2,7 +2,7 @@
 #  / ___/ / /    /_  _/  /  | / / /_  _/ /_/ /  __/     /  __/ / /_/ / / __  / / /__ / / / __ |  / __  / / /__ / / /  | / /
 # / ___/ / /___  _/ /_  / /||/ /   / /      /__  /     /__  / / __  / / /_/ / / // // / / /_/ / / /_/ / / // // / / /||/ /
 #/_/    /_____/ /____/ /_/ |__/   /_/      /____/     /____/ /_/ /_/ /_____/ /_______/ /_____/ /_____/ /_______/ /_/ |__/
-version = "0.3.5"
+version = "0.3.0"
 dateRelease = "December 25, 2022"
 #Project start: Jan 23, 2022
 #Current release push: December 25, 2022
@@ -145,6 +145,12 @@ def checkRelint(data, filename):
     # If version is not found in the file, add it to the list of issues
     except:
         issues.append("version")
+    try:
+        # Attempts to find character dialogue
+        dialoguePlan = data["1"]["dialogue"]
+    # If dialogue is not found in the character file, add it to the list of issues
+    except:
+        issues.append("dialogue")
     # If there are issues within the list, send it to the relint() function
     if len(issues) > 0:
         relintedData = relint(data, issues, filename)
@@ -152,8 +158,8 @@ def checkRelint(data, filename):
 
 def relint(data, issues, filename):
     # Asks user if they want the program to change the file
-    print()
-    decision = moose.askOption("Data file is out of date. Would you like to use it anyway?", ["Yes", "No"])
+    print(format.clear)
+    decision = moose.askOption("This data file is out of date, and this can cause issues.\n  Would you like to have to program modify it and have it be used anyway?\n", ["Yes", "No"])
     # If they decide yes, run through issues list
     if decision == 1:
         run = 0
@@ -162,12 +168,13 @@ def relint(data, issues, filename):
             # If "version" tag is in list, add current version to the version tag
             if issues[run] == "version":
                 data["version"] = version
+            if issues[run] == "dialogue":
+                leng = data["length"]
+                dialogRun = 0
+                while dialogRun < leng:
+                    data[str(dialogRun)]["dialogue"] = "basic"
+                    dialogRun = dialogRun + 1
             run = run + 1
-        # Prints out relint statement and waits for user
-        print()
-        moose.scrollingText("Data relinted.")
-        print()
-        moose.askToContinue()
         run = 0
         # Opens dict type for saving
         newData = {}
@@ -181,6 +188,7 @@ def relint(data, issues, filename):
             newData[str(run)] = {}
             newData[str(run)]["name"] = data[str(run)]["name"]
             newData[str(run)]["plan"] = data[str(run)]["plan"]
+            newData[str(run)]["dialogue"] = data[str(run)]["dialogue"]
             newData[str(run)]["melee"] = data[str(run)]["melee"]
             newData[str(run)]["ranged"] = data[str(run)]["ranged"]
             newData[str(run)]["endurance"] = data[str(run)]["endurance"]
@@ -197,6 +205,11 @@ def relint(data, issues, filename):
         file = open(filename, "w")
         # Dumps all data
         json.dump(newData, file, separators = (', ', ': '), indent = 4)
+        # Prints out relint statement and waits for user
+        print()
+        moose.scrollingText("Data was relinted without any issues.")
+        print()
+        moose.askToContinue()
         # Returns and stores relinted data
         return newData
     # Returns to menu if the user chooses not to have the program change file
@@ -555,6 +568,7 @@ def startSim():
     global creationMode
     global characterNames
     global characterPlans
+    global characterDialogue
     global characterAttributes
     global characterHealth
     global characterItems
@@ -586,11 +600,13 @@ def startSim():
             creationMode = data["creationmode"]
             characterNames = []
             characterPlans = []
+            characterDialogue = []
             characterAttributes = []
             run = 0
             while run < data["length"]:
                 characterNames.append(data[str(run)]["name"])
                 characterPlans.append(data[str(run)]["plan"])
+                characterDialogue.append(data[str(run)]["dialogue"])
                 templist = []
                 templist.append(data[str(run)]["melee"])
                 templist.append(data[str(run)]["ranged"])
@@ -604,6 +620,7 @@ def startSim():
     else:
         print()
         moose.scrollingText("Directory is empty!")
+        print()
         moose.askToContinue()
         mainMenu()
     characterHealth = []
@@ -704,6 +721,7 @@ def sawParticipant():
             attacked(characters)
         else:
             moose.scrollingText(format.green + characterNames[characters[0]] + " successfully negotiates with " + characterNames[characters[1]] + "." + format.end)
+    print()
     moose.askToContinue()
     print(format.clear)
 
@@ -736,6 +754,7 @@ def heardParticipant():
             moose.scrollingText(characterNames[characters[0]] + " fails to find anyone.")
     if npc[characterPlans[characters[0]]]["heard_participant"] == "flee":
         moose.scrollingText(characterNames[characters[0]] + " runs away.")
+    print()
     moose.askToContinue()
     print(format.clear)
 
@@ -759,6 +778,7 @@ def trace():
             attacked(characters)
         else:
             moose.scrollingText(characterNames[characters[0]] + " hides.")
+    print()
     moose.askToContinue()
     print(format.clear)
         
@@ -838,6 +858,7 @@ def looting():
             attack(characters)
         else:
             runLoot(characters)
+    print()
     moose.askToContinue()
     print(format.clear)
 
@@ -914,7 +935,6 @@ def viewCharacters():
                 run = run + 1
             if len(characterItems[view]) == 0:
                 moose.scrollingText(format.bold + format.italic + "Inventory is empty!" + format.end)
-        moose.askToContinue()
         print(format.clear)
     nightfall()
 
@@ -937,22 +957,33 @@ def viewLog():
                     while run < len(filteredlog):
                         filteredlog[run]["event"]
                         run = run + 1
-            option = moose.askOption("", ["Add filters", "Remove filters", "Exit"])
-            if option == 1:
+            outoption = 0
+            while outoption != 5:
                 print(format.clear)
-                option = moose.askOption("Select filter type:", ["Sort by character", "Sort by type", "Sort by day", "Exit"])
-                if option == 1:
-                    print(format.clear)
+                outoption = moose.askOption("", ["Sort by character", "Sort by type", "Sort by day", "Remove filters", "Exit"])
+                print(format.clear)
+                if len(filters) == 0:
+                    print("Add a filter to view the log!")
+                else:
+                    if len(filteredlog) == 0:
+                        moose.scrollingText("Filters didn't return anything! Remove some filters to see more.")
+                    else:
+                        run = 0
+                        while run < len(filteredlog):
+                            filteredlog[run]["event"]
+                            run = run + 1
+                if outoption == 1:
+                    print()
                     option = moose.askOption("Select character", characterNames)
                     filters.append(["char", option - 1])
-                if option == 2:
-                    print(format.clear)
+                if outoption == 2:
+                    print()
                     option = moose.askOption("Select filter type", ["Item found", "Combat", "Escape", "Trace", "None"])
                     if option == 1:
-                        print(format.clear)
+                        print()
                         option = moose.askOption("Filter by specific item or show all looting events?", ["Filter by item", "Show all", "None"])
                         if option == 1:
-                            print(format.clear)
+                            print()
                             itemid = moose.askOption("Choose item to filter by:", items["lootable"])
                             filters.append(["loot", items["lootable"][itemid]])
                         if option == 2:
@@ -963,20 +994,23 @@ def viewLog():
                         filters.append(["escape"])
                     if option == 4:
                         filters.append(["trace"])
-                if option == 3:
-                    print(format.clear)
+                if outoption == 3:
+                    print()
                     filters.append(["day", moose.askOpen("Filter by day: (1 - " + str(days) + ")", min = 1, max = days)])
-            if option == 2:
-                filterstrings = stringFilters(filters)
-                filters.pop(moose.askOption("Choose a filter to remove", filterstrings))
-            filteredlog = filterLog(filters, log)
+                if outoption == 4:
+                    filterstrings = stringFilters(filters)
+                    filters.pop(moose.askOption("Choose a filter to remove", filterstrings) - 1)
+                filteredlog = filterLog(filters, log)
                 
     if option == 2:
+        print(format.clear)
+        print("Viewing full log:\n")
         run = 0
         while run < len(log):
-            print(log[run])
+            print(log[run]["event"])
             time.sleep(0.05)
             run = run + 1
+        print()
         moose.askToContinue()
     nightfall()
 
@@ -1010,6 +1044,7 @@ def printWinner():
 def selectSimMode():
     global creationMode
     global characterNames
+    global characterDialogue
     global characterPlans
     global characterAttributes
     print(format.clear)
@@ -1046,11 +1081,13 @@ def selectSimMode():
         mainMenu()
     characterNames = ["Joe Generic"]
     characterPlans = ["offensive"]
+    characterDialogue = ["basic"]
     characterAttributes = [[0, 0, 0, 0, 0]]
 
 def createCharacters(currentCharacter = 0):
     global characterNames
     global characterPlans
+    global characterDialogue
     global characterAttributes
 
     print(format.clear)
@@ -1077,9 +1114,11 @@ def createCharacters(currentCharacter = 0):
         if creationMode == "det":
             methods.append("Name")
             methods.append("NPC plan")
+            methods.append("Dialogue")
             methods.append("Attributes")
         if creationMode == "ada":
             methods.append("Name")
+            methods.append("Dialogue")
             methods.append("Attributes")
         if creationMode == "sim":
             methods.append("Name")
@@ -1092,6 +1131,7 @@ def createCharacters(currentCharacter = 0):
         print()
         moose.scrollingText("Name: " + characterNames[currentCharacter])
         moose.scrollingText("Plan: " + npc[characterPlans[currentCharacter]]["name"])
+        moose.scrollingText("Dialogue plan: " + dialogue[characterDialogue[currentCharacter]]["name"])
         moose.scrollingText("Current character: #" + str(currentCharacter + 1))
         print()
         print("          Melee: " + str(characterAttributes[currentCharacter][0]))
@@ -1105,6 +1145,8 @@ def createCharacters(currentCharacter = 0):
             changeCharacterName(currentCharacter)
         if methods[decision - 1] == "NPC plan":
             changeCharacterPlan(currentCharacter)
+        if methods[decision - 1] == "Dialogue":
+            changeCharacterDialogue(currentCharacter)
         if methods[decision - 1] == "Attributes":
             changeCharacterAttributes(currentCharacter)
         if methods[decision - 1] == "Switch character":
@@ -1156,6 +1198,18 @@ def changeCharacterPlan(curChar):
         changeCharacterPlan(curChar)
     print(format.clear)
 
+def changeCharacterDialogue(curChar):
+    global characterDialogue
+    print()
+    dialoguelist = []
+    run = 0
+    while run < len(dialogue["packs"]):
+        dialoguelist.append(dialogue[dialogue["packs"][run]]["name"])
+        run = run + 1
+    decision = moose.askOption("Choose character's NPC plan", dialoguelist)
+    characterDialogue[curChar] = dialogue["packs"][decision - 1]
+    print(format.clear)
+
 def changeCharacterAttributes(curChar):
     print(format.clear)
     print("          Melee: " + str(characterAttributes[curChar][0]))
@@ -1201,6 +1255,7 @@ def newCharacter(currentCharacters):
     print(format.clear)
     characterNames.append("Unnamed character")
     characterPlans.append("defensive")
+    characterDialogue.append("basic")
     characterAttributes.append([0, 0, 0, 0, 0])
     newCharacter = len(currentCharacters) - 1
     return newCharacter
@@ -1208,6 +1263,7 @@ def newCharacter(currentCharacters):
 def deleteCharacter(currChar):
     global characterNames
     global characterPlans
+    global characterDialogue
     global characterAttributes
 
     print()
@@ -1215,6 +1271,7 @@ def deleteCharacter(currChar):
     if decision == 1:
         characterNames.pop(currChar)
         characterPlans.pop(currChar)
+        characterDialogue.pop(currChar)
         characterAttributes.pop(currChar)
         currChar = currChar - 1
     return currChar
@@ -1222,6 +1279,7 @@ def deleteCharacter(currChar):
 def saveLoadCharacters():
     global characterNames
     global characterPlans
+    global characterDialogue
     global characterAttributes
     global creationMode
 
@@ -1253,10 +1311,12 @@ def saveLoadCharacters():
                 characterNames = []
                 characterPlans = []
                 characterAttributes = []
+                characterDialogue = []
                 run = 0
                 while run < data["length"]:
                     characterNames.append(data[str(run)]["name"])
                     characterPlans.append(data[str(run)]["plan"])
+                    characterDialogue.append(data[str(run)]["dialogue"])
                     templist = []
                     templist.append(data[str(run)]["melee"])
                     templist.append(data[str(run)]["ranged"])
@@ -1270,6 +1330,7 @@ def saveLoadCharacters():
         else:
             print()
             print("  Directory is empty!")
+            print()
             moose.askToContinue()
             print(format.clear)
     if decision == 2:
@@ -1281,6 +1342,7 @@ def saveLoadCharacters():
             data[str(run)] = {}
             data[str(run)]["name"] = characterNames[run]
             data[str(run)]["plan"] = characterPlans[run]
+            data[str(run)]["dialogue"] = characterDialogue[run]
             data[str(run)]["melee"] = characterAttributes[run][0]
             data[str(run)]["ranged"] = characterAttributes[run][1]
             data[str(run)]["endurance"] = characterAttributes[run][2]
@@ -1315,6 +1377,7 @@ def saveLoadCharacters():
                 data[str(run)] = {}
                 data[str(run)]["name"] = characterNames[selected[run]]
                 data[str(run)]["plan"] = characterPlans[selected[run]]
+                data[str(run)]["dialogue"] = characterDialogue[selected[run]]
                 data[str(run)]["melee"] = characterAttributes[selected[run]][0]
                 data[str(run)]["ranged"] = characterAttributes[selected[run]][1]
                 data[str(run)]["endurance"] = characterAttributes[selected[run]][2]
@@ -1332,11 +1395,13 @@ def saveLoadCharacters():
             data = json.load(open(filename, "r"))
             characterNames = []
             characterPlans = []
+            characterDialogue = []
             characterAttributes = []
             run = 0
             while run < data["length"]:
                 characterNames.append(data[str(run)]["name"])
                 characterPlans.append(data[str(run)]["plan"])
+                characterDialogue.append(data[str(run)]["dialogue"])
                 templist = []
                 templist.append(data[str(run)]["melee"])
                 templist.append(data[str(run)]["ranged"])
@@ -1356,6 +1421,7 @@ def directToSave():
         data[str(run)] = {}
         data[str(run)]["name"] = characterNames[run]
         data[str(run)]["plan"] = characterPlans[run] 
+        data[str(run)]["dialogue"] = characterDialogue[run]
         data[str(run)]["melee"] = characterAttributes[run][0]
         data[str(run)]["ranged"] = characterAttributes[run][1]
         data[str(run)]["endurance"] = characterAttributes[run][2]
@@ -1376,6 +1442,7 @@ def loadMods():
     global npc
     global dialogue
     global usedmods
+    global usedmodtitles
 
     print(format.clear)
     directory = os.path.dirname(__file__)

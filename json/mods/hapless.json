@@ -7,8 +7,15 @@
     "packs": ["bent"],
 
     "bent": {
+        "name": "Bent",
         "getMelee": [],
         "getRanged": [],
-        "": []
+        "heard": [],
+        "seen": [],
+        "trace": [],
+        "miss": [],
+        "hit": [],
+        "hadMiss": [],
+        "gotHit": []
     }
 }

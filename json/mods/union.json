@@ -1,0 +1,9 @@
+{
+    "modname": "Union Dialogue Packs",
+    "description": "on... iom,,g.,n",
+    "category": "dialogue",
+    "overwrite": false,
+
+    "packs": ["ace", "box", "dj", "doya", "english", "falcre", "flint", "grav", "gummy",
+              "jaxe", "killer", "lolguy", "mb", "onyx", "s3al", "tact", "willy"]
+}

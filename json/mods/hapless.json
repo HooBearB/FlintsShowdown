@@ -4,7 +4,9 @@
     "category": "dialogue",
     "overwrite": false,
 
-    "packs": ["bent"],
+    "packs": ["ajax", "apher", "avery", "bent", "bigguy", "bun", "cola", "cora", "decode", "drifty", "evoker", "googly",
+              "hoovers", "jitter", "juke", "keluna", "lexi", "mochi", "mule", "r4v3", "random", "raven", "ruby", "rose",
+              "soap", "trojan", "verti", "vesono"],
 
     "bent": {
         "name": "Bent",
@@ -13,9 +15,30 @@
         "heard": [],
         "seen": [],
         "trace": [],
+        "openNegotiate": [],
+        "negotiateFail": [],
+        "negotiateWin": [],
         "miss": [],
         "hit": [],
         "hadMiss": [],
-        "gotHit": []
+        "gotHit": [],
+        "win": []
+    },
+
+    "bigguy": {
+        "name": "Big guy",
+        "getMelee": ["Sweet, new shit!", "Fuck yeah, time to go Anprim mode."],
+        "getRanged": ["God bless Dick Cheney!", "Aw, nice!"],
+        "heard": ["What was that?", "I swear I just heard something."],
+        "seen": ["What the fuck?", "The fuck...?"],
+        "trace": ["Something ain't right around here.", "Somebody's sneaking around, and I don't like it."],
+        "openNegotiate": [],
+        "negotiateFail": [],
+        "negotiateWin": [],
+        "miss": ["Get back here!", "I'm not gonna miss twice."],
+        "hit": ["GET FUCKED SHITHEAD!", "Look, there's something on your face! Oh wait, it was pain!"],
+        "hadMiss": ["Ooh, get juked!", "Looks like you missed, dumbass!"],
+        "gotHit": ["OW, FUCK YOU BASTARD!", "God damn that hurt."],
+        "win": ["Wooo yeah baby that's what i've been waiting for! Thats what it's all about, woohoo.", "Wow, that was... something."]
     }
 }

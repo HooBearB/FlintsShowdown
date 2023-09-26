@@ -3,6 +3,7 @@ import os
 
 directory = os.path.dirname(__file__)
 filename = os.path.join(directory, ('json/items.json'))
+# filename = os.path.join(directory, ('json/mods/moreGuns.json'))
 items = json.load(open(filename, "r"))
 
 class format:
@@ -16,7 +17,7 @@ class format:
     blue = "\u001b[36m"
     green = "\u001b[32m"
 
-while 1 == 1:
+while True:
     item = input("\nItem?\n")
     item = item.lower()
     if item in items:

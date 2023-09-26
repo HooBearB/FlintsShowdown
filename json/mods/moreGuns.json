@@ -1,0 +1,63 @@
+{
+    "modname": "More Guns",
+    "description": "More firearms. Makes it more likely to have guns given to players.",
+    "category": "items",
+    "overwrite": false,
+
+    "lootable": ["spistol", "mpistol"],
+    
+    "spistol": {
+        "name": "Suppressed pistol",
+        "uncap": true,
+        "grade": 5,
+        "type": "Ranged",
+        "damage": 25,
+        "accuracy": 75,
+        "durability": 15,
+        "faildamage": true,
+        "ready": " aims their suppressed pistol.",
+        "attack": " fires their suppressed pistol at ",
+        "break": "'s suppressed pistol clicks. It's empty.",
+        "1": "   ,________._________",
+        "2": "  /_________|---------╵",
+        "3": " /  /(_/",
+        "4": "/__/",
+        "5": ""
+    },
+    "mpistol": {
+        "name": "Machine pistol",
+        "uncap": true,
+        "grade": 4,
+        "type": "Ranged",
+        "damage": 25,
+        "accuracy": 50,
+        "durability": 11,
+        "faildamage": true,
+        "ready": " aims their machine pistol.",
+        "attack": " fires a burst from their machine pistol towards ",
+        "break": "'s machine pistol clicks. It's empty.",
+        "1": "   ,__________",
+        "2": "  |_________|-╵",
+        "3": " /  /(_(",
+        "4": "/__/",
+        "5": "/_/"
+    },
+    "srifle": {
+        "name": "Service rifle",
+        "uncap": true,
+        "grade": 5,
+        "type": "Ranged",
+        "damage": 40,
+        "accuracy": 60,
+        "durability": 6,
+        "faildamage": true,
+        "ready": " aims their machine pistol.",
+        "attack": " fires a round from their service rifle towards ",
+        "break": "'s service rifle jams.",
+        "1": "",
+        "2": "",
+        "3": "",
+        "4": "",
+        "5": ""
+    }
+}

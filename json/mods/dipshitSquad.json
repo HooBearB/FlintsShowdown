@@ -1,0 +1,25 @@
+{
+    "modname": "Dipshit Dialogue Packs",
+    "description": "Me when I use personality C with friend group A:",
+    "category": "dialogue",
+    "overwrite": false,
+
+    "packs": ["onyx", "aj", "crow", "box", "sunfire", "lazy", "segoe", "ayuumi", "reed", "onyx2", ""],
+
+    "flint": {
+        "name": "Flint",
+        "getMelee": [""],
+        "getRanged": [],
+        "heard": ["Think I heard something over here."],
+        "seen": ["BASTARD SPOTTED!", "I spot a dumbass!"],
+        "trace": ["I smell a bitch about...", "I don't think that's a deer."],
+        "openNegotiate": ["Consider the following...", "Okay, so, I"],
+        "negotiateFail": [],
+        "negotiateWin": [],
+        "miss": [],
+        "hit": [],
+        "hadMiss": ["Nice try!", "Gonna have to try harder than that."],
+        "gotHit": ["Fuck.", "Shit.", "Damn!"],
+        "win": ["Uncommon flint W!", "Can I go home now?", ""]
+    }
+}
